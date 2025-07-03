@@ -1,279 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Adarsh Pulimoottil Jolly | Electrical Engineer</title>
-  <style>
-    /* Reset some default styles */
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-
-    /* Body with clean, easy-to-read font */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      color: #222;
-      line-height: 1.6;
-      scroll-behavior: smooth;
-    }
-
-    /* Fixed top navigation bar */
-    header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: #2c3e50;
-      padding: 15px 30px;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    header .logo {
-      font-weight: 700;
-      font-size: 1.3rem;
-      letter-spacing: 2px;
-      cursor: default;
-    }
-    nav a {
-      color: #ecf0f1;
-      text-decoration: none;
-      margin-left: 25px;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-    nav a:hover {
-      color: #3498db;
-    }
-
-    /* Main container with padding from fixed header */
-    main {
-      max-width: 1000px;
-      margin: 100px auto 60px;
-      padding: 0 30px;
-    }
-
-    /* Hero section with profile image and intro side by side */
-    .hero {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 30px;
-      margin-bottom: 60px;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 40px;
-    }
-
-    /* Profile image styling */
-    .hero img {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      border: 4px solid #3498db;
-      object-fit: cover;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-
-    /* Intro text next to image */
-    .intro {
-      flex: 1;
-      min-width: 280px;
-    }
-    .intro h1 {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-      color: #2c3e50;
-    }
-    .intro p.position {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #2980b9;
-      margin-bottom: 15px;
-    }
-    .intro p.contact-info {
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 5px;
-    }
-    .intro p.contact-info a {
-      color: #3498db;
-      text-decoration: none;
-    }
-    .intro p.contact-info a:hover {
-      text-decoration: underline;
-    }
-
-    /* Section headings */
-    section h2 {
-      font-size: 1.8rem;
-      color: #2c3e50;
-      margin-bottom: 18px;
-      border-left: 5px solid #3498db;
-      padding-left: 12px;
-    }
-
-    /* Section content spacing */
-    section {
-      margin-bottom: 50px;
-    }
-
-    /* List styles */
-    ul {
-      list-style: disc inside;
-      color: #555;
-    }
-    ul li {
-      margin-bottom: 8px;
-      font-size: 1rem;
-    }
-
-    /* Projects links styling */
-    .projects a {
-      display: inline-block;
-      margin-bottom: 10px;
-      color: #3498db;
-      font-weight: 600;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.3s ease;
-    }
-    .projects a:hover {
-      border-color: #3498db;
-    }
-
-    /* Contact section with icons */
-    .contact-info-list {
-      list-style: none;
-      padding-left: 0;
-      font-size: 1rem;
-      color: #555;
-    }
-    .contact-info-list li {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      color: #999;
-      margin-bottom: 30px;
-      font-size: 0.9rem;
-    }
-
-    /* Responsive for smaller screens */
-    @media (max-width: 700px) {
-      .hero {
-        flex-direction: column;
-        text-align: center;
-      }
-      .intro {
-        min-width: 100%;
-      }
-      header {
-        flex-wrap: wrap;
-      }
-      nav {
-        margin-top: 10px;
-        width: 100%;
-        text-align: center;
-      }
-      nav a {
-        margin: 10px 15px;
-        font-size: 1rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adarsh Pulimoottil Jolly | Power Electronics Engineer</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --accent-color: #17a2b8;
+            --border-color: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin-bottom: 1rem;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .header-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-text p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .nav-links li {
+            margin: 0 1rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 0.5rem auto;
+        }
+        
+        /* About Section */
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .contact-info {
+            margin-top: 1.5rem;
+        }
+        
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-info i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        /* Education Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: var(--border-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content .date {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .skill-category {
+            background-color: var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .skill-list {
+            list-style: none;
+        }
+        
+        .skill-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .skill-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background-color: var(--secondary-color);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-image {
+            height: 200px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .project-info {
+            padding: 1.5rem;
+        }
+        
+        .project-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .project-tag {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-view-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .project-view-btn:hover {
+            background-color: #004494;
+        }
+        
+        /* Project Detail Page */
+        .project-detail {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .project-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .project-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-header p {
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .project-content {
+            margin-bottom: 2rem;
+        }
+        
+        .project-section {
+            margin-bottom: 2rem;
+        }
+        
+        .project-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .project-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .gallery-item {
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .report-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+        
+        .report-item {
+            background-color: var(--secondary-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .report-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+        }
+        
+        .report-info {
+            flex: 1;
+        }
+        
+        .report-info h4 {
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+        
+        .report-info p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .report-download {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .report-download:hover {
+            background-color: #138496;
+        }
+        
+        /* Modal for image gallery */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        /* Publications Section */
+        .publications-list {
+            list-style: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .publication-item {
+            background-color: var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .publication-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .publication-meta {
+            font-style: italic;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        
+        .publication-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        
+        .publication-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Contact Form Section */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--secondary-color);
+            padding: 2rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+        }
+        
+        .form-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .form-submit:hover {
+            background-color: #004494;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .projects-grid,
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Fixed header with navigation -->
-  <header>
-    <div class="logo">Adarsh Jolly</div>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-pic">AP</div>
+                <div class="header-text">
+                    <h1>Adarsh Pulimoottil Jolly</h1>
+                    <p>Power Electronics Engineer | Researcher | Embedded Systems Specialist</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
     <nav>
-      <a href="#summary">Summary</a>
-      <a href="#projects">Projects</a>
-      <a href="#skills">Skills</a>
-      <a href="#education">Education</a>
-      <a href="#contact">Contact</a>
+        <ul class="nav-links">
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#education">Education</a></li>
+            <li><a href="index.html#skills">Skills</a></li>
+            <li><a href="index.html#projects">Projects</a></li>
+            <li><a href="index.html#publications">Publications</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
     </nav>
-  </header>
-
-  <main>
-    <!-- Hero section with image and intro -->
-    <div class="hero">
-      <img src="your-image.jpg" alt="Adarsh Pulimoottil Jolly" />
-      <div class="intro">
-        <h1>Adarsh Pulimoottil Jolly</h1>
-        <p class="position">Graduate Electrical Engineer</p>
-        <p class="contact-info">📍 Nackstavägen 16B, Sundsvall, Sweden</p>
-        <p class="contact-info">📞 +46 736232352</p>
-        <p class="contact-info">✉️ <a href="mailto:adarshjolly245@gmail.com">adarshjolly245@gmail.com</a></p>
-        <p class="contact-info">🔗 <a href="https://www.linkedin.com/in/adarsh-p-j" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a></p>
-      </div>
-    </div>
-
-    <!-- Professional Summary -->
-    <section id="summary">
-      <h2>Professional Summary</h2>
-      <p>
-        Graduate Electrical Engineer skilled in power electronics, PCB development (KiCAD), and embedded systems using TI C2000 and ESP32 platforms. Experienced in prototyping, magnetic design, and lab testing for high-frequency converters. Proficient in using oscilloscopes, multimeters, and signal generators. Adept at documentation and eager to contribute to cutting-edge defense technologies.
-      </p>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects">
-      <h2>Projects</h2>
-      <div class="projects">
-        <a href="project1.html" target="_blank" rel="noopener noreferrer">🔌 Reconfigurable Phase-Shift Full Bridge Converter</a><br/>
-        <a href="project2.html" target="_blank" rel="noopener noreferrer">📘 IGBT Switch Control Using Fuzzy Logic</a><br/>
-        <a href="project3.html" target="_blank" rel="noopener noreferrer">🔋 Bidirectional DC-DC Converter</a><br/>
-        <a href="project4.html" target="_blank" rel="noopener noreferrer">🧾 ESP32 Arduino Clone for Temperature Measurement</a><br/>
-        <a href="project5.html" target="_blank" rel="noopener noreferrer">🌱 Environmental Monitoring Sensor System</a>
-      </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills">
-      <h2>Skills</h2>
-      <ul>
-        <li>Power Electronics, PCB Design (KiCAD, EasyEDA)</li>
-        <li>Embedded Systems: TI C2000, ESP32, Arduino</li>
-        <li>Lab Testing: Oscilloscope, Multimeter, Signal Generator</li>
-        <li>Simulation Tools: MATLAB, Simulink, Ansys</li>
-        <li>Prototyping: Magnetic component fabrication, sensor integration</li>
-        <li>Technical Reporting: Overleaf, Microsoft Office</li>
-      </ul>
-    </section>
-
-    <!-- Education -->
-    <section id="education">
-      <h2>Education</h2>
-      <ul>
-        <li><strong>Master’s in Electrical Engineering</strong><br/>Mid Sweden University, Sundsvall, Sweden (2023–2025)</li>
-        <li><strong>Bachelor of Technology in EEE</strong><br/>APJ Abdul Kalam Technological University, Kerala, India (2018–2022)</li>
-      </ul>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact">
-      <h2>Contact</h2>
-      <ul class="contact-info-list">
-        <li>📧 <a href="mailto:adarshjolly245@gmail.com">adarshjolly245@gmail.com</a></li>
-        <li>📞 +46 736232352</li>
-        <li>🔗 <a href="https://www.linkedin.com/in/adarsh-p-j" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a></li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 Adarsh Pulimoottil Jolly
-  </footer>
-
+    
+    <main>
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 class="section-title">Academic Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image" style="background-image: url('images/phase-shift-converter.jpg'); background-color: #e9ecef;">Master's Thesis</div>
+                        <div class="project-info">
+                            <h3>Magnetic optimization of a reconfigurable Phase-shift Full bridge converter</h3>
+                            <p>Developing optimization techniques for magnetic components in phase-shift full bridge converters with a focus on reconfigurable designs specific to railway applications.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Power Electronics</span>
+                                <span class="project-tag">Optimization</span>
+                                <span class="project-tag">Railway Applications</span>
+                            </div>
+                            <a href="projects/phase-shift-converter.html" class="project-view-btn">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image" style="background-image: url('images/fuzzy-logic.jpg'); background-color: #e9ecef;">Bachelor's Thesis</div>
+                        <div class="project-info">
+                            <h3>IGBT Switch Control Using Fuzzy Logic</h3>
+                            <p>Developed a fuzzy logic-based control strategy to adjust the duty cycle of an IGBT switch for fault current limitation. Enhanced circuit stability under various fault conditions through intelligent control.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Fuzzy Logic</span>
+                                <span class="project-tag">IGBT</span>
+                                <span class="project-tag">Fault Current Limitation</span>
+                            </div>
+                            <a href="projects/fuzzy-logic-control.html" class="project-view-btn">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image" style="background-image: url('images/dc-dc-converter.jpg'); background-color: #e9ecef;">Converter Design</div>
+                        <div class="project-info">
+                            <h3>Bidirectional DC-DC Converter with Hybrid Energy Storage</h3>
+                            <p>Implementing analog and digital control for a bidirectional DC-DC converter integrating battery and supercapacitor systems. Optimizing power flow management between multiple energy storage elements.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">DC-DC Converter</span>
+                                <span class="project-tag">Energy Storage</span>
+                                <span class="project-tag">Power Flow Management</span>
+                            </div>
+                            <a href="projects/bidirectional-converter.html" class="project-view-btn">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image" style="background-image: url('images/pcb-design.jpg'); background-color: #e9ecef;">PCB Design</div>
+                        <div class="project-info">
+                            <h3>PCB Design and Assembly for Temperature Measurement</h3>
+                            <p>Designed and assembled PCBs for temperature measurement systems using ESP32. Optimized two-layer PCB layout to reduce electromagnetic interference (EMI).</p>
+                            <div class="project-tags">
+                                <span class="project-tag">PCB Design</span>
+                                <span class="project-tag">ESP32</span>
+                                <span class="project-tag">EMI Reduction</span>
+                            </div>
+                            <a href="projects/pcb-design.html" class="project-view-btn">View Project</a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image" style="background-image: url('images/semiconductor.jpg'); background-color: #e9ecef;">Semiconductor</div>
+                        <div class="project-info">
+                            <h3>Clean Room Work and Semiconductor Fabrication</h3>
+                            <p>Fabricated a P-N junction diode in a clean room environment. Performed IV and CV measurements for device characterization. Analyzed performance parameters and documented fabrication process.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Semiconductor</span>
+                                <span class="project-tag">P-N Junction</span>
+                                <span class="project-tag">Clean Room</span>
+                            </div>
+                            <a href="projects/semiconductor-fabrication.html" class="project-view-btn">View Project</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Adarsh Pulimoottil Jolly. All Rights Reserved.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/adarshp-j" target="_blank">LinkedIn</a>
+                <a href="mailto:adarshjolly245@gmail.com">Email</a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
