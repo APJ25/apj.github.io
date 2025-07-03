@@ -1,0 +1,26 @@
+<!-- project4.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arduino Clone Temperature Logger</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; background-color: #f7f7f7; }
+    h1 { color: #004aad; }
+    section { margin-bottom: 2rem; background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>Arduino Clone for Temperature Measurement</h1>
+  <section>
+    <p>Designed a custom ESP32-based Arduino clone for environmental temperature monitoring. Developed and tested the PCB using EasyEDA and built a prototype.</p>
+    <ul>
+      <li>Created schematics and PCB layout</li>
+      <li>Soldered and assembled SMD components</li>
+      <li>Tested temperature data acquisition inside a room</li>
+    </ul>
+    <p><strong>Skills:</strong> PCB design, prototyping, soldering</p>
+  </section>
+</body>
+</html>
