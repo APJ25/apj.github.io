@@ -2,228 +2,278 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Adarsh Pulimoottil Jolly - Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adarsh Pulimoottil Jolly | Electrical Engineer</title>
   <style>
-    /* General body styling */
+    /* Reset some default styles */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    /* Body with clean, easy-to-read font */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background: #e9f0f7; /* Soft blue background */
-      color: #2c3e50; /* Dark blue text for professionalism */
+      background: #f5f7fa;
+      color: #222;
+      line-height: 1.6;
+      scroll-behavior: smooth;
     }
 
-    /* Main container to center content with white background and subtle shadow */
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
-      padding: 40px 50px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(44, 62, 80, 0.15);
+    /* Fixed top navigation bar */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #2c3e50;
+      padding: 15px 30px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-
-    /* Header styles */
-    h1 {
-      text-align: center;
-      color: #1a2733;
-      margin-bottom: 5px;
+    header .logo {
       font-weight: 700;
-      letter-spacing: 1.5px;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      cursor: default;
     }
-
-    /* Subheading style for your contact info */
-    .contact-info {
-      text-align: center;
-      color: #34495e;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-    }
-
-    /* Styling LinkedIn link with custom color and hover effect */
-    .linkedin-link {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .linkedin-link a {
-      color: #0077b5; /* LinkedIn blue */
+    nav a {
+      color: #ecf0f1;
       text-decoration: none;
+      margin-left: 25px;
       font-weight: 600;
-      font-size: 1.1rem;
+      transition: color 0.3s ease;
     }
-    .linkedin-link a:hover {
-      text-decoration: underline;
+    nav a:hover {
+      color: #3498db;
+    }
+
+    /* Main container with padding from fixed header */
+    main {
+      max-width: 1000px;
+      margin: 100px auto 60px;
+      padding: 0 30px;
+    }
+
+    /* Hero section with profile image and intro side by side */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 60px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 40px;
     }
 
     /* Profile image styling */
-    .profile-image {
-      display: block;
-      margin: 0 auto 30px auto;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%; /* Circular image */
+    .hero img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 4px solid #3498db;
       object-fit: cover;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border: 4px solid #2980b9; /* blue border around image */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
-    /* Section headers styling */
-    h2 {
-      border-bottom: 3px solid #2980b9; /* blue underline */
-      padding-bottom: 8px;
-      margin-top: 50px;
-      margin-bottom: 20px;
-      font-weight: 700;
+    /* Intro text next to image */
+    .intro {
+      flex: 1;
+      min-width: 280px;
+    }
+    .intro h1 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
       color: #2c3e50;
     }
-
-    /* Paragraph styling */
-    p {
-      line-height: 1.6;
+    .intro p.position {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2980b9;
+      margin-bottom: 15px;
+    }
+    .intro p.contact-info {
       font-size: 1rem;
-      color: #34495e;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .intro p.contact-info a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    .intro p.contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    /* Section headings */
+    section h2 {
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin-bottom: 18px;
+      border-left: 5px solid #3498db;
+      padding-left: 12px;
+    }
+
+    /* Section content spacing */
+    section {
+      margin-bottom: 50px;
+    }
+
+    /* List styles */
+    ul {
+      list-style: disc inside;
+      color: #555;
+    }
+    ul li {
+      margin-bottom: 8px;
+      font-size: 1rem;
     }
 
     /* Projects links styling */
     .projects a {
-      display: block;
-      margin-bottom: 12px;
-      color: #2980b9;
-      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 10px;
+      color: #3498db;
       font-weight: 600;
-      font-size: 1.05rem;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
     }
     .projects a:hover {
-      text-decoration: underline;
-      color: #1a5276;
+      border-color: #3498db;
     }
 
-    /* Lists styling */
-    ul {
-      list-style-type: disc;
-      padding-left: 20px;
-      color: #34495e;
+    /* Contact section with icons */
+    .contact-info-list {
+      list-style: none;
+      padding-left: 0;
       font-size: 1rem;
+      color: #555;
+    }
+    .contact-info-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    /* Contact section centered */
-    .contact {
-      margin-top: 50px;
-      text-align: center;
-      font-size: 1.05rem;
-      color: #34495e;
-    }
-    .contact a {
-      color: #2980b9;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .contact a:hover {
-      text-decoration: underline;
-      color: #1a5276;
-    }
-
-    /* Footer styling */
+    /* Footer */
     footer {
       text-align: center;
-      margin-top: 60px;
-      color: #95a5a6; /* light grey */
+      color: #999;
+      margin-bottom: 30px;
       font-size: 0.9rem;
-      font-style: italic;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      .container {
-        padding: 30px 20px;
+    /* Responsive for smaller screens */
+    @media (max-width: 700px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
       }
-      .profile-image {
-        width: 110px;
-        height: 110px;
+      .intro {
+        min-width: 100%;
+      }
+      header {
+        flex-wrap: wrap;
+      }
+      nav {
+        margin-top: 10px;
+        width: 100%;
+        text-align: center;
+      }
+      nav a {
+        margin: 10px 15px;
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- Profile image, replace 'your-image.jpg' with your actual image file path -->
-    <img src="your-image.jpg" alt="Adarsh Pulimoottil Jolly" class="profile-image" />
+  <!-- Fixed header with navigation -->
+  <header>
+    <div class="logo">Adarsh Jolly</div>
+    <nav>
+      <a href="#summary">Summary</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-    <!-- Main heading with name -->
-    <h1>Adarsh Pulimoottil Jolly</h1>
-
-    <!-- Contact info section -->
-    <p class="contact-info">
-      Nackstavägen 16B, Sundsvall, Sweden | +46 736232352 | adarshjolly245@gmail.com
-    </p>
-
-    <!-- LinkedIn profile link -->
-    <div class="linkedin-link">
-      <a href="https://www.linkedin.com/in/adarsh-p-j" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a>
+  <main>
+    <!-- Hero section with image and intro -->
+    <div class="hero">
+      <img src="your-image.jpg" alt="Adarsh Pulimoottil Jolly" />
+      <div class="intro">
+        <h1>Adarsh Pulimoottil Jolly</h1>
+        <p class="position">Graduate Electrical Engineer</p>
+        <p class="contact-info">📍 Nackstavägen 16B, Sundsvall, Sweden</p>
+        <p class="contact-info">📞 +46 736232352</p>
+        <p class="contact-info">✉️ <a href="mailto:adarshjolly245@gmail.com">adarshjolly245@gmail.com</a></p>
+        <p class="contact-info">🔗 <a href="https://www.linkedin.com/in/adarsh-p-j" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a></p>
+      </div>
     </div>
 
-    <!-- Professional Summary section -->
-    <h2>Professional Summary</h2>
-    <p>
-      Graduate Electrical Engineer skilled in power electronics, PCB development (KiCAD), and embedded systems using TI C2000 and ESP32 platforms. Experienced in prototyping, magnetic design, and lab testing for high-frequency converters. Proficient in using oscilloscopes, multimeters, and signal generators. Adept at documentation and eager to contribute to cutting-edge defense technologies.
-    </p>
+    <!-- Professional Summary -->
+    <section id="summary">
+      <h2>Professional Summary</h2>
+      <p>
+        Graduate Electrical Engineer skilled in power electronics, PCB development (KiCAD), and embedded systems using TI C2000 and ESP32 platforms. Experienced in prototyping, magnetic design, and lab testing for high-frequency converters. Proficient in using oscilloscopes, multimeters, and signal generators. Adept at documentation and eager to contribute to cutting-edge defense technologies.
+      </p>
+    </section>
 
-    <!-- Projects section with clickable links -->
-    <h2>Projects</h2>
-    <div class="projects">
-      <a href="project1.html" target="_blank" rel="noopener noreferrer">🔌 Reconfigurable Phase-Shift Full Bridge Converter</a>
-      <a href="project2.html" target="_blank" rel="noopener noreferrer">📘 IGBT Switch Control Using Fuzzy Logic</a>
-      <a href="project3.html" target="_blank" rel="noopener noreferrer">🔋 Bidirectional DC-DC Converter</a>
-      <a href="project4.html" target="_blank" rel="noopener noreferrer">🧾 ESP32 Arduino Clone for Temperature Measurement</a>
-      <a href="project5.html" target="_blank" rel="noopener noreferrer">🌱 Environmental Monitoring Sensor System</a>
-    </div>
+    <!-- Projects -->
+    <section id="projects">
+      <h2>Projects</h2>
+      <div class="projects">
+        <a href="project1.html" target="_blank" rel="noopener noreferrer">🔌 Reconfigurable Phase-Shift Full Bridge Converter</a><br/>
+        <a href="project2.html" target="_blank" rel="noopener noreferrer">📘 IGBT Switch Control Using Fuzzy Logic</a><br/>
+        <a href="project3.html" target="_blank" rel="noopener noreferrer">🔋 Bidirectional DC-DC Converter</a><br/>
+        <a href="project4.html" target="_blank" rel="noopener noreferrer">🧾 ESP32 Arduino Clone for Temperature Measurement</a><br/>
+        <a href="project5.html" target="_blank" rel="noopener noreferrer">🌱 Environmental Monitoring Sensor System</a>
+      </div>
+    </section>
 
-    <!-- Skills section -->
-    <h2>Skills</h2>
-    <ul>
-      <li>Power Electronics, PCB Design (KiCAD, EasyEDA)</li>
-      <li>Embedded Systems: TI C2000, ESP32, Arduino</li>
-      <li>Lab Testing: Oscilloscope, Multimeter, Signal Generator</li>
-      <li>Simulation Tools: MATLAB, Simulink, Ansys</li>
-      <li>Prototyping: Magnetic component fabrication, sensor integration</li>
-      <li>Technical Reporting: Overleaf, Microsoft Office</li>
-    </ul>
+    <!-- Skills -->
+    <section id="skills">
+      <h2>Skills</h2>
+      <ul>
+        <li>Power Electronics, PCB Design (KiCAD, EasyEDA)</li>
+        <li>Embedded Systems: TI C2000, ESP32, Arduino</li>
+        <li>Lab Testing: Oscilloscope, Multimeter, Signal Generator</li>
+        <li>Simulation Tools: MATLAB, Simulink, Ansys</li>
+        <li>Prototyping: Magnetic component fabrication, sensor integration</li>
+        <li>Technical Reporting: Overleaf, Microsoft Office</li>
+      </ul>
+    </section>
 
-    <!-- Certifications section -->
-    <h2>Certifications</h2>
-    <ul>
-      <li>Power Electronics Specialization – University of Colorado Boulder (Coursera)</li>
-      <li>Non-Conventional Energy Resources – NPTEL</li>
-      <li>AI and Machine Learning – NIELIT</li>
-      <li>IELTS – Score: 7.5</li>
-    </ul>
+    <!-- Education -->
+    <section id="education">
+      <h2>Education</h2>
+      <ul>
+        <li><strong>Master’s in Electrical Engineering</strong><br/>Mid Sweden University, Sundsvall, Sweden (2023–2025)</li>
+        <li><strong>Bachelor of Technology in EEE</strong><br/>APJ Abdul Kalam Technological University, Kerala, India (2018–2022)</li>
+      </ul>
+    </section>
 
-    <!-- Education section -->
-    <h2>Education</h2>
-    <ul>
-      <li><strong>Master’s in Electrical Engineering</strong><br/>Mid Sweden University, Sundsvall, Sweden (2023–2025)</li>
-      <li><strong>Bachelor of Technology in EEE</strong><br/>APJ Abdul Kalam Technological University, Kerala, India (2018–2022)</li>
-    </ul>
-
-    <!-- Research & Publications -->
-    <h2>Research & Publications</h2>
-    <ul>
-      <li>“A Reliable Fuzzy Logic Controlled Power Converter Type Fault Current Limiter for Interconnected Power Systems” – IEEE INDICON, 2022</li>
-    </ul>
-
-    <!-- Contact section repeated for emphasis -->
-    <div class="contact">
+    <!-- Contact -->
+    <section id="contact">
       <h2>Contact</h2>
-      <p>Email: <a href="mailto:adarshjolly245@gmail.com">adarshjolly245@gmail.com</a></p>
-      <p>Phone: +46 736232352</p>
-      <p><a href="https://www.linkedin.com/in/adarsh-p-j" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
-    </div>
+      <ul class="contact-info-list">
+        <li>📧 <a href="mailto:adarshjolly245@gmail.com">adarshjolly245@gmail.com</a></li>
+        <li>📞 +46 736232352</li>
+        <li>🔗 <a href="https://www.linkedin.com/in/adarsh-p-j" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a></li>
+      </ul>
+    </section>
+  </main>
 
-    <!-- Footer -->
-    <footer>
-      &copy; 2025 Adarsh Pulimoottil Jolly
-    </footer>
-  </div>
+  <footer>
+    &copy; 2025 Adarsh Pulimoottil Jolly
+  </footer>
+
 </body>
 </html>
