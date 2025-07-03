@@ -651,31 +651,92 @@
 
     
     <nav>
-        <ul class="nav-links">
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#education">Education</a></li>
-            <li><a href="index.html#skills">Skills</a></li>
-            <li><a href="index.html#projects">Projects</a></li>
-            <li><a href="index.html#publications">Publications</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-        </ul>
-    </nav>
-    <section id="about">
-    <div class="container about-content">
-        <div class="about-text">
-            <h2 class="section-title">About Me</h2>
-            <p>
-                I’m Adarsh Pulimoottil Jolly, a Power Electronics Engineer with a strong focus on energy-efficient systems, inverter topologies, and embedded control systems. With hands-on experience in both academic research and industry projects, I bridge the gap between theoretical innovation and practical application.
-            </p>
-            <div class="contact-info">
-                <p><i class="fas fa-envelope"></i> adarsh.jolly@example.com</p>
-                <p><i class="fas fa-phone"></i> +91 98765 43210</p>
-                <p><i class="fas fa-map-marker-alt"></i> Kochi, Kerala, India</p>
+    <ul class="nav-links">
+        <li><a href="#" data-section="about">About</a></li>
+        <li><a href="#" data-section="education">Education</a></li>
+        <li><a href="#" data-section="skills">Skills</a></li>
+        <li><a href="#" data-section="projects">Projects</a></li>
+        <li><a href="#" data-section="publications">Publications</a></li>
+        <li><a href="#" data-section="contact">Contact</a></li>
+    </ul>
+</nav>
+    
+     <!-- ABOUT -->
+    <section id="about" class="section">
+        <div class="about-content container">
+            <div class="about-text">
+                <h2 class="section-title">About Me</h2>
+                <p>I’m Adarsh Pulimoottil Jolly, a Power Electronics Engineer with a strong focus on energy-efficient systems, inverter topologies, and embedded control</p>
             </div>
         </div>
-    </div>
-</section>
-    
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="section">
+        <div class="container">
+            <h2 class="section-title">Education</h2>
+            <p>[Your timeline content goes here]</p>
+        </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title">Skills</h2>
+            <p>[Your skills content goes here]</p>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <p>[Your projects content goes here]</p>
+        </div>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section id="publications" class="section">
+        <div class="container">
+            <h2 class="section-title">Publications</h2>
+            <p>[Your publications content goes here]</p>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Contact</h2>
+            <p>[Your contact content goes here]</p>
+        </div>
+    </section>
+   
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const links = document.querySelectorAll('.nav-links a');
+            const sections = document.querySelectorAll('.section');
+
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-section');
+
+                    // Hide all sections
+                    sections.forEach(sec => sec.classList.remove('active'));
+
+                    // Show the selected section
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Show "about" section by default
+            document.getElementById("about").classList.add("active");
+        });
+    </script>
     <main>
         <section id="projects" class="projects">
             <div class="container">
