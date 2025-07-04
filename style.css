@@ -88,7 +88,8 @@ header {
     width: 100%;
     height: 100%;
     background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-    display: flex;
+    /* CHANGE HERE: Hide by default */
+    display: none; /* Changed from flex */
     align-items: center;
     justify-content: center;
     font-size: 3rem;
@@ -100,9 +101,8 @@ header {
 }
 
 /* Removed the specific rule hiding APJ.jpg */
-/* .profile-pic img[src="APJ.jpg"] {
-    display: none;
-} */
+/* The previous correction where this comment was refers to a rule that was explicitly hiding the image.
+   It's good that it's commented out now. */
 
 
 @keyframes float {
