@@ -688,11 +688,11 @@
                 left: 0;
             }
 
-            .timeline-item::after {
+            .timeline-item:nth-child(even)::after {
                 left: 21px;
             }
 
-            .timeline-item:nth-child(even)::after {
+            .timeline-item::after {
                 left: 21px;
             }
 
@@ -735,7 +735,8 @@
     </header>
 
     <main>
-        <section id="about" class="section active"> <h2 class="section-title">About Me</h2>
+        <section id="about" class="section active">
+            <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
                     <p>I'm Adarsh Pulimoottil Jolly, a dedicated Power Electronics Engineer with a passion for developing energy-efficient systems and innovative converter topologies. My expertise lies in DC-DC converters, inverter designs, and embedded control systems.</p>
@@ -886,52 +887,47 @@
                 <div class="publication-item">
                     <h3>Title of Publication 1</h3>
                     <p class="publication-meta">Authors: A. P. Jolly, J. Doe | Journal/Conference: IEEE Transactions on Power Electronics | Year: 2024</p>
-                    <p>Brief description of the publication's content and its contribution to the field.</p>
-                    <a href="#" class="project-view-btn">Read More</a>
+                    <p>Brief description of the publication's content and its contribution to the field. This would typically be a summary or abstract of your research paper.</p>
                 </div>
                 <div class="publication-item">
                     <h3>Title of Publication 2</h3>
-                    <p class="publication-meta">Authors: A. P. Jolly, R. Smith | Journal/Conference: Applied Power Electronics Conference (APEC) | Year: 2023</p>
-                    <p>Summary of the research and key findings presented at the conference.</p>
-                    <a href="#" class="project-view-btn">Read More</a>
+                    <p class="publication-meta">Authors: A. P. Jolly, A. N. Other | Conference Proceedings | Year: 2023</p>
+                    <p>Another brief description of a significant publication, highlighting its key findings or impact on power electronics.</p>
                 </div>
-                <div class="publication-item">
-                    <h3>Title of Publication 3 (Example)</h3>
-                    <p class="publication-meta">Authors: C. D. White, A. P. Jolly | Journal/Conference: Journal of Renewable Energy | Year: 2022</p>
-                    <p>Exploration of novel power conversion techniques for solar photovoltaic systems, focusing on maximum power point tracking algorithms.</p>
-                    <a href="#" class="project-view-btn">Read More</a>
                 </div>
-            </div>
         </section>
 
         <section id="contact" class="section">
             <h2 class="section-title">Contact Me</h2>
             <div class="contact-form">
-                <form action="#" method="POST"> <div class="form-group">
-                        <label for="name">Name:</label>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
                         <input type="text" id="name" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email:</label>
+                        <label for="email">Email</label>
                         <input type="email" id="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="message">Message:</label>
-                        <textarea id="message" name="message" required></textarea>
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
                     </div>
                     <button type="submit" class="form-submit">Send Message</button>
                 </form>
             </div>
         </section>
-
     </main>
 
     <footer>
         <p>&copy; 2025 Adarsh Pulimoottil Jolly. All rights reserved.</p>
         <div class="social-links">
-            <a href="https://linkedin.com/in/adarshp-j" target="_blank">LinkedIn</a>
-            <a href="mailto:adarshjolly245@gmail.com">Email</a>
-            <a href="#" target="_blank">ResearchGate</a> </div>
+            <a href="https://linkedin.com/in/adarshp-j" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
     </footer>
 
     <script>
@@ -953,16 +949,33 @@
 
                 // Add 'active' to the target section
                 const targetSection = document.querySelector(sectionId);
-                if (targetSection) {
+                if (targetSection) { // Check if the target section actually exists
                     targetSection.classList.add('active');
+                } else {
+                    console.error(`Section with ID "${sectionId}" not found.`); // Helpful for debugging
                 }
 
                 // Add 'active' to the corresponding nav link
                 const activeNavLink = document.querySelector(`.nav-link[href="${sectionId}"]`);
-                if (activeNavLink) {
+                if (activeNavLink) { // Check if the nav link exists
                     activeNavLink.classList.add('active');
+                } else {
+                    console.warn(`Navigation link with href "${sectionId}" not found.`); // Helpful for debugging
                 }
             };
+
+            // Event listener for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent default anchor link behavior (page jump)
+                    const targetId = link.getAttribute('href'); // Get the href (e.g., "#about")
+                    showSection(targetId);
+
+                    // Optional: Update URL hash without causing a page reload
+                    // This allows users to bookmark specific sections or use back/forward browser buttons
+                    history.pushState(null, '', targetId);
+                });
+            });
 
             // Initial section display based on URL hash or default to #about
             const initialHash = window.location.hash || '#about';
