@@ -1,69 +1,178 @@
+/* Import a modern font from Google Fonts (e.g., 'Inter' for body, 'Montserrat' for headings) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Montserrat:wght@400;600;700&display=swap');
+
+/* --- CSS Variables for Easy Customization --- */
+:root {
+    --primary-color: #007acc; /* Original accent blue */
+    --primary-dark: #005a9c; /* Darker shade for hover/active */
+    --text-color-dark: #2c3e50; /* Darker text for headings */
+    --text-color-body: #495057; /* Slightly softer body text */
+    --background-light: #f8f9fa; /* Very light background */
+    --background-card: #ffffff; /* White background for containers */
+    --shadow-light: rgba(0, 0, 0, 0.08); /* Softer, subtle shadow */
+    --shadow-hover: rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+    --border-radius-main: 12px;
+    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+    --spacing-xs: 8px;
+    --spacing-sm: 15px;
+    --spacing-md: 25px;
+    --spacing-lg: 40px;
+}
+
+/* --- Global Body Styles --- */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f2f2f2;
-  color: #333;
-  margin: 0;
-  padding: 0;
+    font-family: var(--font-body);
+    background-color: var(--background-light);
+    color: var(--text-color-body);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6; /* Improve readability */
+    -webkit-font-smoothing: antialiased; /* Smoother font rendering */
+    -moz-osx-font-smoothing: grayscale; /* Smoother font rendering */
 }
 
+/* --- Container Styles (Cards/Sections) --- */
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 850px; /* Slightly wider for modern feel */
+    margin: var(--spacing-lg) auto; /* Consistent margin */
+    padding: var(--spacing-lg); /* More generous padding */
+    background-color: var(--background-card);
+    border-radius: var(--border-radius-main);
+    box-shadow: 0 6px 20px var(--shadow-light); /* Softer, more diffused shadow */
+    transition: box-shadow 0.3s ease; /* Smooth transition for potential hover effects */
 }
 
+.container:hover {
+    box-shadow: 0 8px 25px var(--shadow-hover); /* Slightly more prominent shadow on hover */
+}
+
+/* --- Header Styles --- */
 header {
-  text-align: center;
-  margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: var(--spacing-lg); /* Increased spacing */
 }
 
+/* --- Subtitle (Tagline) --- */
 .subtitle {
-  color: #555;
-  font-size: 1.1em;
+    color: var(--text-color-body);
+    font-size: 1.15em; /* Slightly larger */
+    font-weight: 400; /* Ensure it's not too bold */
+    margin-top: -10px; /* Pull closer to main heading if needed */
 }
 
+/* --- Headings --- */
 h1, h2, h3 {
-  color: #2c3e50;
+    font-family: var(--font-heading);
+    color: var(--text-color-dark);
+    font-weight: 600; /* Modern heading weight */
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
+h1 {
+    font-size: 2.8em; /* Larger main heading */
+    margin-bottom: var(--spacing-sm);
+}
+
+h2 {
+    font-size: 2em;
+    border-bottom: 2px solid var(--primary-color); /* Subtle underline for section titles */
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    display: inline-block; /* Makes border-bottom only as wide as text */
+}
+
+h3 {
+    font-size: 1.5em;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* --- Unordered Lists (General) --- */
 ul {
-  list-style: none;
-  padding-left: 0;
+    list-style: none;
+    padding-left: 0;
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
 }
 
 ul li {
-  margin: 10px 0;
+    margin: var(--spacing-xs) 0; /* Consistent small margin */
 }
 
+/* --- General Link Styles --- */
 a {
-  text-decoration: none;
-  color: #007acc;
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color 0.2s ease; /* Smooth transition for general links */
 }
 
 a:hover {
-  text-decoration: underline;
+    color: var(--primary-dark); /* Darker blue on hover */
+    text-decoration: none; /* No underline unless specifically intended */
 }
 
+/* --- Navigation Menu Styling (Addressing your request for hover) --- */
+/* Assuming your navigation menu is within a <nav> tag directly under the header */
+.main-nav {
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: center; /* Center the navigation items */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: var(--spacing-md); /* Space between navigation items */
+    margin-bottom: var(--spacing-lg); /* Space below the navigation */
+    padding-top: var(--spacing-sm); /* Add a little padding above if needed */
+    border-top: 1px solid rgba(0, 0, 0, 0.05); /* Subtle separator */
+    padding-top: var(--spacing-md); /* Adjust this padding to give space from the top border */
+}
+
+.main-nav a {
+    /* Default state: No blue block */
+    background-color: transparent;
+    color: var(--text-color-dark); /* Default text color for nav links */
+    padding: var(--spacing-sm) var(--spacing-md); /* Generous padding for clickable area */
+    border-radius: var(--spacing-xs); /* Slightly rounded corners */
+    font-weight: 500; /* Slightly bold for nav items */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Smooth transitions for hover */
+    white-space: nowrap; /* Prevent text wrapping within nav items */
+}
+
+.main-nav a:hover {
+    /* Highlight on hover */
+    background-color: var(--primary-color); /* Blue background on hover */
+    color: var(--background-card); /* White text on blue background */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 10px var(--shadow-light); /* Subtle shadow on hover */
+}
+
+/* --- Back Link --- */
 .back {
-  display: block;
-  margin-top: 10px;
-  color: #555;
+    display: inline-block; /* Changed to inline-block for better spacing control if needed */
+    margin-top: var(--spacing-sm);
+    color: var(--text-color-body);
+    font-size: 0.95em;
+    transition: color 0.2s ease;
 }
 
-footer {
-  text-align: center;
-  margin-top: 40px;
-  font-size: 0.9em;
-  color: #888;
+.back:hover {
+    color: var(--primary-dark);
 }
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid rgba(0, 0, 0, 0.05); /* Subtle separator */
+    font-size: 0.85em; /* Slightly smaller */
+    color: var(--text-color-body);
+    opacity: 0.7; /* Slightly faded */
+}
+
+/* --- Section Display Toggle --- */
 .section {
-  display: none;
+    display: none;
 }
 
 .section.active {
-  display: block;
+    display: block;
 }
-
