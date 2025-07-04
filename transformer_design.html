@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer Design | Adarsh Pulimoottil Jolly</title>
+    <link rel="stylesheet" href="styles.css"> <style>
+        /* Specific styles for calculation pages (can also be in main CSS if preferred) */
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #495057;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #0056b3, #17a2b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            color: #0056b3;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(45deg, #0056b3, #17a2b8);
+            border-radius: 3px;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .equation-block {
+            background-color: #e9ecef;
+            border-left: 5px solid #17a2b8;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace; /* Good for code/math */
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .equation-block strong {
+            color: #0056b3;
+        }
+
+        ul {
+            list-style: disc;
+            margin-left: 20px;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .back-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 1rem;
+        }
+
+        .back-buttons a {
+            flex: 1;
+            text-align: center;
+            display: block;
+            background: #6c757d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .back-buttons a:hover {
+            background: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .back-buttons .main-portfolio {
+            background: #0056b3;
+        }
+
+        .back-buttons .main-portfolio:hover {
+            background: #003d7a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .back-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transformer Design & Optimization for PSFB Converter</h1>
+
+        <p>Designing efficient **high-frequency transformers** is crucial for the performance of Phase-shift Full Bridge (PSFB) converters, especially when aiming for high power density and minimal losses in railway applications. This section details the methodology and calculations involved in optimizing the transformer for our specific reconfigurable PSFB converter.</p>
+
+        <h2>Core Selection</h2>
+        <p>The selection of the magnetic core material and geometry is the first critical step. For high-frequency applications, **Ferrite cores** are preferred due to their low core losses at high frequencies. We considered materials like N87, 3C90, or similar, balancing saturation flux density, permeability, and loss characteristics.</p>
+        <p><strong>Core Geometry:</strong> E-cores or Pot-cores are often chosen for their ease of winding and good shielding properties. Toroidal cores offer excellent coupling but can be harder to wind.</p>
+        <img src="https://via.placeholder.com/800x300?text=Transformer+Core+Example" alt="Transformer Core Example">
+        <p><em>Example of a selected E-core for the transformer design.</em></p>
+
+        <h2>Winding Design & Turns Ratio</h2>
+        <p>The turns ratio is determined by the input/output voltage requirements and the desired duty cycle range. For a PSFB converter, the transformer needs to handle **bidirectional power flow**, which implies careful consideration of magnetizing inductance and leakage inductance.</p>
+        
+        <h3>Turns Ratio Calculation</h3>
+        <p>The approximate turns ratio ($N_{pri}/N_{sec}$) is primarily based on the input and output voltages, considering the voltage drop across the switches and diodes, and the maximum duty cycle:</p>
+        <div class="equation-block">
+            $$
+            \mathbf{N_{pri}/N_{sec}} = \frac{V_{in,max}}{V_{out,max}} \times D_{max}
+            $$
+            <br>
+            Where: <br>
+            $V_{in,max}$ = Maximum input voltage<br>
+            $V_{out,max}$ = Maximum output voltage<br>
+            $D_{max}$ = Maximum effective duty cycle of the converter.
+        </div>
+
+        <h3>Primary and Secondary Windings</h3>
+        <p>Once the turns ratio is set, the number of turns for primary ($N_p$) and secondary ($N_s$) windings are calculated. Considerations for winding type (Litz wire for high frequency to reduce skin and proximity effects), insulation, and winding arrangement (e.g., interleaved windings to minimize leakage inductance) are critical.</p>
+
+        <h2>Magnetizing Inductance & Power Loss Calculation</h2>
+        <p>The magnetizing inductance plays a significant role in the **zero-voltage switching (ZVS)** range of the PSFB converter. It is designed to be large enough to ensure ZVS over the desired load range but small enough to avoid excessive circulating currents.</p>
+        
+        <h3>Magnetizing Inductance ($L_m$)</h3>
+        <div class="equation-block">
+            $$
+            \mathbf{L_m} = \frac{N_{pri}^2}{R_L} \times A_e
+            $$
+            <br>
+            Where: <br>
+            $N_{pri}$ = Primary winding turns<br>
+            $R_L$ = Reluctance of the magnetic path (depends on core material and geometry)<br>
+            $A_e$ = Effective cross-sectional area of the core.
+        </div>
+        <p>We use a combination of analytical models and simulation tools like **PSIM** and **LTspice** to accurately predict magnetizing inductance and its effect on converter performance.</p>
+
+        <h3>Transformer Losses</h3>
+        <p>Total transformer losses consist of **core losses** (hysteresis and eddy current losses in the core) and **copper losses** (resistive losses in the windings). Both are frequency and flux density dependent.</p>
+        <div class="equation-block">
+            <strong>Core Loss:</strong>
+            $$
+            \mathbf{P_{core}} = k \cdot f^{\alpha} \cdot B_{max}^{\beta} \cdot V_e
+            $$
+            Where $k, \alpha, \beta$ are Steinmetz coefficients, $f$ is frequency, $B_{max}$ is peak flux density, and $V_e$ is effective core volume.
+            <br><br>
+            <strong>Copper Loss:</strong>
+            $$
+            \mathbf{P_{copper}} = I_{rms}^2 \cdot R_{ac}
+            $$
+            Where $I_{rms}$ is RMS current and $R_{ac}$ is AC resistance of the winding (considering skin/proximity effects).
+        </div>
+        <p>Optimization involves iteratively adjusting turns, wire gauge, and core material to minimize total losses across the operating range while meeting size and thermal constraints.</p>
+
+        <h2>Experimental Verification</h2>
+        <p>After simulation, a prototype transformer is constructed, and its characteristics (inductance, resistance, temperature rise) are measured in the lab. These measurements are then compared with the calculated and simulated values to validate the design methodology.</p>
+        <img src="https://via.placeholder.com/800x400?text=Transformer+Test+Setup" alt="Transformer Test Setup">
+        <p><em>Laboratory setup for measuring transformer characteristics and losses.</em></p>
+
+        <div class="back-buttons">
+            <a href="master_thesis_details.html">← Back to Thesis Details</a>
+            <a href="index.html" class="main-portfolio">Back to Main Portfolio</a>
+        </div>
+    </div>
+</body>
+</html>
