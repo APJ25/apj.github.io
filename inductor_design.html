@@ -3,240 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inductor Design | Adarsh Pulimoottil Jolly</title>
-    <link rel="stylesheet" href="styles.css"> <style>
-        /* Specific styles for calculation pages (can also be in main CSS if preferred) */
+    <title>Inductor Design Analysis (Parametric Method) - Interactive Plots</title>
+    <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
-            color: #495057;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            box-sizing: border-box;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
         }
-
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             max-width: 900px;
-            width: 100%;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #0056b3, #17a2b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-        }
-
-        h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.8rem;
-            color: #0056b3;
-            margin-top: 2.5rem;
-            margin-bottom: 1.2rem;
-            position: relative;
-            padding-left: 1rem;
-        }
-
-        h2::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 6px;
-            height: 100%;
-            background: linear-gradient(45deg, #0056b3, #17a2b8);
-            border-radius: 3px;
-        }
-
-        h3 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.4rem;
-            color: #2c3e50;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        p {
-            margin-bottom: 1rem;
-            font-size: 1.05rem;
-            line-height: 1.7;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
-        }
-
-        .equation-block {
-            background-color: #e9ecef;
-            border-left: 5px solid #17a2b8;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
             border-radius: 8px;
-            font-family: 'Fira Code', 'Cascadia Code', monospace;
-            font-size: 1.1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        pre {
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 5px;
             overflow-x: auto;
         }
-
-        .equation-block strong {
-            color: #0056b3;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-
-        ul {
-            list-style: disc;
-            margin-left: 20px;
-            margin-bottom: 1rem;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
-
-        li {
-            margin-bottom: 0.5rem;
+        th {
+            background-color: #f2f2f2;
         }
-
-        .back-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 3rem;
-            gap: 1rem;
+        .section-separator {
+            border-top: 2px dashed #ccc;
+            margin: 40px 0;
         }
-
-        .back-buttons a {
-            flex: 1;
-            text-align: center;
+        .note {
+            background-color: #fff3cd;
+            border-left: 6px solid #ffe08a;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .plot-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9e9e9;
+            border-radius: 8px;
+        }
+        .plot-controls label {
             display: block;
-            background: #6c757d;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 8px;
+            cursor: pointer;
         }
-
-        .back-buttons a:hover {
-            background: #5a6268;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        .plot-controls input[type="checkbox"] {
+            margin-right: 8px;
         }
-
-        .back-buttons .main-portfolio {
-            background: #0056b3;
+        .plot-container {
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+            display: none; /* Hidden by default */
         }
-
-        .back-buttons .main-portfolio:hover {
-            background: #003d7a;
+        .plot-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            h2 {
-                font-size: 1.6rem;
-            }
-            .back-buttons {
-                flex-direction: column;
-            }
+        .plot-caption {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Inductor Design & Optimization for PSFB Converter</h1>
+        <h1>Inductor Design Analysis (Parametric Method) - Interactive Plots</h1>
 
-        <p>The output filter inductor in a **Phase-shift Full Bridge (PSFB) converter** is crucial for filtering the ripple current and ensuring stable output voltage. This section elaborates on the design considerations and calculations for optimizing the inductor's performance, especially for minimizing losses and maintaining efficiency across varying load conditions.</p>
-
-        <h2>Inductance Value Determination</h2>
-        <p>The inductance value ($L$) is primarily determined by the desired output current ripple ($\Delta I_{out}$) and the switching frequency ($f_s$). A smaller ripple generally requires a larger inductance.</p>
-        
-        <h3>Inductance Calculation</h3>
-        <p>For a continuous conduction mode (CCM) operation, the minimum inductance can be estimated as:</p>
-        <div class="equation-block">
-            $$
-            \mathbf{L_{min}} = \frac{V_{out} \cdot (1 - D_{min})}{f_s \cdot \Delta I_{out, max}}
-            $$
-            <br>
-            Where: <br>
-            $V_{out}$ = Output voltage<br>
-            $D_{min}$ = Minimum effective duty cycle<br>
-            $f_s$ = Switching frequency<br>
-            $\Delta I_{out, max}$ = Maximum allowable output ripple current.
-        </div>
-        <p>We typically choose an inductance value slightly higher than the minimum to provide a buffer and ensure CCM operation over a wider range.</p>
-
-        <h2>Core Material and Geometry</h2>
-        <p>Similar to transformers, the core material significantly impacts inductor performance. For inductors, materials like **powdered iron cores** (e.g., Sendust, MPP, High Flux) are often used due to their distributed air gap, which allows for higher energy storage capability before saturation. Ferrite cores with discrete air gaps are also common.</p>
-        <p><strong>Core Geometry:</strong> Toroids and E-cores are common choices. Toroidal inductors offer good self-shielding, while E-cores are easier to wind and allow for adjustable air gaps.</p>
-        <img src="https://via.placeholder.com/800x300?text=Inductor+Core+Example" alt="Inductor Core Example">
-        <p><em>An example of a toroidal core used for inductor design.</em></p>
-
-        <h2>Winding Design & Current Handling</h2>
-        <p>The winding design involves selecting the appropriate wire gauge and number of turns to achieve the desired inductance while minimizing copper losses and ensuring thermal stability. Litz wire is often used for higher frequencies to mitigate skin and proximity effects.</p>
-
-        <h3>Number of Turns ($N$)</h3>
-        <p>The number of turns for a given inductance ($L$) and core material ($A_L$ value or permeability $\mu_e$) can be calculated as:</p>
-        <div class="equation-block">
-            $$
-            \mathbf{N} = \sqrt{\frac{L}{A_L}} \quad \text{or} \quad \mathbf{N} = \sqrt{\frac{L \cdot l_e}{\mu_0 \mu_e A_e}}
-            $$
-            <br>
-            Where: <br>
-            $L$ = Desired inductance<br>
-            $A_L$ = Inductance factor (specific to core material and geometry)<br>
-            $l_e$ = Effective magnetic path length<br>
-            $\mu_0$ = Permeability of free space<br>
-            $\mu_e$ = Effective permeability of the core<br>
-            $A_e$ = Effective cross-sectional area of the core.
+        <div class="note">
+            <h3>Important Note: Generating & Displaying Plots</h3>
+            <p>
+                The plots for this analysis are generated by the provided MATLAB code.
+                To view them on this webpage, you must first run the MATLAB script yourself.
+                After running the script, save each generated figure as an image file (e.g., PNG, JPEG).
+                It is **highly recommended** to save them to a subfolder named `images/` within your website's directory.
+                Then, update the `src` attributes of the `<img>` tags below to point to the correct paths of your saved image files.
+            </p>
+            <p>
+                For example, if you save `figure1.png` in the `images` folder, the `src` for Figure 1 should be `src="images/figure1.png"`.
+            </p>
+            <p>
+                Use the checkboxes below to toggle the visibility of each plot.
+            </p>
         </div>
 
-        <h2>Inductor Losses</h2>
-        <p>Inductor losses primarily include **core losses** (from the AC flux swing) and **copper losses** (from the DC and AC currents in the windings). Designing for minimal losses involves balancing these two components.</p>
-        <div class="equation-block">
-            <strong>Core Loss:</strong>
-            $$
-            \mathbf{P_{core}} = k \cdot f^{\alpha} \cdot B_{ac}^{\beta} \cdot V_e
-            $$
-            Where $k, \alpha, \beta$ are Steinmetz coefficients, $f$ is frequency, $B_{ac}$ is AC flux density swing, and $V_e$ is effective core volume.
-            <br><br>
-            <strong>Copper Loss:</strong>
-            $$
-            \mathbf{P_{copper}} = (I_{dc,rms}^2 + I_{ac,rms}^2) \cdot R_{dc} + P_{eddy}
-            $$
-            Where $I_{dc,rms}$ is DC RMS current, $I_{ac,rms}$ is AC RMS current, $R_{dc}$ is DC resistance, and $P_{eddy}$ accounts for eddy current losses due to skin and proximity effects.
-        </div>
-        <p>We use simulation tools like PSIM and LTspice to verify the inductor's performance under dynamic conditions and to analyze thermal behavior. Adjustments to core size, air gap, and winding details are made iteratively until optimal performance is achieved.</p>
+        <h2>Steinmetz Parameters (Calculated)</h2>
+        <p>These parameters are calculated based on the input frequency (100 kHz):</p>
+        <ul>
+            <li>$\alpha = 1.07816$</li>
+            <li>$\beta = 2.92017$</li>
+            <li>$k = 0.16491$</li>
+        </ul>
 
-        <h2>Validation and Measurement</h2>
-        <p>Prototypes of the inductor are built and tested in the laboratory using impedance analyzers and power loss measurement equipment. The measured inductance, Q-factor, and temperature rise are compared against the design targets and simulation results to ensure accuracy and reliability.</p>
-        <img src="https://via.placeholder.com/800x400?text=Inductor+Test+Setup" alt="Inductor Test Setup">
-        <p><em>Testing the prototype inductor to validate design parameters.</em></p>
+        <div class="section-separator"></div>
 
-        <div class="back-buttons">
-            <a href="master_thesis_details.html">← Back to Thesis Details</a>
-            <a href="index.html" class="main-portfolio">Back to Main Portfolio</a>
+        <h2>Inductor Design: Parametric Sweep and Optimization</h2>
+        <p>This method involves sweeping through core diameters and solving for the optimal air gap and number of turns. It then analyzes associated losses and core volume to identify a design point that balances these factors.</p>
+
+        <h3>Optimization Results: Closest Point to Normalized Intersection</h3>
+        <p>The MATLAB script identifies a design point that aims to minimize total loss while considering core volume. This is represented by the "closest point" on the total loss ($P$) versus core volume ($V_c$) curve to an idealized intersection of minimal loss and maximal volume.</p>
+        <ul>
+            <li><strong>Closest Total Loss (P):</strong> [Calculated P in Watts] W</li>
+            <li><strong>Closest Core Volume ($V_c$):</strong> [Calculated Vc in cm³] cm³</li>
+            <li><strong>Closest Number of Turns (N):</strong> [Calculated N]</li>
+        </ul>
+
+        <h3>Summary of Key Parameters at N ≈ 12 Turns</h3>
+        <p>A specific design point where the calculated number of turns ($N$) is approximately 12 is highlighted for detailed examination:</p>
+        <ul>
+            <li><strong>Window Area ($A_w$):</strong> [Calculated Aw] mm²</li>
+            <li><strong>Core Diameter ($D_c$):</strong> [Calculated Dc] mm</li>
+            <li><strong>Air Gap ($l_g$):</strong> [Calculated eg] mm</li>
+            <li><strong>Cross Sectional Area (A):</strong> [Calculated A] mm²</li>
+            <li><strong>Inductance ($L_1$):</strong> [Calculated L1] μH</li>
+            <li><strong>Core Volume ($V_c$):):</strong> [Calculated Vc] cm³</li>
+            <li><strong>Core Loss ($P_{core}$):</strong> [Calculated Pin] W</li>
+            <li><strong>Copper Loss ($P_w$):</strong> [Calculated Pw] W</li>
+            <li><strong>Total Loss (P):</strong> [Calculated P] W</li>
+        </ul>
+        <p><strong>Note:</strong> The MATLAB script explicitly states, "The core is R22/6/6 with an air gap of 0.867mm", suggesting this is a target or example core for the conditions at N=12.</p>
+
+        <h3>Extremes of Air Gap</h3>
+        <ul>
+            <li><strong>Minimum Air Gap:</strong> [Calculated eg_min] mm at N = [Calculated N at eg_min], Dc = [Calculated Dc at eg_min] mm</li>
+            <li><strong>Maximum Air Gap:</strong> [Calculated eg_max] mm at N = [Calculated N at eg_max], Dc = [Calculated Dc at eg_max] mm</li>
+            <li><strong>Core Diameter ($D_c$) at N = 12:</strong> [Calculated Dc_at_N12] mm</li>
+        </ul>
+
+        <h3>Window Area ($A_w$) Extremes</h3>
+        <ul>
+            <li><strong>Window Area ($A_w$) at N = 12:</strong> [Calculated Aw_at_N12] mm²</li>
+            <li><strong>Minimum Window Area ($A_w$):</strong> [Calculated Aw_min] mm²</li>
+            <li><strong>Maximum Window Area ($A_w$):</strong> [Calculated Aw_max] mm²</li>
+        </ul>
+
+        <div class="section-separator"></div>
+
+        <h2>Interactive Plots</h2>
+        <p>Select the plots you wish to view:</p>
+
+        <div class="plot-controls">
+            <h3>Plot Visibility Controls:</h3>
+            <label><input type="checkbox" data-plot-id="plot1"> Figure 1: N vs. Air Gap ($l_g$)</label>
+            <label><input type="checkbox" data-plot-id="plot2"> Figure 2: Core Area (A) vs. Air Gap ($l_g$)</label>
+            <label><input type="checkbox" data-plot-id="plot3"> Figure 3: 1/N vs. Air Gap ($l_g$)</label>
+            <label><input type="checkbox" data-plot-id="plot4"> Figure 4: Core Area (A) vs. Number of Turns (N)</label>
+            <label><input type="checkbox" data-plot-id="plot5"> Figure 5: Total Loss (P) vs. Core Volume ($V_c$) with Optimal Point</label>
+            <label><input type="checkbox" data-plot-id="plot6"> Figure 6: Number of Turns (N) vs. Core Volume ($V_c$) with Optimal Point</label>
+            <label><input type="checkbox" data-plot-id="plot7"> Figure 7: Real Inductance ($L_1$) vs. Cross Section (A)</label>
+            <label><input type="checkbox" data-plot-id="plot8"> Figure 8: Real Flux Density ($B_1$) vs. Cross Section (A)</label>
+            <label><input type="checkbox" data-plot-id="plot9"> Figure 9: Magnetic Energy ($E_m$) vs. Electrical Energy ($E_L$) vs. Cross Section (A)</label>
+            <label><input type="checkbox" data-plot-id="plot11"> Figure 11: Total Loss (P) vs. N and A (Dual Axis)</label>
+            <label><input type="checkbox" data-plot-id="plot10"> Figure 10: Core Volume ($V_c$) vs. N and A (Dual Axis)</label>
+            <label><input type="checkbox" data-plot-id="plot_aw_vs_n"> Window Area ($A_w$) vs. Number of Turns (N)</label>
+            <label><input type="checkbox" data-plot-id="plot_dc_vs_n"> Core Diameter ($D_c$) vs. Number of Turns (N)</label>
+            <label><input type="checkbox" data-plot-id="plot_l_vs_lg"> Inductance ($L$) vs. Air Gap ($l_g$)</label>
+            <label><input type="checkbox" data-plot-id="plot_l_vs_dc"> Inductance ($L$) vs. Core Diameter ($D_c$)</label>
         </div>
+
+        <div id="plot1" class="plot-container">
+            <img src="images/figure1.png" alt="Figure 1: Number of Turns (N) vs. Air Gap (lg)">
+            <p class="plot-caption"><strong>Figure 1:</strong> Number of Turns (N) vs. Air Gap ($l_g$).</p>
+        </div>
+
+        <div id="plot2" class="plot-container">
+            <img src="images/figure2.png" alt="Figure 2: Core Area (A) vs. Air Gap (lg)">
+            <p class="plot-caption"><strong>Figure 2:</strong> Core Area (A) vs. Air Gap ($l_g$).</p>
+        </div>
+
+        <div id="plot3" class="plot-container">
+            <img src="images/figure3.png" alt="Figure 3: 1/N vs. Air Gap (lg)">
+            <p class="plot-caption"><strong>Figure 3:</strong> 1/N vs. Air Gap ($l_g$).</p>
+        </div>
+
+        <div id="plot4" class="plot-container">
+            <img src="images/figure4.png" alt="Figure 4: Core Area (A) vs. Number of Turns (N)">
+            <p class="plot-caption"><strong>Figure 4:</strong> Core Area (A) vs. Number of Turns (N).</p>
+        </div>
+
+        <div id="plot5" class="plot-container">
+            <img src="images/figure5.png" alt="Figure 5: Total Loss (P) vs. Core Volume (Vc) with Optimal Point">
+            <p class="plot-caption"><strong>Figure 5:</strong> Total Loss (P) vs. Core Volume ($V_c$) with Optimal Point. This plot highlights the closest point on the curve to the normalized intersection of maximum volume and minimum loss.</p>
+        </div>
+
+        <div id="plot6" class="plot-container">
+            <img src="images/figure6.png" alt="Figure 6: Number of Turns (N) vs. Core Volume (Vc) with Optimal Point">
+            <p class="plot-caption"><strong>Figure 6:</strong> Number of Turns (N) vs. Core Volume ($V_c$) with Optimal Point. This plot shows how core volume varies with turns, marking the optimal design point found.</p>
+        </div>
+
+        <div id="plot7" class="plot-container">
+            <img src="images/figure7.png" alt="Figure 7: Real Inductance (L1) vs. Cross Section (A) with Target Inductance">
+            <p class="plot-caption"><strong>Figure 7:</strong> Real Inductance ($L_1$) vs. Cross Section (A) with Target Inductance. Compares the calculated inductance to the target inductance.</p>
+        </div>
+
+        <div id="plot8" class="plot-container">
+            <img src="images/figure8.png" alt="Figure 8: Real Flux Density (B1) vs. Cross Section (A) with Target Flux Density">
+            <p class="plot-caption"><strong>Figure 8:</strong> Real Flux Density ($B_1$) vs. Cross Section (A) with Target Flux Density. Shows calculated flux density against the target flux density.</p>
+        </div>
+
+        <div id="plot9" class="plot-container">
+            <img src="images/figure9.png" alt="Figure 9: Magnetic Energy (Em) vs. Electrical Energy (EL) vs. Cross Section (A)">
+            <p class="plot-caption"><strong>Figure 9:</strong> Magnetic Energy ($E_m$) vs. Electrical Energy ($E_L$) vs. Cross Section (A). Illustrates energy storage characteristics.</p>
+        </div>
+
+        <div id="plot11" class="plot-container">
+            <img src="images/figure11.png" alt="Figure 11: Total Loss (P) vs. Number of Turns (N) and Core Area (A)">
+            <p class="plot-caption"><strong>Figure 11:</strong> Total Loss (P) vs. Number of Turns (N) and Core Area (A). This plot uses a dual y-axis to show the relationship of total loss with both number of turns and core area.</p>
+        </div>
+
+        <div id="plot10" class="plot-container">
+            <img src="images/figure10.png" alt="Figure 10: Core Volume (Vc) vs. Number of Turns (N) and Core Area (A)">
+            <p class="plot-caption"><strong>Figure 10:</strong> Core Volume ($V_c$) vs. Number of Turns (N) and Core Area (A). A dual y-axis plot showing how core volume varies with number of turns and core area.</p>
+        </div>
+
+        <div id="plot_aw_vs_n" class="plot-container">
+            <img src="images/aw_vs_n.png" alt="Window Area Aw vs. Number of Turns N">
+            <p class="plot-caption"><strong>Window Area ($A_w$) vs. Number of Turns (N).</strong> This plot highlights the window area at N=12 turns.</p>
+        </div>
+
+        <div id="plot_dc_vs_n" class="plot-container">
+            <img src="images/dc_vs_n.png" alt="Core Diameter Dc vs. Number of Turns N">
+            <p class="plot-caption"><strong>Core Diameter ($D_c$) vs. Number of Turns (N).</strong> Shows the relationship between core diameter and number of turns, with the point at N=12 highlighted.</p>
+        </div>
+
+        <div id="plot_l_vs_lg" class="plot-container">
+            <img src="images/inductance_vs_airgap.png" alt="Inductance vs. Air Gap lg">
+            <p class="plot-caption"><strong>Inductance ($L$) vs. Air Gap ($l_g$).</strong> Plots the inductance as a function of air gap, highlighting the inductance and air gap at N=12 turns.</p>
+        </div>
+
+        <div id="plot_l_vs_dc" class="plot-container">
+            <img src="images/inductance_vs_corediameter.png" alt="Inductance vs. Core Diameter Dc">
+            <p class="plot-caption"><strong>Inductance ($L$) vs. Core Diameter ($D_c$).</strong> Illustrates how inductance varies with core diameter, with the N=12 point highlighted.</p>
+        </div>
+
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.plot-controls input[type="checkbox"]');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const plotId = this.dataset.plotId;
+                    const plotContainer = document.getElementById(plotId);
+                    if (this.checked) {
+                        plotContainer.style.display = 'block';
+                    } else {
+                        plotContainer.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
