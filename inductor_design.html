@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inductor Design | Adarsh Pulimoottil Jolly</title>
+    <link rel="stylesheet" href="styles.css"> <style>
+        /* Specific styles for calculation pages (can also be in main CSS if preferred) */
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #495057;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #0056b3, #17a2b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            color: #0056b3;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(45deg, #0056b3, #17a2b8);
+            border-radius: 3px;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .equation-block {
+            background-color: #e9ecef;
+            border-left: 5px solid #17a2b8;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .equation-block strong {
+            color: #0056b3;
+        }
+
+        ul {
+            list-style: disc;
+            margin-left: 20px;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .back-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 1rem;
+        }
+
+        .back-buttons a {
+            flex: 1;
+            text-align: center;
+            display: block;
+            background: #6c757d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .back-buttons a:hover {
+            background: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .back-buttons .main-portfolio {
+            background: #0056b3;
+        }
+
+        .back-buttons .main-portfolio:hover {
+            background: #003d7a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .back-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inductor Design & Optimization for PSFB Converter</h1>
+
+        <p>The output filter inductor in a **Phase-shift Full Bridge (PSFB) converter** is crucial for filtering the ripple current and ensuring stable output voltage. This section elaborates on the design considerations and calculations for optimizing the inductor's performance, especially for minimizing losses and maintaining efficiency across varying load conditions.</p>
+
+        <h2>Inductance Value Determination</h2>
+        <p>The inductance value ($L$) is primarily determined by the desired output current ripple ($\Delta I_{out}$) and the switching frequency ($f_s$). A smaller ripple generally requires a larger inductance.</p>
+        
+        <h3>Inductance Calculation</h3>
+        <p>For a continuous conduction mode (CCM) operation, the minimum inductance can be estimated as:</p>
+        <div class="equation-block">
+            $$
+            \mathbf{L_{min}} = \frac{V_{out} \cdot (1 - D_{min})}{f_s \cdot \Delta I_{out, max}}
+            $$
+            <br>
+            Where: <br>
+            $V_{out}$ = Output voltage<br>
+            $D_{min}$ = Minimum effective duty cycle<br>
+            $f_s$ = Switching frequency<br>
+            $\Delta I_{out, max}$ = Maximum allowable output ripple current.
+        </div>
+        <p>We typically choose an inductance value slightly higher than the minimum to provide a buffer and ensure CCM operation over a wider range.</p>
+
+        <h2>Core Material and Geometry</h2>
+        <p>Similar to transformers, the core material significantly impacts inductor performance. For inductors, materials like **powdered iron cores** (e.g., Sendust, MPP, High Flux) are often used due to their distributed air gap, which allows for higher energy storage capability before saturation. Ferrite cores with discrete air gaps are also common.</p>
+        <p><strong>Core Geometry:</strong> Toroids and E-cores are common choices. Toroidal inductors offer good self-shielding, while E-cores are easier to wind and allow for adjustable air gaps.</p>
+        <img src="https://via.placeholder.com/800x300?text=Inductor+Core+Example" alt="Inductor Core Example">
+        <p><em>An example of a toroidal core used for inductor design.</em></p>
+
+        <h2>Winding Design & Current Handling</h2>
+        <p>The winding design involves selecting the appropriate wire gauge and number of turns to achieve the desired inductance while minimizing copper losses and ensuring thermal stability. Litz wire is often used for higher frequencies to mitigate skin and proximity effects.</p>
+
+        <h3>Number of Turns ($N$)</h3>
+        <p>The number of turns for a given inductance ($L$) and core material ($A_L$ value or permeability $\mu_e$) can be calculated as:</p>
+        <div class="equation-block">
+            $$
+            \mathbf{N} = \sqrt{\frac{L}{A_L}} \quad \text{or} \quad \mathbf{N} = \sqrt{\frac{L \cdot l_e}{\mu_0 \mu_e A_e}}
+            $$
+            <br>
+            Where: <br>
+            $L$ = Desired inductance<br>
+            $A_L$ = Inductance factor (specific to core material and geometry)<br>
+            $l_e$ = Effective magnetic path length<br>
+            $\mu_0$ = Permeability of free space<br>
+            $\mu_e$ = Effective permeability of the core<br>
+            $A_e$ = Effective cross-sectional area of the core.
+        </div>
+
+        <h2>Inductor Losses</h2>
+        <p>Inductor losses primarily include **core losses** (from the AC flux swing) and **copper losses** (from the DC and AC currents in the windings). Designing for minimal losses involves balancing these two components.</p>
+        <div class="equation-block">
+            <strong>Core Loss:</strong>
+            $$
+            \mathbf{P_{core}} = k \cdot f^{\alpha} \cdot B_{ac}^{\beta} \cdot V_e
+            $$
+            Where $k, \alpha, \beta$ are Steinmetz coefficients, $f$ is frequency, $B_{ac}$ is AC flux density swing, and $V_e$ is effective core volume.
+            <br><br>
+            <strong>Copper Loss:</strong>
+            $$
+            \mathbf{P_{copper}} = (I_{dc,rms}^2 + I_{ac,rms}^2) \cdot R_{dc} + P_{eddy}
+            $$
+            Where $I_{dc,rms}$ is DC RMS current, $I_{ac,rms}$ is AC RMS current, $R_{dc}$ is DC resistance, and $P_{eddy}$ accounts for eddy current losses due to skin and proximity effects.
+        </div>
+        <p>We use simulation tools like PSIM and LTspice to verify the inductor's performance under dynamic conditions and to analyze thermal behavior. Adjustments to core size, air gap, and winding details are made iteratively until optimal performance is achieved.</p>
+
+        <h2>Validation and Measurement</h2>
+        <p>Prototypes of the inductor are built and tested in the laboratory using impedance analyzers and power loss measurement equipment. The measured inductance, Q-factor, and temperature rise are compared against the design targets and simulation results to ensure accuracy and reliability.</p>
+        <img src="https://via.placeholder.com/800x400?text=Inductor+Test+Setup" alt="Inductor Test Setup">
+        <p><em>Testing the prototype inductor to validate design parameters.</em></p>
+
+        <div class="back-buttons">
+            <a href="master_thesis_details.html">← Back to Thesis Details</a>
+            <a href="index.html" class="main-portfolio">Back to Main Portfolio</a>
+        </div>
+    </div>
+</body>
+</html>
