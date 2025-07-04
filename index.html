@@ -54,9 +54,24 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            object-fit: cover;
             border: 4px solid var(--primary-color);
             margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: var(--transition);
+            animation: float 3s ease-in-out infinite;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-pic-placeholder {
+            width: 100%;
+            height: 100%;
             background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             display: flex;
             align-items: center;
@@ -64,9 +79,6 @@
             font-size: 3rem;
             color: white;
             font-weight: bold;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            transition: var(--transition);
-            animation: float 3s ease-in-out infinite;
         }
         
         @keyframes float {
@@ -121,6 +133,7 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         
         .nav-links a::before {
@@ -233,6 +246,17 @@
             margin-right: 1rem;
             color: var(--accent-color);
             font-size: 1.2rem;
+        }
+        
+        .contact-info a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .contact-info a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
         }
         
         /* Education Timeline */
@@ -654,7 +678,11 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="profile-pic">APJ</div>
+            <div class="profile-pic">
+                <!-- Replace this with your actual image -->
+                <!-- <img src="your-photo.jpg" alt="Adarsh Pulimoottil Jolly"> -->
+                <div class="profile-pic-placeholder">APJ</div>
+            </div>
             <div class="header-text">
                 <h1>Adarsh Pulimoottil Jolly</h1>
                 <p>Power Electronics Engineer | DC-DC Converters Specialist</p>
@@ -664,12 +692,12 @@
 
     <nav>
         <ul class="nav-links">
-            <li><a href="#about" class="nav-link active">About</a></li>
-            <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#publications" class="nav-link">Publications</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="#about" class="nav-link active" onclick="showSection('about')">About</a></li>
+            <li><a href="#education" class="nav-link" onclick="showSection('education')">Education</a></li>
+            <li><a href="#skills" class="nav-link" onclick="showSection('skills')">Skills</a></li>
+            <li><a href="#projects" class="nav-link" onclick="showSection('projects')">Projects</a></li>
+            <li><a href="#publications" class="nav-link" onclick="showSection('publications')">Publications</a></li>
+            <li><a href="#contact" class="nav-link" onclick="showSection('contact')">Contact</a></li>
         </ul>
     </nav>
 
@@ -685,8 +713,8 @@
                 </div>
                 <div class="contact-info">
                     <h3>Get in Touch</h3>
-                    <p><span class="icon">📧</span> adarshjolly245@gmail.com</p>
-                    <p><span class="icon">💼</span> linkedin.com/in/adarshp-j</p>
+                    <p><span class="icon">📧</span> <a href="mailto:adarshjolly245@gmail.com">adarshjolly245@gmail.com</a></p>
+                    <p><span class="icon">💼</span> <a href="https://linkedin.com/in/adarshp-j" target="_blank">linkedin.com/in/adarshp-j</a></p>
                     <p><span class="icon">📍</span> Available for opportunities</p>
                     <p><span class="icon">🎓</span> Master's in Power Electronics</p>
                 </div>
@@ -825,23 +853,4 @@
                     <div class="project-image">PCB Design</div>
                     <div class="project-info">
                         <h3>Advanced PCB Design for Temperature Measurement</h3>
-                        <p>Designed and assembled precision PCBs for temperature measurement systems using ESP32 microcontrollers. Implemented advanced two-layer PCB layout techniques to minimize electromagnetic interference and optimize signal integrity.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">PCB Design</span>
-                            <span class="project-tag">ESP32</span>
-                            <span class="project-tag">EMI Reduction</span>
-                            <span class="project-tag">Signal Integrity</span>
-                        </div>
-                        <a href="#" class="project-view-btn">View Details</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">Semiconductor Fab</div>
-                    <div class="project-info">
-                        <h3>Semiconductor Device Fabrication</h3>
-                        <p>Fabricated P-N junction diodes in a controlled clean room environment using advanced semiconductor processing techniques. Conducted comprehensive IV and CV measurements for detailed device characterization and performance analysis.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">Semiconductor</span>
-                            <span class="project-tag">P-N Junction</span>
-                            <span class="project-tag">Clean Room</span>
-                            <span class="project-tag">Device
+                        <p>Designed and assembled precision PCBs for temperature measurement systems using ESP32 microcontrollers. Implemented advanced two-layer PC
