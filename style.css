@@ -104,6 +104,13 @@ header {
 /* The previous correction where this comment was refers to a rule that was explicitly hiding the image.
    It's good that it's commented out now. */
 
+/* THIS IS THE CHANGE: The rule that was hiding your image is now commented out below. */
+/*
+.profile-pic img[src="APJ.jpg"] {
+     display: none;
+}
+*/
+
 
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
