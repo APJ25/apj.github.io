@@ -65,6 +65,7 @@
             margin-top: 2rem;
             min-height: 400px; /* Ensure plot div has height */
             display: flex;
+            flex-direction: column; /* Allow content to stack */
             justify-content: center;
             align-items: center;
             position: relative; /* For loading indicator */
@@ -183,6 +184,13 @@
         .back-to-portfolio-btn:hover {
             background-color: #5a6268;
             transform: translateY(-2px);
+        }
+        /* Specific style for Plotly graph div within plot-container */
+        #plot-area {
+            width: 100%;
+            height: 100%;
+            min-height: 350px; /* Ensure Plotly takes up space */
+            flex-grow: 1; /* Allow it to grow */
         }
     </style>
 </head>
@@ -354,11 +362,12 @@
             <button id="calculateInductorButton" class="btn">Calculate and Plot Inductor</button>
         </div>
 
-        <div id="inductorPlotDiv" class="plot-container">
+        <div id="inductorPlotContainer" class="plot-container">
             <div class="loading-overlay hidden" id="inductorLoadingOverlay">
                 <div class="spinner"></div>
             </div>
-            <p class="text-gray-500">Enter inductor parameters and click 'Calculate and Plot Inductor' to see results.</p>
+            <div id="plot-area" style="min-height: 350px;"></div>
+            <p id="inductorPlotDescription" class="plot-description"></p>
         </div>
 
         <div id="inductorDesignSummaryContainer" class="mt-8">
@@ -416,7 +425,9 @@
         function calculateInductorDesign() {
             // Show loading overlay
             document.getElementById('inductorLoadingOverlay').classList.remove('hidden');
-            document.getElementById('inductorPlotDiv').innerHTML = '<p class="text-gray-500">Calculating...</p>'; // Clear previous plot/message
+            // Clear previous plot and description area
+            document.getElementById('plot-area').innerHTML = ''; 
+            document.getElementById('inductorPlotDescription').textContent = '';
 
             // Read input values
             const f = parseFloat(document.getElementById('inductorFrequency').value);
@@ -434,11 +445,7 @@
             const Beta = (a1 * Math.pow(f, b1) + c1);
             const k = a3 * Math.pow(f, b3) + c3;
 
-            // Generate Dc values (linear interpolation as pchip is complex)
-            const Dc_coarse = [];
-            for (let val = Dc_coarse_start; val <= Dc_coarse_end; val += 0.5e-3) {
-                Dc_coarse.push(val);
-            }
+            // Generate Dc values (linear interpolation)
             const Dc = [];
             for (let i = 0; i < s; i++) {
                 const ratio = i / (s - 1);
@@ -458,67 +465,100 @@
             const Pin = new Array(s);
             const Pw = new Array(s);
             const P = new Array(s);
+            const Aw = new Array(s);
+            const Le = new Array(s);
+            const lm = new Array(s);
+            const DCR = new Array(s);
 
-            const Sp = I / 4.5 * 1e-6; // Defined outside loop in MATLAB context
+            const Sp = I / 4.5 * 1e-6; // Defined outside loop, as per MATLAB logic
 
             for (let i = 0; i < s; i++) {
+                // Step 1: Calculate core area
                 A[i] = Math.PI * Dc[i]**2 / 4;
 
-                // Solving for eg and N (simplified from MATLAB's 'solve' based on lc=0)
-                // From eq1: eg = uo * N * I / B
-                // From eq2: uo * ur * A * N^2 / (lc + ur * eg) = L
-                // Substituting eg into eq2 (with lc=0): uo * ur * A * N^2 / (ur * uo * N * I / B) = L
-                // Simplifies to: A * N * B / I = L
-                // So, N = L * I / (A * B)
-                // And eg = uo * (L * I / (A * B)) * I / B = uo * L * I^2 / (A * B^2)
-                
-                // Check for division by zero or invalid inputs
+                // Step 2: Calculate N and eg based on simplified equations
+                // Checks for division by zero before calculating N and eg
                 if (A[i] === 0 || B_target === 0 || L_target === 0 || I === 0) {
-                    valueOfeg[i] = NaN;
                     valueOfN[i] = NaN;
-                    // Set other dependent values to NaN as well
-                    Aw[i] = NaN; Le[i] = NaN; lm[i] = NaN; DCR[i] = NaN;
-                    L1[i] = NaN; B1[i] = NaN; Ee[i] = NaN; Em[i] = NaN;
-                    Vc[i] = NaN; Bac[i] = NaN; Pin[i] = NaN; Pw[i] = NaN; P[i] = NaN;
-                    continue; // Skip to next iteration
+                    valueOfeg[i] = NaN;
+                } else {
+                    valueOfN[i] = (L_target * I) / (A[i] * B_target);
+                    valueOfeg[i] = (uo * L_target * I**2) / (A[i] * B_target**2);
                 }
 
-                valueOfN[i] = (L_target * I) / (A[i] * B_target);
-                valueOfeg[i] = (uo * L_target * I**2) / (A[i] * B_target**2);
+                // Initial robust check for NaN/Infinity/negative values immediately after N and eg
+                if (!Number.isFinite(valueOfN[i]) || !Number.isFinite(valueOfeg[i]) || valueOfN[i] < 0 || valueOfeg[i] < 0) {
+                    // Set all results for this point to NaN so it's filtered out later
+                    valueOfN[i] = NaN; valueOfeg[i] = NaN; A[i] = NaN; L1[i] = NaN;
+                    Ee[i] = NaN; B1[i] = NaN; Em[i] = NaN; Vc[i] = NaN;
+                    Bac[i] = NaN; Pin[i] = NaN; Pw[i] = NaN; P[i] = NaN;
+                    Aw[i] = NaN; Le[i] = NaN; lm[i] = NaN; DCR[i] = NaN;
+                    continue; // Skip remaining calculations for this iteration
+                }
 
-                // Ensure non-negative values for physical quantities
-                if (valueOfN[i] < 0) valueOfN[i] = 0;
-                if (valueOfeg[i] < 0) valueOfeg[i] = 0;
-                
+                // Step 3: Calculate Aw (Window Area)
                 Aw[i] = valueOfN[i] * (I / 4.5 * 1e-6) / 0.78;
-                
-                // Handle potential NaN from sqrt(negative)
+                if (!Number.isFinite(Aw[i]) || Aw[i] < 0) Aw[i] = NaN;
+
+                // Step 4: Calculate Le (Effective Length of Winding)
                 let sqrt_term = 4 * Aw[i] / (0.78 * Math.PI);
-                if (sqrt_term < 0) sqrt_term = 0; // Prevent NaN for sqrt of negative
+                if (sqrt_term < 0 || isNaN(sqrt_term)) sqrt_term = 0; // Handle negative or NaN for sqrt input
                 Le[i] = Math.PI * (Math.sqrt(sqrt_term) + (Dc[i] / 2));
-                
+                if (!Number.isFinite(Le[i])) Le[i] = NaN;
+
+                // Step 5: Calculate DCR (DC Resistance)
                 lm[i] = valueOfN[i] * Math.PI * Dc[i];
-                DCR[i] = rau * lm[i] / Sp;
+                if (Sp === 0) DCR[i] = NaN; // Prevent Infinity if Sp is zero
+                else DCR[i] = rau * lm[i] / Sp;
+                if (!Number.isFinite(DCR[i])) DCR[i] = NaN;
 
-                L1[i] = (uo * ur * valueOfN[i]**2 * A[i]) / (Le[i] + ur * valueOfeg[i]);
-                B1[i] = (L1[i] * I) / (valueOfN[i] * A[i]);
+                // Step 6: Recalculate L1 (actual Inductance with calculated eg)
+                const L1_denom = (Le[i] + ur * valueOfeg[i]);
+                if (L1_denom === 0) L1[i] = NaN; // Prevent Infinity
+                else L1[i] = (uo * ur * valueOfN[i]**2 * A[i]) / L1_denom;
+                if (!Number.isFinite(L1[i])) L1[i] = NaN;
 
+                // Step 7: Calculate B1 (Actual Flux Density)
+                const B1_denom = (valueOfN[i] * A[i]);
+                if (B1_denom === 0) B1[i] = NaN; // Prevent Infinity
+                else B1[i] = (L1[i] * I) / B1_denom;
+                if (!Number.isFinite(B1[i])) B1[i] = NaN;
+
+                // Step 8: Calculate Energies Ee, Em and Core Volume Vc
                 Ee[i] = 1e6 * 0.5 * L1[i] * I**2;
                 Em[i] = 1e6 * 0.5 * B1[i]**2 * A[i] * valueOfeg[i] / uo;
                 Vc[i] = Le[i] * A[i] * 1e6;
-                Bac[i] = B1[i] * 0.2; // This 0.2 factor is from MATLAB, representing peak-to-peak AC flux density swing
+                if (!Number.isFinite(Ee[i])) Ee[i] = NaN;
+                if (!Number.isFinite(Em[i])) Em[i] = NaN;
+                if (!Number.isFinite(Vc[i])) Vc[i] = NaN;
 
-                // Ensure Bac is non-negative for power calculation
-                if (Bac[i] < 0) Bac[i] = 0;
-                Pin[i] = 1000 * k * Math.pow(f, alpha) * Math.pow(Bac[i], Beta) * Vc[i] * 1e-6;
+                // Step 9: Calculate Core Loss (Pin)
+                Bac[i] = B1[i] * 0.2;
+                if (Bac[i] < 0 || isNaN(Bac[i])) Bac[i] = 0; // Prevent Math.pow(negative, non-integer) or Math.pow(NaN, ...)
+                
+                // Ensure k, f, alpha, Beta are valid and finite for Pin calculation
+                if (!Number.isFinite(k) || !Number.isFinite(f) || !Number.isFinite(alpha) || !Number.isFinite(Beta) || !Number.isFinite(Vc[i])) {
+                    Pin[i] = NaN;
+                } else {
+                    Pin[i] = 1000 * k * Math.pow(f, alpha) * Math.pow(Bac[i], Beta) * Vc[i] * 1e-6;
+                }
+                if (!Number.isFinite(Pin[i])) Pin[i] = NaN;
+
+                // Step 10: Calculate Copper Loss (Pw) and Total Loss (P)
                 Pw[i] = DCR[i] * I**2;
                 P[i] = Pw[i] + Pin[i];
+                if (!Number.isFinite(Pw[i])) Pw[i] = NaN;
+                if (!Number.isFinite(P[i])) P[i] = NaN;
             }
 
             // Filter out NaN values for plotting and calculations
             const filteredData = [];
             for(let i = 0; i < s; i++) {
-                if (!isNaN(valueOfN[i]) && !isNaN(valueOfeg[i]) && !isNaN(A[i]) && !isNaN(L1[i]) && !isNaN(Ee[i]) && !isNaN(B1[i]) && !isNaN(Em[i]) && !isNaN(Vc[i]) && !isNaN(Bac[i]) && !isNaN(Pin[i]) && !isNaN(Pw[i]) && !isNaN(P[i])) {
+                // Only include points where all core derived values are finite numbers
+                if (Number.isFinite(valueOfN[i]) && Number.isFinite(valueOfeg[i]) && Number.isFinite(A[i]) && 
+                    Number.isFinite(L1[i]) && Number.isFinite(Ee[i]) && Number.isFinite(B1[i]) && 
+                    Number.isFinite(Em[i]) && Number.isFinite(Vc[i]) && Number.isFinite(Bac[i]) && 
+                    Number.isFinite(Pin[i]) && Number.isFinite(Pw[i]) && Number.isFinite(P[i]) && Number.isFinite(Aw[i])) {
                     filteredData.push({
                         Dc: Dc[i],
                         valueOfeg: valueOfeg[i],
@@ -555,8 +595,17 @@
             const finalAw = filteredData.map(d => d.Aw);
 
             // === Normalize values ===
-            const P_norm = finalP.length > 0 ? finalP.map(val => (val - Math.min(...finalP)) / (Math.max(...finalP) - Math.min(...finalP))) : [];
-            const Vc_norm = finalVc.length > 0 ? finalVc.map(val => (val - Math.min(...finalVc)) / (Math.max(...finalVc) - Math.min(...finalVc))) : [];
+            // Ensure arrays are not empty before min/max calculations to prevent errors
+            const P_min = finalP.length > 0 ? Math.min(...finalP) : 0;
+            const P_max = finalP.length > 0 ? Math.max(...finalP) : 0;
+            const P_range = P_max - P_min;
+            const P_norm = P_range > 0 ? finalP.map(val => (val - P_min) / P_range) : finalP.map(() => 0); // Handle zero range
+
+            const Vc_min = finalVc.length > 0 ? Math.min(...finalVc) : 0;
+            const Vc_max = finalVc.length > 0 ? Math.max(...finalVc) : 0;
+            const Vc_range = Vc_max - Vc_min;
+            const Vc_norm = Vc_range > 0 ? finalVc.map(val => (val - Vc_min) / Vc_range) : finalVc.map(() => 0); // Handle zero range
+
 
             // === Find intersection point for P vs Vc ===
             let idx_maxVc = -1, idx_minVc = -1;
@@ -573,12 +622,12 @@
 
             // === Compute closest point ===
             let closest_P = NaN, closest_Vc = NaN, closest_N = NaN;
-            if (P_norm.length > 0 && Vc_norm.length > 0) {
+            if (P_norm.length > 0 && Vc_norm.length > 0 && Number.isFinite(x_intersect) && Number.isFinite(y_intersect)) {
                 let min_distance = Infinity;
                 let idx_closest = -1;
 
                 for (let i = 0; i < P_norm.length; i++) {
-                    if (!isNaN(P_norm[i]) && !isNaN(Vc_norm[i]) && !isNaN(x_intersect) && !isNaN(y_intersect)) {
+                    if (Number.isFinite(P_norm[i]) && Number.isFinite(Vc_norm[i])) { // Ensure points are valid
                         const dist = Math.sqrt(Math.pow(P_norm[i] - x_intersect, 2) + Math.pow(Vc_norm[i] - y_intersect, 2));
                         if (dist < min_distance) {
                             min_distance = dist;
@@ -598,10 +647,12 @@
             if (finalValueOfN.length > 0) {
                 let min_diff = Infinity;
                 for (let i = 0; i < finalValueOfN.length; i++) {
-                    const diff = Math.abs(finalValueOfN[i] - 12);
-                    if (diff < min_diff) {
-                        min_diff = diff;
-                        idx_N12 = i;
+                    if (Number.isFinite(finalValueOfN[i])) { // Ensure N is finite
+                        const diff = Math.abs(finalValueOfN[i] - 12);
+                        if (diff < min_diff) {
+                            min_diff = diff;
+                            idx_N12 = i;
+                        }
                     }
                 }
             }
@@ -685,15 +736,21 @@
 
         // Function to plot inductor results
         function plotInductorResults(results, plotType) {
-            const plotDiv = document.getElementById('inductorPlotDiv');
+            const plotDiv = document.getElementById('plot-area');
+            const descriptionDiv = document.getElementById('inductorPlotDescription');
             let data = [];
             let layout = {};
             let plotDescription = '';
 
+            // If no valid data points, display a message
             if (!results || results.valueOfN.length === 0) {
-                plotDiv.innerHTML = '<p class="text-gray-500">No data available for plotting. Please adjust inputs and calculate.</p>';
+                plotDiv.innerHTML = '<p class="text-gray-500">No data available for plotting. Please adjust inputs and calculate to generate valid data.</p>';
+                descriptionDiv.textContent = '';
                 return;
             }
+
+            // Clear previous content
+            plotDiv.innerHTML = '';
 
             switch (plotType) {
                 case 'N_vs_lg':
@@ -764,7 +821,7 @@
                         name: 'Total Loss vs. Core Volume',
                         line: { color: 'black', dash: 'dash', width: 3 }
                     });
-                    if (!isNaN(results.closest_P) && !isNaN(results.closest_Vc)) {
+                    if (Number.isFinite(results.closest_P) && Number.isFinite(results.closest_Vc)) {
                         data.push({
                             x: [results.closest_P],
                             y: [results.closest_Vc],
@@ -815,7 +872,7 @@
                         name: 'Turns vs. Core Volume',
                         line: { color: 'red', width: 2 }
                     });
-                    if (!isNaN(results.closest_N) && !isNaN(results.closest_Vc)) {
+                    if (Number.isFinite(results.closest_N) && Number.isFinite(results.closest_Vc)) {
                         data.push({
                             x: [results.closest_N],
                             y: [results.closest_Vc],
@@ -965,7 +1022,7 @@
                         name: 'Window Area vs. N',
                         line: { color: 'magenta', width: 2 }
                     });
-                    if (!isNaN(results.summary_at_N12.N_at_N12) && !isNaN(results.summary_at_N12.Aw_at_N12)) {
+                    if (Number.isFinite(results.summary_at_N12.N_at_N12) && Number.isFinite(results.summary_at_N12.Aw_at_N12)) {
                         data.push({
                             x: [results.summary_at_N12.N_at_N12],
                             y: [results.summary_at_N12.Aw_at_N12],
@@ -990,7 +1047,7 @@
                         name: 'Core Diameter vs. N',
                         line: { color: 'green', width: 2 }
                     });
-                    if (!isNaN(results.summary_at_N12.N_at_N12) && !isNaN(results.summary_at_N12.Dc_at_N12)) {
+                    if (Number.isFinite(results.summary_at_N12.N_at_N12) && Number.isFinite(results.summary_at_N12.Dc_at_N12)) {
                         data.push({
                             x: [results.summary_at_N12.N_at_N12],
                             y: [results.summary_at_N12.Dc_at_N12],
@@ -1008,7 +1065,6 @@
                     plotDescription = 'This plot illustrates how the core diameter changes with the number of turns. This relationship is crucial for selecting an appropriate core size.';
                     break;
                 case 'L_vs_lg':
-                    // L2 in MATLAB was L for N=12, so it's a constant. We plot L1 (real value)
                     data.push({
                         x: results.valueOfeg.map(val => val * 1e3), // mm
                         y: results.L1.map(val => val * 1e6), // uH
@@ -1017,7 +1073,7 @@
                         line: { color: 'black', dash: 'dash', width: 3 }
                     });
                     // Highlight N=12 point if available
-                    if (!isNaN(results.summary_at_N12.eg_at_N12) && !isNaN(results.summary_at_N12.L1_at_N12)) {
+                    if (Number.isFinite(results.summary_at_N12.eg_at_N12) && Number.isFinite(results.summary_at_N12.L1_at_N12)) {
                         data.push({
                             x: [results.summary_at_N12.eg_at_N12],
                             y: [results.summary_at_N12.L1_at_N12],
@@ -1043,7 +1099,7 @@
                         line: { color: 'blue', width: 2 }
                     });
                     // Highlight N=12 point if available
-                    if (!isNaN(results.summary_at_N12.Dc_at_N12) && !isNaN(results.summary_at_N12.L1_at_N12)) {
+                    if (Number.isFinite(results.summary_at_N12.Dc_at_N12) && Number.isFinite(results.summary_at_N12.L1_at_N12)) {
                         data.push({
                             x: [results.summary_at_N12.Dc_at_N12],
                             y: [results.summary_at_N12.L1_at_N12],
@@ -1062,12 +1118,12 @@
                     break;
                 default:
                     plotDiv.innerHTML = '<p class="text-gray-500">Select a plot type from the dropdown.</p>';
+                    descriptionDiv.textContent = '';
                     return;
             }
 
             Plotly.newPlot(plotDiv, data, layout, { responsive: true });
-            // Add plot description below the plot
-            plotDiv.insertAdjacentHTML('afterend', `<p class="plot-description">${plotDescription}</p>`);
+            descriptionDiv.textContent = plotDescription;
         }
 
         // Event Listeners
@@ -1079,4 +1135,5 @@
         });
 
         // Initial calculation and plot on page load
-        document.addEventListener
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateInd
