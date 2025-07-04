@@ -108,7 +108,7 @@
 
         /* This rule hides the image if it's APJ.jpg. If you want to show the image, remove this. */
         /* If APJ.jpg exists and you want to use it, remove the profile-pic-placeholder div from HTML as well. */
-       /* .profile-pic img[src="APJ.jpg"] {
+        /* .profile-pic img[src="APJ.jpg"] {
              display: none; /* Make sure this is still here if you want placeholder text  }*/
 
 
@@ -846,7 +846,7 @@
                             <span class="project-tag">Railway Applications</span>
                             <span class="project-tag">Magnetic Design</span>
                         </div>
-                        <a href="#" class="project-view-btn">View Details</a>
+                        <a href="master_thesis_project.html" class="project-view-btn">View Details</a>
                     </div>
                 </div>
                 <div class="project-card">
@@ -890,10 +890,10 @@
                 </div>
                 <div class="publication-item">
                     <h3>Title of Publication 2</h3>
-                    <p class="publication-meta">Authors: A. P. Jolly, A. N. Other | Conference Proceedings | Year: 2023</p>
-                    <p>Another brief description of a significant publication, highlighting its key findings or impact on power electronics.</p>
+                    <p class="publication-meta">Authors: A. P. Jolly, K. Smith | Journal/Conference: Applied Power Electronics Conference | Year: 2023</p>
+                    <p>Another brief description of a publication. You can add more details or a link to the publication itself.</p>
                 </div>
-                </div>
+            </div>
         </section>
 
         <section id="contact" class="section">
@@ -901,20 +901,20 @@
             <div class="contact-form">
                 <form action="#" method="POST">
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Name:</label>
                         <input type="text" id="name" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email:</label>
                         <input type="email" id="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="subject">Subject</label>
+                        <label for="subject">Subject:</label>
                         <input type="text" id="subject" name="subject">
                     </div>
                     <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" required></textarea>
                     </div>
                     <button type="submit" class="form-submit">Send Message</button>
                 </form>
@@ -925,60 +925,43 @@
     <footer>
         <p>&copy; 2025 Adarsh Pulimoottil Jolly. All rights reserved.</p>
         <div class="social-links">
-            <a href="https://linkedin.com/in/adarshp-j" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            </div>
+            <!-- Add social media icons/links here -->
+            <a href="https://linkedin.com/in/adarshp-j" target="_blank" aria-label="LinkedIn"><img src="https://img.icons8.com/ios-filled/50/000000/linkedin.png" alt="LinkedIn" width="24" height="24"></a>
+            <!-- Example for GitHub, you'd replace with your actual GitHub link -->
+            <a href="https://github.com/your-github-profile" target="_blank" aria-label="GitHub"><img src="https://img.icons8.com/ios-filled/50/000000/github.png" alt="GitHub" width="24" height="24"></a>
+            <!-- Add more social links as needed -->
+        </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('.section');
 
-            // Function to show a specific section and activate its nav link
-            const showSection = (sectionId) => {
-                // Remove 'active' from all sections
+            function showSection(id) {
                 sections.forEach(section => {
                     section.classList.remove('active');
                 });
+                document.getElementById(id).classList.add('active');
 
-                // Remove 'active' from all nav links
                 navLinks.forEach(link => {
                     link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('active');
+                    }
                 });
+            }
 
-                // Add 'active' to the target section
-                const targetSection = document.querySelector(sectionId);
-                if (targetSection) { // Check if the target section actually exists
-                    targetSection.classList.add('active');
-                } else {
-                    console.error(`Section with ID "${sectionId}" not found.`); // Helpful for debugging
-                }
-
-                // Add 'active' to the corresponding nav link
-                const activeNavLink = document.querySelector(`.nav-link[href="${sectionId}"]`);
-                if (activeNavLink) { // Check if the nav link exists
-                    activeNavLink.classList.add('active');
-                } else {
-                    console.warn(`Navigation link with href "${sectionId}" not found.`); // Helpful for debugging
-                }
-            };
-
-            // Event listener for navigation links
             navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault(); // Prevent default anchor link behavior (page jump)
-                    const targetId = link.getAttribute('href'); // Get the href (e.g., "#about")
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
                     showSection(targetId);
-
-                    // Optional: Update URL hash without causing a page reload
-                    // This allows users to bookmark specific sections or use back/forward browser buttons
-                    history.pushState(null, '', targetId);
                 });
             });
 
-            // Initial section display based on URL hash or default to #about
-            const initialHash = window.location.hash || '#about';
-            showSection(initialHash);
+            // Show the 'about' section by default on load
+            showSection('about');
         });
     </script>
 </body>
