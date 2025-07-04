@@ -4,169 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inductor Design Analysis (Parametric Method) - Interactive Plots</title>
+    <!-- Plotly.js for interactive graphing -->
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
             margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f0f4f8; /* Light background */
+            color: #334155; /* Dark text */
         }
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         h1, h2, h3 {
-            color: #0056b3;
+            color: #0056b3; /* Primary blue */
+            font-family: 'Montserrat', sans-serif;
         }
-        pre {
-            background-color: #eee;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #0056b3, #17a2b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+        h2 {
+            font-size: 2rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #2c3e50;
         }
-        th {
-            background-color: #f2f2f2;
+        p {
+            margin-bottom: 1rem;
+        }
+        ul {
+            list-style: disc;
+            margin-left: 25px;
+            margin-bottom: 1rem;
         }
         .section-separator {
-            border-top: 2px dashed #ccc;
+            border-top: 2px dashed #cbd5e1;
             margin: 40px 0;
         }
         .note {
-            background-color: #fff3cd;
-            border-left: 6px solid #ffe08a;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 4px;
+            background-color: #e0f2f7; /* Light blue for notes */
+            border-left: 6px solid #0056b3;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            color: #003d7a;
         }
         .plot-controls {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #e9e9e9;
-            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa; /* Very light background */
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         .plot-controls label {
-            display: block;
-            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
             cursor: pointer;
+            font-size: 1.1rem;
+            color: #495057;
         }
         .plot-controls input[type="checkbox"] {
-            margin-right: 8px;
+            margin-right: 10px;
+            transform: scale(1.2); /* Make checkboxes slightly larger */
         }
         .plot-container {
             text-align: center;
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            background-color: #f9f9f9;
+            margin-bottom: 40px;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            min-height: 400px; /* Ensure space for plot */
             display: none; /* Hidden by default */
-        }
-        .plot-container img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
+            position: relative; /* For loading overlay */
         }
         .plot-caption {
-            margin-top: 10px;
+            margin-top: 15px;
             font-style: italic;
-            color: #555;
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border-radius: 10px;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #0056b3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .back-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+        .back-to-portfolio-btn {
+            background-color: #6c757d; /* Grey button */
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .back-to-portfolio-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Inductor Design Analysis (Parametric Method) - Interactive Plots</h1>
+        <h1>Inductor Design Analysis (Parametric Method)</h1>
 
         <div class="note">
-            <h3>Important Note: Generating & Displaying Plots</h3>
+            <h3>Interactive Inductor Design Tool</h3>
             <p>
-                The plots for this analysis are generated by the provided MATLAB code.
-                To view them on this webpage, you must first run the MATLAB script yourself.
-                After running the script, save each generated figure as an image file (e.g., PNG, JPEG).
-                It is **highly recommended** to save them to a subfolder named `images/` within your website's directory.
-                Then, update the `src` attributes of the `<img>` tags below to point to the correct paths of your saved image files.
+                This page presents a dynamic analysis of inductor design using a parametric sweep and optimization approach, directly translated from a MATLAB script.
+                All calculations and plots are generated in real-time by your browser using JavaScript and Plotly.js.
             </p>
             <p>
-                For example, if you save `figure1.png` in the `images` folder, the `src` for Figure 1 should be `src="images/figure1.png"`.
-            </p>
-            <p>
-                Use the checkboxes below to toggle the visibility of each plot.
+                Use the checkboxes in the "Interactive Plots" section below to toggle the visibility of each graph and explore the design relationships.
             </p>
         </div>
 
         <h2>Steinmetz Parameters (Calculated)</h2>
-        <p>These parameters are calculated based on the input frequency (100 kHz):</p>
+        <p>These parameters are calculated based on the input frequency (100 kHz) and are crucial for estimating core losses:</p>
         <ul>
-            <li>$\alpha = 1.07816$</li>
-            <li>$\beta = 2.92017$</li>
-            <li>$k = 0.16491$</li>
+            <li>$\alpha = \text{<span id="alphaVal"></span>}$</li>
+            <li>$\beta = \text{<span id="betaVal"></span>}$</li>
+            <li>$k = \text{<span id="kVal"></span>}$</li>
         </ul>
 
         <div class="section-separator"></div>
 
         <h2>Inductor Design: Parametric Sweep and Optimization</h2>
-        <p>This method involves sweeping through core diameters and solving for the optimal air gap and number of turns. It then analyzes associated losses and core volume to identify a design point that balances these factors.</p>
+        <p>This method involves sweeping through a range of core diameters and, for each diameter, solving a system of equations to determine the corresponding optimal air gap and number of turns. It then calculates associated losses and core volume, aiming to identify a design point that balances these factors.</p>
 
         <h3>Optimization Results: Closest Point to Normalized Intersection</h3>
-        <p>The MATLAB script identifies a design point that aims to minimize total loss while considering core volume. This is represented by the "closest point" on the total loss ($P$) versus core volume ($V_c$) curve to an idealized intersection of minimal loss and maximal volume.</p>
+        <p>The script identifies a design point that aims to minimize total power loss while considering the core volume. This is represented by the "closest point" on the total loss ($P$) versus core volume ($V_c$) curve to an idealized intersection of minimal loss and maximal volume. This point signifies a balance between efficiency and compactness.</p>
         <ul>
-            <li><strong>Closest Total Loss (P):</strong> [Calculated P in Watts] W</li>
-            <li><strong>Closest Core Volume ($V_c$):</strong> [Calculated Vc in cm³] cm³</li>
-            <li><strong>Closest Number of Turns (N):</strong> [Calculated N]</li>
+            <li><strong>Closest Total Loss (P):</strong> <span id="closestP"></span> W</li>
+            <li><strong>Closest Core Volume ($V_c$):</strong> <span id="closestVc"></span> cm³</li>
+            <li><strong>Closest Number of Turns (N):</strong> <span id="closestN"></span></li>
         </ul>
 
         <h3>Summary of Key Parameters at N ≈ 12 Turns</h3>
-        <p>A specific design point where the calculated number of turns ($N$) is approximately 12 is highlighted for detailed examination:</p>
+        <p>A specific design point where the calculated number of turns ($N$) is approximately 12 is highlighted for detailed examination. This provides a concrete example of the design outputs at a particular turn count.</p>
         <ul>
-            <li><strong>Window Area ($A_w$):</strong> [Calculated Aw] mm²</li>
-            <li><strong>Core Diameter ($D_c$):</strong> [Calculated Dc] mm</li>
-            <li><strong>Air Gap ($l_g$):</strong> [Calculated eg] mm</li>
-            <li><strong>Cross Sectional Area (A):</strong> [Calculated A] mm²</li>
-            <li><strong>Inductance ($L_1$):</strong> [Calculated L1] μH</li>
-            <li><strong>Core Volume ($V_c$):):</strong> [Calculated Vc] cm³</li>
-            <li><strong>Core Loss ($P_{core}$):</strong> [Calculated Pin] W</li>
-            <li><strong>Copper Loss ($P_w$):</strong> [Calculated Pw] W</li>
-            <li><strong>Total Loss (P):</strong> [Calculated P] W</li>
+            <li><strong>Window Area ($A_w$):</strong> <span id="awAtN12"></span> mm²</li>
+            <li><strong>Core Diameter ($D_c$):</strong> <span id="dcAtN12"></span> mm</li>
+            <li><strong>Air Gap ($l_g$):</strong> <span id="egAtN12"></span> mm</li>
+            <li><strong>Cross Sectional Area (A):</strong> <span id="aAtN12"></span> mm²</li>
+            <li><strong>Inductance ($L_1$):</strong> <span id="l1AtN12"></span> μH</li>
+            <li><strong>Core Volume ($V_c$):</strong> <span id="vcAtN12"></span> cm³</li>
+            <li><strong>Core Loss ($P_{core}$):</strong> <span id="pinAtN12"></span> W</li>
+            <li><strong>Copper Loss ($P_w$):</strong> <span id="pwAtN12"></span> W</li>
+            <li><strong>Total Loss (P):</strong> <span id="pAtN12"></span> W</li>
         </ul>
         <p><strong>Note:</strong> The MATLAB script explicitly states, "The core is R22/6/6 with an air gap of 0.867mm", suggesting this is a target or example core for the conditions at N=12.</p>
 
         <h3>Extremes of Air Gap</h3>
+        <p>Understanding the range of air gap values is important for manufacturability and performance.</p>
         <ul>
-            <li><strong>Minimum Air Gap:</strong> [Calculated eg_min] mm at N = [Calculated N at eg_min], Dc = [Calculated Dc at eg_min] mm</li>
-            <li><strong>Maximum Air Gap:</strong> [Calculated eg_max] mm at N = [Calculated N at eg_max], Dc = [Calculated Dc at eg_max] mm</li>
-            <li><strong>Core Diameter ($D_c$) at N = 12:</strong> [Calculated Dc_at_N12] mm</li>
+            <li><strong>Minimum Air Gap:</strong> <span id="egMin"></span> mm at N = <span id="nAtEgMin"></span>, Dc = <span id="dcAtEgMin"></span> mm</li>
+            <li><strong>Maximum Air Gap:</strong> <span id="egMax"></span> mm at N = <span id="nAtEgMax"></span>, Dc = <span id="dcAtEgMax"></span> mm</li>
+            <li><strong>Core Diameter ($D_c$) at N = 12:</strong> <span id="dcAtN12_again"></span> mm</li>
         </ul>
 
         <h3>Window Area ($A_w$) Extremes</h3>
+        <p>The range of window area values from the sweep provides insight into the physical size implications.</p>
         <ul>
-            <li><strong>Window Area ($A_w$) at N = 12:</strong> [Calculated Aw_at_N12] mm²</li>
-            <li><strong>Minimum Window Area ($A_w$):</strong> [Calculated Aw_min] mm²</li>
-            <li><strong>Maximum Window Area ($A_w$):</strong> [Calculated Aw_max] mm²</li>
+            <li><strong>Window Area ($A_w$) at N = 12:</strong> <span id="awAtN12_again"></span> mm²</li>
+            <li><strong>Minimum Window Area ($A_w$):</strong> <span id="awMin"></span> mm²</li>
+            <li><strong>Maximum Window Area ($A_w$):</strong> <span id="awMax"></span> mm²</li>
         </ul>
 
         <div class="section-separator"></div>
 
         <h2>Interactive Plots</h2>
-        <p>Select the plots you wish to view:</p>
+        <p>Select the plots you wish to view. Calculations are performed once on page load, and plots are rendered dynamically.</p>
 
         <div class="plot-controls">
             <h3>Plot Visibility Controls:</h3>
-            <label><input type="checkbox" data-plot-id="plot1"> Figure 1: N vs. Air Gap ($l_g$)</label>
+            <label><input type="checkbox" data-plot-id="plot1"> Figure 1: Number of Turns (N) vs. Air Gap ($l_g$)</label>
             <label><input type="checkbox" data-plot-id="plot2"> Figure 2: Core Area (A) vs. Air Gap ($l_g$)</label>
             <label><input type="checkbox" data-plot-id="plot3"> Figure 3: 1/N vs. Air Gap ($l_g$)</label>
             <label><input type="checkbox" data-plot-id="plot4"> Figure 4: Core Area (A) vs. Number of Turns (N)</label>
@@ -184,84 +243,877 @@
         </div>
 
         <div id="plot1" class="plot-container">
-            <img src="images/figure1.png" alt="Figure 1: Number of Turns (N) vs. Air Gap (lg)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 1:</strong> Number of Turns (N) vs. Air Gap ($l_g$).</p>
         </div>
 
         <div id="plot2" class="plot-container">
-            <img src="images/figure2.png" alt="Figure 2: Core Area (A) vs. Air Gap (lg)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 2:</strong> Core Area (A) vs. Air Gap ($l_g$).</p>
         </div>
 
         <div id="plot3" class="plot-container">
-            <img src="images/figure3.png" alt="Figure 3: 1/N vs. Air Gap (lg)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 3:</strong> 1/N vs. Air Gap ($l_g$).</p>
         </div>
 
         <div id="plot4" class="plot-container">
-            <img src="images/figure4.png" alt="Figure 4: Core Area (A) vs. Number of Turns (N)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 4:</strong> Core Area (A) vs. Number of Turns (N).</p>
         </div>
 
         <div id="plot5" class="plot-container">
-            <img src="images/figure5.png" alt="Figure 5: Total Loss (P) vs. Core Volume (Vc) with Optimal Point">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 5:</strong> Total Loss (P) vs. Core Volume ($V_c$) with Optimal Point. This plot highlights the closest point on the curve to the normalized intersection of maximum volume and minimum loss.</p>
         </div>
 
         <div id="plot6" class="plot-container">
-            <img src="images/figure6.png" alt="Figure 6: Number of Turns (N) vs. Core Volume (Vc) with Optimal Point">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 6:</strong> Number of Turns (N) vs. Core Volume ($V_c$) with Optimal Point. This plot shows how core volume varies with turns, marking the optimal design point found.</p>
         </div>
 
         <div id="plot7" class="plot-container">
-            <img src="images/figure7.png" alt="Figure 7: Real Inductance (L1) vs. Cross Section (A) with Target Inductance">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 7:</strong> Real Inductance ($L_1$) vs. Cross Section (A) with Target Inductance. Compares the calculated inductance to the target inductance.</p>
         </div>
 
         <div id="plot8" class="plot-container">
-            <img src="images/figure8.png" alt="Figure 8: Real Flux Density (B1) vs. Cross Section (A) with Target Flux Density">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 8:</strong> Real Flux Density ($B_1$) vs. Cross Section (A) with Target Flux Density. Shows calculated flux density against the target flux density.</p>
         </div>
 
         <div id="plot9" class="plot-container">
-            <img src="images/figure9.png" alt="Figure 9: Magnetic Energy (Em) vs. Electrical Energy (EL) vs. Cross Section (A)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 9:</strong> Magnetic Energy ($E_m$) vs. Electrical Energy ($E_L$) vs. Cross Section (A). Illustrates energy storage characteristics.</p>
         </div>
 
         <div id="plot11" class="plot-container">
-            <img src="images/figure11.png" alt="Figure 11: Total Loss (P) vs. Number of Turns (N) and Core Area (A)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 11:</strong> Total Loss (P) vs. Number of Turns (N) and Core Area (A). This plot uses a dual y-axis to show the relationship of total loss with both number of turns and core area.</p>
         </div>
 
         <div id="plot10" class="plot-container">
-            <img src="images/figure10.png" alt="Figure 10: Core Volume (Vc) vs. Number of Turns (N) and Core Area (A)">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Figure 10:</strong> Core Volume ($V_c$) vs. Number of Turns (N) and Core Area (A). A dual y-axis plot showing how core volume varies with number of turns and core area.</p>
         </div>
 
         <div id="plot_aw_vs_n" class="plot-container">
-            <img src="images/aw_vs_n.png" alt="Window Area Aw vs. Number of Turns N">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Window Area ($A_w$) vs. Number of Turns (N).</strong> This plot highlights the window area at N=12 turns.</p>
         </div>
 
         <div id="plot_dc_vs_n" class="plot-container">
-            <img src="images/dc_vs_n.png" alt="Core Diameter Dc vs. Number of Turns N">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Core Diameter ($D_c$) vs. Number of Turns (N).</strong> Shows the relationship between core diameter and number of turns, with the point at N=12 highlighted.</p>
         </div>
 
         <div id="plot_l_vs_lg" class="plot-container">
-            <img src="images/inductance_vs_airgap.png" alt="Inductance vs. Air Gap lg">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Inductance ($L$) vs. Air Gap ($l_g$).</strong> Plots the inductance as a function of air gap, highlighting the inductance and air gap at N=12 turns.</p>
         </div>
 
         <div id="plot_l_vs_dc" class="plot-container">
-            <img src="images/inductance_vs_corediameter.png" alt="Inductance vs. Core Diameter Dc">
+            <div class="loading-overlay hidden">
+                <div class="spinner"></div>
+            </div>
             <p class="plot-caption"><strong>Inductance ($L$) vs. Core Diameter ($D_c$).</strong> Illustrates how inductance varies with core diameter, with the N=12 point highlighted.</p>
         </div>
 
+        <div class="back-button-container">
+            <a href="master_thesis_details.html" class="back-to-portfolio-btn">← Back to Thesis Details</a>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const plotData = {}; // Object to store all calculated plot data
+            const summaryData = {}; // Object to store summary values
+
+            // --- MATLAB Code Translation to JavaScript ---
+
+            // Constants
+            const a1 = -0.1108;
+            const b1 = 0.2134;
+            const c1 = 4.213;
+            const a2 = 0.215;
+            const b2 = 0.1373;
+            const c2 = 0.03359;
+            const a3 = 1.022e+06;
+            const b3 = -1.348;
+            const c3 = -0.02106;
+            const f = 100e3; // Frequency in Hz
+
+            // Calculate Steinmetz parameters
+            const alpha = (a2 * Math.pow(f, b2) + c2);
+            const Beta = (a1 * Math.pow(f, b1) + c1);
+            const k = (a3 * Math.pow(f, b3) + c3);
+
+            // Input data
+            const Dc_coarse = [];
+            for (let val = 4e-3; val <= 14e-3; val += 0.5e-3) {
+                Dc_coarse.push(val);
+            }
+            const s = 100; // number of fine points
+
+            // Simple linear interpolation for Dc (approximates MATLAB's pchip for this linear range)
+            const Dc = [];
+            const step = (Dc_coarse[Dc_coarse.length - 1] - Dc_coarse[0]) / (s - 1);
+            for (let i = 0; i < s; i++) {
+                Dc.push(Dc_coarse[0] + i * step);
+            }
+
+            // Preallocate arrays
+            const valueOfeg = new Array(s).fill(0);
+            const valueOfN = new Array(s).fill(0);
+            const A = new Array(s).fill(0);
+            const L1 = new Array(s).fill(0);
+            const e = new Array(s).fill(0); // e is assigned e1 later
+            const e1 = new Array(s).fill(0);
+
+            // Loop for calculations
+            const rau = 1.72e-8; // Resistivity
+            const I = 8; // Current
+            const uo = 4 * Math.PI * 1e-7; // Permeability of free space (H/m)
+            const ur = 2000; // Relative permeability
+            const B = 0.2; // Peak Flux Density (Tesla)
+            const lc = 0e-3; // Core length (m) - set to 0 in MATLAB for the symbolic solve
+
+            // Target Inductance for L2 plot comparison
+            const L_target = 12.7 * 1e-6; // Target Inductance (H)
+
+            for (let i = 0; i < s; i++) {
+                A[i] = Math.PI * Math.pow(Dc[i], 2) / 4; // Cross-sectional area
+
+                // Simplified symbolic solve for N and eg
+                // From MATLAB: eq1 = eg - uo * N * I / B == -(lc / ur);
+                //              eq2 = uo * ur * A(i) * N^2 / (lc + ur * eg) == L;
+                // With lc = 0, these simplify to:
+                // N = (L * I) / (B * A(i))
+                // eg = uo * N * I / B
+                
+                valueOfN[i] = (L_target * I) / (B * A[i]);
+                valueOfeg[i] = (uo * valueOfN[i] * I) / B;
+            }
+
+            // Remaining calculations
+            const Sp = I / 4.5 * 1e-6; // Wire cross-section area (m^2) - from MATLAB comment I/4.5 * 1e-6, seems like a fixed value
+            const Aw = valueOfN.map(N_val => N_val * Sp / 0.78); // Window Area
+            const dp = Math.sqrt(4 * Sp / Math.PI); // Wire diameter
+
+            const Le = Aw.map((Aw_val, idx) => Math.PI * (Math.sqrt(4 * Aw_val / (0.78 * Math.PI)) + (Dc[idx] / 2))); // Effective length
+            const lm = valueOfN.map((N_val, idx) => N_val * Math.PI * Dc[idx]); // Mean length of turn
+            const DCR = lm.map(lm_val => rau * lm_val / Sp); // DC Resistance
+
+            // e = e1 (e1 is not used before this assignment in MATLAB, so it's effectively e = 0)
+            // L1 and L2 calculations
+            const L1 = valueOfN.map((N_val, idx) => uo * ur * Math.pow(N_val, 2) * A[idx] / (Le[idx] + ur * valueOfeg[idx]));
+            const L2 = A.map((A_val, idx) => uo * ur * Math.pow(12, 2) * A_val / (Le[idx] + ur * valueOfeg[idx])); // L2 uses N=12 fixed
+
+            // Energy and Loss calculations
+            const Ee = L1.map(L1_val => 1e6 * 0.5 * L1_val * Math.pow(I, 2)); // Electrical Energy (uJ)
+            const B1 = valueOfN.map((N_val, idx) => L1[idx] * I / (N_val * A[idx])); // Real Flux Density
+            const Em = B1.map((B1_val, idx) => 1e6 * 0.5 * Math.pow(B1_val, 2) * A[idx] * valueOfeg[idx] / uo); // Magnetic Energy (uJ)
+            const Vc = A.map((A_val, idx) => Le[idx] * A_val * 1e6); // Core Volume (cm^3)
+            const Bac = B1.map(B1_val => B1_val * 0.2); // AC Flux Density
+            const Pin = Bac.map((Bac_val, idx) => 1000 * k * Math.pow(f, alpha) * Math.pow(Bac_val, Beta) * Vc[idx] * 1e-6); // Core Loss (W)
+            const Pw = DCR.map(DCR_val => DCR_val * Math.pow(I, 2)); // Copper Loss (W)
+            const P = Pw.map((Pw_val, idx) => Pw_val + Pin[idx]); // Total Loss (W)
+
+            // --- Normalize values for closest point ---
+            const P_norm = P.map(val => (val - Math.min(...P)) / (Math.max(...P) - Math.min(...P)));
+            const Vc_norm = Vc.map(val => (val - Math.min(...Vc)) / (Math.max(...Vc) - Math.min(...Vc)));
+
+            const idx_maxVc = Vc.indexOf(Math.max(...Vc));
+            const idx_minVc = Vc.indexOf(Math.min(...Vc));
+
+            const x_intersect = P_norm[idx_maxVc];
+            const y_intersect = Vc_norm[idx_minVc];
+            const intersection_point = [x_intersect, y_intersect];
+
+            // Compute closest point
+            let minDistance = Infinity;
+            let idx_closest = -1;
+            for (let i = 0; i < s; i++) {
+                const diffX = P_norm[i] - intersection_point[0];
+                const diffY = Vc_norm[i] - intersection_point[1];
+                const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    idx_closest = i;
+                }
+            }
+
+            const closest_P = P[idx_closest];
+            const closest_Vc = Vc[idx_closest];
+            const closest_N = valueOfN[idx_closest];
+
+            // --- Summary of Key Parameters at N = 12 ---
+            const targetN12 = 12;
+            let idx_N12 = -1;
+            let minDiffN12 = Infinity;
+            for (let i = 0; i < valueOfN.length; i++) {
+                const diff = Math.abs(valueOfN[i] - targetN12);
+                if (diff < minDiffN12) {
+                    minDiffN12 = diff;
+                    idx_N12 = i;
+                }
+            }
+
+            const Aw_at_N12 = Aw[idx_N12];
+            const Aw_min = Math.min(...Aw);
+            const Aw_max = Math.max(...Aw);
+
+            const eg_min = Math.min(...valueOfeg);
+            const idx_eg_min = valueOfeg.indexOf(eg_min);
+            const eg_max = Math.max(...valueOfeg);
+            const idx_eg_max = valueOfeg.indexOf(eg_max);
+
+            const Dc_at_N12 = Dc[idx_N12];
+
+            // Store all calculated data for plotting and summary
+            plotData.valueOfN = valueOfN;
+            plotData.valueOfeg = valueOfeg;
+            plotData.A = A;
+            plotData.P = P;
+            plotData.Vc = Vc;
+            plotData.L1 = L1;
+            plotData.L2 = L2;
+            plotData.B1 = B1;
+            plotData.Ee = Ee;
+            plotData.Em = Em;
+            plotData.Aw = Aw;
+            plotData.Dc = Dc;
+            plotData.L_target = L_target;
+            plotData.B_target = B; // B is the target flux density
+
+            // Store summary data
+            summaryData.alpha = alpha.toFixed(5);
+            summaryData.Beta = Beta.toFixed(5);
+            summaryData.k = k.toFixed(5);
+
+            summaryData.closestP = closest_P.toFixed(3);
+            summaryData.closestVc = closest_Vc.toFixed(3);
+            summaryData.closestN = closest_N.toFixed(2);
+
+            summaryData.awAtN12 = (Aw_at_N12 * 1e6).toFixed(2);
+            summaryData.dcAtN12 = (Dc_at_N12 * 1e3).toFixed(2);
+            summaryData.egAtN12 = (valueOfeg[idx_N12] * 1e3).toFixed(3);
+            summaryData.aAtN12 = (A[idx_N12] * 1e6).toFixed(2);
+            summaryData.l1AtN12 = (L1[idx_N12] * 1e6).toFixed(2);
+            summaryData.vcAtN12 = Vc[idx_N12].toFixed(2);
+            summaryData.pinAtN12 = Pin[idx_N12].toFixed(2);
+            summaryData.pwAtN12 = Pw[idx_N12].toFixed(2);
+            summaryData.pAtN12 = P[idx_N12].toFixed(2);
+
+            summaryData.egMin = (eg_min * 1e3).toFixed(3);
+            summaryData.nAtEgMin = valueOfN[idx_eg_min].toFixed(2);
+            summaryData.dcAtEgMin = (Dc[idx_eg_min] * 1e3).toFixed(2);
+            summaryData.egMax = (eg_max * 1e3).toFixed(3);
+            summaryData.nAtEgMax = valueOfN[idx_eg_max].toFixed(2);
+            summaryData.dcAtEgMax = (Dc[idx_eg_max] * 1e3).toFixed(2);
+            summaryData.dcAtN12_again = (Dc_at_N12 * 1e3).toFixed(2);
+            summaryData.awAtN12_again = (Aw_at_N12 * 1e6).toFixed(2);
+            summaryData.awMin = (Aw_min * 1e6).toFixed(2);
+            summaryData.awMax = (Aw_max * 1e6).toFixed(2);
+
+
+            // --- Populate Summary Data in HTML ---
+            document.getElementById('alphaVal').textContent = summaryData.alpha;
+            document.getElementById('betaVal').textContent = summaryData.Beta;
+            document.getElementById('kVal').textContent = summaryData.k;
+
+            document.getElementById('closestP').textContent = summaryData.closestP;
+            document.getElementById('closestVc').textContent = summaryData.closestVc;
+            document.getElementById('closestN').textContent = summaryData.closestN;
+
+            document.getElementById('awAtN12').textContent = summaryData.awAtN12;
+            document.getElementById('dcAtN12').textContent = summaryData.dcAtN12;
+            document.getElementById('egAtN12').textContent = summaryData.egAtN12;
+            document.getElementById('aAtN12').textContent = summaryData.aAtN12;
+            document.getElementById('l1AtN12').textContent = summaryData.l1AtN12;
+            document.getElementById('vcAtN12').textContent = summaryData.vcAtN12;
+            document.getElementById('pinAtN12').textContent = summaryData.pinAtN12;
+            document.getElementById('pwAtN12').textContent = summaryData.pwAtN12;
+            document.getElementById('pAtN12').textContent = summaryData.pAtN12;
+
+            document.getElementById('egMin').textContent = summaryData.egMin;
+            document.getElementById('nAtEgMin').textContent = summaryData.nAtEgMin;
+            document.getElementById('dcAtEgMin').textContent = summaryData.dcAtEgMin;
+            document.getElementById('egMax').textContent = summaryData.egMax;
+            document.getElementById('nAtEgMax').textContent = summaryData.nAtEgMax;
+            document.getElementById('dcAtEgMax').textContent = summaryData.dcAtEgMax;
+            document.getElementById('dcAtN12_again').textContent = summaryData.dcAtN12_again;
+            document.getElementById('awAtN12_again').textContent = summaryData.awAtN12_again;
+            document.getElementById('awMin').textContent = summaryData.awMin;
+            document.getElementById('awMax').textContent = summaryData.awMax;
+
+
+            // --- Plotting Functions ---
+
+            function plotFigure(plotId, traces, layout) {
+                const plotDiv = document.getElementById(plotId);
+                const loadingOverlay = plotDiv.querySelector('.loading-overlay');
+                loadingOverlay.classList.remove('hidden'); // Show spinner
+
+                // Use a small timeout to allow the spinner to render before heavy plotting
+                setTimeout(() => {
+                    Plotly.newPlot(plotId, traces, layout).then(() => {
+                        loadingOverlay.classList.add('hidden'); // Hide spinner after plot
+                    }).catch(error => {
+                        console.error(`Error plotting ${plotId}:`, error);
+                        loadingOverlay.classList.add('hidden');
+                        plotDiv.innerHTML = `<p style="color:red;">Error loading plot: ${error.message}</p>`;
+                    });
+                }, 50); // Short delay
+            }
+
+            // Figure 1: N vs. lg
+            function createPlot1() {
+                const traces = [{
+                    x: plotData.valueOfN,
+                    y: plotData.valueOfeg.map(val => val * 1000),
+                    mode: 'lines',
+                    line: { color: 'black', dash: 'dash', width: 3 },
+                    name: 'l_g vs N'
+                }];
+                const layout = {
+                    title: 'Figure 1: Number of Turns (N) vs. Air Gap (l_g)',
+                    xaxis: { title: 'N (Number of Turns)' },
+                    yaxis: { title: 'l_g (mm)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: false
+                };
+                plotFigure('plot1', traces, layout);
+            }
+
+            // Figure 2: A vs. lg
+            function createPlot2() {
+                const traces = [{
+                    x: plotData.A.map(val => val * 1e6),
+                    y: plotData.valueOfeg.map(val => val * 1000),
+                    mode: 'lines',
+                    line: { color: 'black', dash: 'dash', width: 3 },
+                    name: 'l_g vs A'
+                }];
+                const layout = {
+                    title: 'Figure 2: Core Area (A) vs. Air Gap (l_g)',
+                    xaxis: { title: 'A (mm²)' },
+                    yaxis: { title: 'l_g (mm)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: false
+                };
+                plotFigure('plot2', traces, layout);
+            }
+
+            // Figure 3: 1/N vs. lg
+            function createPlot3() {
+                const traces = [{
+                    x: plotData.valueOfN.map(val => 1 / val),
+                    y: plotData.valueOfeg.map(val => val * 1000),
+                    mode: 'lines',
+                    line: { color: 'black', dash: 'dash', width: 2 },
+                    name: 'l_g vs 1/N'
+                }];
+                const layout = {
+                    title: 'Figure 3: 1/N vs. Air Gap (l_g)',
+                    xaxis: { title: '1/N' },
+                    yaxis: { title: 'l_g (mm)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: false
+                };
+                plotFigure('plot3', traces, layout);
+            }
+
+            // Figure 4: A vs. N
+            function createPlot4() {
+                const traces = [{
+                    x: plotData.A.map(val => val * 1e6),
+                    y: plotData.valueOfN,
+                    mode: 'lines',
+                    line: { color: 'black', dash: 'dash', width: 3 },
+                    name: 'N vs A'
+                }];
+                const layout = {
+                    title: 'Figure 4: Core Area (A) vs. Number of Turns (N)',
+                    xaxis: { title: 'A (mm²)' },
+                    yaxis: { title: 'N (Number of Turns)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: false
+                };
+                plotFigure('plot4', traces, layout);
+            }
+
+            // Figure 5: P vs. Vc (with closest point)
+            function createPlot5() {
+                const traces = [{
+                    x: plotData.P,
+                    y: plotData.Vc,
+                    mode: 'lines',
+                    line: { color: 'black', dash: 'dash', width: 3 },
+                    name: 'Loss vs Volume'
+                }];
+
+                // Add xline, yline, and closest point marker
+                traces.push({
+                    x: [plotData.P[idx_maxVc], plotData.P[idx_maxVc]],
+                    y: [Math.min(...plotData.Vc), Math.max(...plotData.Vc)],
+                    mode: 'lines',
+                    line: { color: 'blue', width: 2, dash: 'solid' },
+                    name: `P at Max Vc (${plotData.P[idx_maxVc].toFixed(3)} W)`
+                });
+                traces.push({
+                    x: [Math.min(...plotData.P), Math.max(...plotData.P)],
+                    y: [plotData.Vc[idx_minVc], plotData.Vc[idx_minVc]],
+                    mode: 'lines',
+                    line: { color: 'blue', width: 2, dash: 'solid' },
+                    name: `Vc at Min P (${plotData.Vc[idx_minVc].toFixed(3)} cm³)`
+                });
+                traces.push({
+                    x: [summaryData.closestP],
+                    y: [summaryData.closestVc],
+                    mode: 'markers',
+                    marker: { color: 'blue', size: 10, symbol: 'circle' },
+                    name: 'Closest Point',
+                    text: `P = ${summaryData.closestP} W<br>Vc = ${summaryData.closestVc} cm³`,
+                    hoverinfo: 'text'
+                });
+                traces.push({
+                    x: [plotData.P[idx_maxVc], summaryData.closestP],
+                    y: [plotData.Vc[idx_minVc], summaryData.closestVc],
+                    mode: 'lines',
+                    line: { color: 'blue', dash: 'dash', width: 1.5 },
+                    name: 'Distance to Closest Point'
+                });
+
+                const layout = {
+                    title: 'Figure 5: Total Loss (W) vs. Core Volume (cm³)',
+                    xaxis: { title: 'Total Loss (W)' },
+                    yaxis: { title: 'Core Volume (cm³)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true,
+                    annotations: [{
+                        x: summaryData.closestP,
+                        y: parseFloat(summaryData.closestVc) + 0.3, // Offset text slightly above point
+                        xref: 'x',
+                        yref: 'y',
+                        text: `Closest<br>P = ${summaryData.closestP} W<br>Vc = ${summaryData.closestVc} cm³`,
+                        showarrow: false,
+                        font: { size: 12, color: 'blue' },
+                        xanchor: 'left'
+                    }]
+                };
+                plotFigure('plot5', traces, layout);
+            }
+
+            // Figure 6: N vs. Vc (with optimal point)
+            function createPlot6() {
+                const traces = [{
+                    x: plotData.valueOfN,
+                    y: plotData.Vc,
+                    mode: 'lines',
+                    line: { color: 'red', width: 2 },
+                    name: 'Turns vs Volume'
+                }];
+
+                // Add optimal point marker
+                traces.push({
+                    x: [summaryData.closestN],
+                    y: [summaryData.closestVc],
+                    mode: 'markers',
+                    marker: { color: 'red', size: 10, symbol: 'circle' },
+                    name: 'Optimal Point',
+                    text: `Optimal<br>N = ${summaryData.closestN}`,
+                    hoverinfo: 'text'
+                });
+
+                const layout = {
+                    title: 'Figure 6: Number of Turns (N) vs. Core Volume (cm³)',
+                    xaxis: { title: 'Number of Turns (N)' },
+                    yaxis: { title: 'Core Volume (cm³)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true,
+                    annotations: [{
+                        x: parseFloat(summaryData.closestN) + 0.5, // Offset text
+                        y: parseFloat(summaryData.closestVc),
+                        xref: 'x',
+                        yref: 'y',
+                        text: `Optimal<br>N = ${summaryData.closestN}`,
+                        showarrow: false,
+                        font: { size: 12, color: 'red' },
+                        xanchor: 'left'
+                    }]
+                };
+                plotFigure('plot6', traces, layout);
+            }
+
+            // Figure 7: A vs. L1 (real vs target)
+            function createPlot7() {
+                const traces = [
+                    {
+                        x: plotData.A.map(val => val * 1e6),
+                        y: plotData.L1.map(val => val * 1e6),
+                        mode: 'lines',
+                        line: { color: 'black', dash: 'dash', width: 3 },
+                        name: 'Real Value'
+                    },
+                    {
+                        x: [Math.min(...plotData.A.map(val => val * 1e6)), Math.max(...plotData.A.map(val => val * 1e6))],
+                        y: [plotData.L_target * 1e6, plotData.L_target * 1e6],
+                        mode: 'lines',
+                        line: { color: 'blue', width: 3 },
+                        name: 'Target Value'
+                    }
+                ];
+                const layout = {
+                    title: 'Figure 7: Real Inductance (L1) vs. Cross Section (A)',
+                    xaxis: { title: 'Cross Section (mm²)' },
+                    yaxis: { title: 'L (μH)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true
+                };
+                plotFigure('plot7', traces, layout);
+            }
+
+            // Figure 8: A vs. B1 (real vs target)
+            function createPlot8() {
+                const traces = [
+                    {
+                        x: plotData.A.map(val => val * 1e6),
+                        y: plotData.B1,
+                        mode: 'lines',
+                        line: { color: 'black', dash: 'dash', width: 3 },
+                        name: 'Real Value'
+                    },
+                    {
+                        x: [Math.min(...plotData.A.map(val => val * 1e6)), Math.max(...plotData.A.map(val => val * 1e6))],
+                        y: [plotData.B_target, plotData.B_target],
+                        mode: 'lines',
+                        line: { color: 'blue', dash: 'dash', width: 3 },
+                        name: 'Target Value'
+                    }
+                ];
+                const layout = {
+                    title: 'Figure 8: Real Flux Density (B1) vs. Cross Section (A)',
+                    xaxis: { title: 'Cross Section (mm²)' },
+                    yaxis: { title: 'B (T)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true
+                };
+                plotFigure('plot8', traces, layout);
+            }
+
+            // Figure 9: A vs. Em, Ee
+            function createPlot9() {
+                const traces = [
+                    {
+                        x: plotData.A.map(val => val * 1e6),
+                        y: plotData.Em,
+                        mode: 'lines',
+                        line: { color: 'black', dash: 'dash', width: 3 },
+                        name: 'E_m (Magnetic Energy)'
+                    },
+                    {
+                        x: plotData.A.map(val => val * 1e6),
+                        y: plotData.Ee,
+                        mode: 'lines',
+                        line: { color: 'blue', dash: 'dash', width: 3 },
+                        name: 'E_L (Electrical Energy)'
+                    }
+                ];
+                const layout = {
+                    title: 'Figure 9: Magnetic Energy (uJ) vs. Electrical Energy (uJ) vs. Cross Section (A)',
+                    xaxis: { title: 'A (mm²)' },
+                    yaxis: { title: 'Energy (uJ)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true
+                };
+                plotFigure('plot9', traces, layout);
+            }
+
+            // Figure 11: Loss vs N and A (Dual Axis)
+            function createPlot11() {
+                const traces = [
+                    {
+                        x: plotData.valueOfN,
+                        y: plotData.P,
+                        mode: 'lines',
+                        line: { color: 'black', dash: 'dash', width: 3 },
+                        name: 'P = f(N)',
+                        yaxis: 'y1'
+                    },
+                    {
+                        x: plotData.A.map(val => val * 1e6), // Use A for top x-axis
+                        y: plotData.P,
+                        mode: 'lines',
+                        line: { color: 'blue', dash: 'dash', width: 3 },
+                        name: 'P = f(A)',
+                        xaxis: 'x2',
+                        yaxis: 'y2'
+                    }
+                ];
+                const layout = {
+                    title: 'Figure 11: Total Loss (W) vs. N and A',
+                    xaxis: { title: 'N', domain: [0, 1] }, // Bottom X-axis
+                    xaxis2: { title: 'A (mm²)', overlaying: 'x', side: 'top', anchor: 'y' }, // Top X-axis
+                    yaxis: { title: 'Loss (W)', side: 'left' }, // Left Y-axis
+                    yaxis2: { title: 'Loss (W)', overlaying: 'y', side: 'right' }, // Right Y-axis
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true
+                };
+                plotFigure('plot11', traces, layout);
+            }
+
+            // Figure 10: Volume vs N and A (Dual Axis)
+            function createPlot10() {
+                const traces = [
+                    {
+                        x: plotData.valueOfN,
+                        y: plotData.Vc,
+                        mode: 'lines',
+                        line: { color: 'black', dash: 'dash', width: 3 },
+                        name: 'Vc = f(N)',
+                        yaxis: 'y1'
+                    },
+                    {
+                        x: plotData.A.map(val => val * 1e6), // Use A for top x-axis
+                        y: plotData.Vc,
+                        mode: 'lines',
+                        line: { color: 'blue', dash: 'dash', width: 3 },
+                        name: 'Vc = f(A)',
+                        xaxis: 'x2',
+                        yaxis: 'y2'
+                    }
+                ];
+                const layout = {
+                    title: 'Figure 10: Core Volume (cm³) vs. N and A',
+                    xaxis: { title: 'N', domain: [0, 1] },
+                    xaxis2: { title: 'A (mm²)', overlaying: 'x', side: 'top', anchor: 'y' },
+                    yaxis: { title: 'Core Volume (cm³)', side: 'left' },
+                    yaxis2: { title: 'Core Volume (cm³)', overlaying: 'y', side: 'right' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true
+                };
+                plotFigure('plot10', traces, layout);
+            }
+
+            // Window Area vs Number of Turns
+            function createPlotAwVsN() {
+                const traces = [{
+                    x: plotData.valueOfN,
+                    y: plotData.Aw.map(val => val * 1e6),
+                    mode: 'lines',
+                    line: { color: 'magenta', width: 2 },
+                    name: 'Window Area'
+                }];
+
+                // Highlight N=12 point
+                traces.push({
+                    x: [plotData.valueOfN[idx_N12]],
+                    y: [plotData.Aw[idx_N12] * 1e6],
+                    mode: 'markers',
+                    marker: { color: 'black', size: 10, symbol: 'circle' },
+                    name: 'N=12 Point',
+                    text: `N = ${summaryData.valueOfN[idx_N12].toFixed(2)}<br>Aw = ${summaryData.awAtN12} mm²`,
+                    hoverinfo: 'text'
+                });
+
+                const layout = {
+                    title: 'Window Area (A_w) vs. Number of Turns (N)',
+                    xaxis: { title: 'Number of Turns (N)' },
+                    yaxis: { title: 'Window Area A_w (mm²)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true,
+                    annotations: [{
+                        x: plotData.valueOfN[idx_N12],
+                        y: plotData.Aw[idx_N12] * 1e6 + 2, // Offset text
+                        xref: 'x',
+                        yref: 'y',
+                        text: `N = ${summaryData.valueOfN[idx_N12].toFixed(2)}<br>A_w = ${summaryData.awAtN12} mm²`,
+                        showarrow: false,
+                        font: { size: 12, color: 'black' },
+                        xanchor: 'center'
+                    }]
+                };
+                plotFigure('plot_aw_vs_n', traces, layout);
+            }
+
+            // Core Diameter vs Number of Turns
+            function createPlotDcVsN() {
+                const traces = [{
+                    x: plotData.valueOfN,
+                    y: plotData.Dc.map(val => val * 1e3),
+                    mode: 'lines',
+                    line: { color: 'green', width: 2 },
+                    name: 'Core Diameter'
+                }];
+
+                // Highlight N=12 point
+                traces.push({
+                    x: [plotData.valueOfN[idx_N12]],
+                    y: [plotData.Dc[idx_N12] * 1e3],
+                    mode: 'markers',
+                    marker: { color: 'black', size: 10, symbol: 'circle' },
+                    name: 'N=12 Point',
+                    text: `N = ${summaryData.valueOfN[idx_N12].toFixed(2)}<br>Dc = ${summaryData.dcAtN12} mm`,
+                    hoverinfo: 'text'
+                });
+
+                const layout = {
+                    title: 'Core Diameter (D_c) vs. Number of Turns (N)',
+                    xaxis: { title: 'Number of Turns (N)' },
+                    yaxis: { title: 'Core Diameter D_c (mm)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true,
+                    annotations: [{
+                        x: parseFloat(summaryData.valueOfN[idx_N12]) + 0.5, // Offset text
+                        y: parseFloat(summaryData.dcAtN12) + 0.1,
+                        xref: 'x',
+                        yref: 'y',
+                        text: `N = ${summaryData.valueOfN[idx_N12].toFixed(2)}<br>D_c = ${summaryData.dcAtN12} mm`,
+                        showarrow: false,
+                        font: { size: 12, color: 'black' },
+                        xanchor: 'left'
+                    }]
+                };
+                plotFigure('plot_dc_vs_n', traces, layout);
+            }
+
+            // Inductance vs Air Gap
+            function createPlotLVsLg() {
+                const traces = [{
+                    x: plotData.valueOfeg.map(val => val * 1e3),
+                    y: plotData.L2.map(val => val * 1e6), // MATLAB plots L2 here
+                    mode: 'lines',
+                    line: { color: 'black', dash: 'dash', width: 3 },
+                    name: 'Inductance'
+                }];
+
+                // Highlight N=12 point (using L1 at N=12)
+                traces.push({
+                    x: [plotData.valueOfeg[idx_N12] * 1e3],
+                    y: [plotData.L1[idx_N12] * 1e6],
+                    mode: 'markers',
+                    marker: { color: 'red', size: 10, symbol: 'circle' },
+                    name: 'N=12 Point',
+                    text: `L = ${summaryData.l1AtN12} μH<br>lg = ${summaryData.egAtN12} mm`,
+                    hoverinfo: 'text'
+                });
+
+                const layout = {
+                    title: 'Inductance (L) vs. Air Gap (l_g)',
+                    xaxis: { title: 'Air Gap l_g (mm)', range: [0, 2] },
+                    yaxis: { title: 'Inductance L (μH)', range: [0, 20] },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true
+                };
+                plotFigure('plot_l_vs_lg', traces, layout);
+            }
+
+            // Inductance vs Core Diameter
+            function createPlotLVsDc() {
+                const traces = [{
+                    x: plotData.Dc.map(val => val * 1e3),
+                    y: plotData.L1.map(val => val * 1e6),
+                    mode: 'lines',
+                    line: { color: 'blue', width: 2 },
+                    name: 'Inductance'
+                }];
+
+                // Highlight N=12 point
+                traces.push({
+                    x: [plotData.Dc[idx_N12] * 1e3],
+                    y: [plotData.L1[idx_N12] * 1e6],
+                    mode: 'markers',
+                    marker: { color: 'red', size: 10, symbol: 'circle' },
+                    name: 'N=12 Point',
+                    text: `N = ${summaryData.closestN}<br>L = ${summaryData.l1AtN12} μH`,
+                    hoverinfo: 'text'
+                });
+
+                const layout = {
+                    title: 'Inductance (L) vs. Core Diameter (D_c)',
+                    xaxis: { title: 'Core Diameter D_c (mm)' },
+                    yaxis: { title: 'Inductance L (μH)' },
+                    grid: { rows: 1, columns: 1, pattern: 'independent' },
+                    aspectratio: { x: 1, y: 1 },
+                    showlegend: true,
+                    annotations: [{
+                        x: parseFloat(summaryData.dcAtN12) + 0.1, // Offset text
+                        y: parseFloat(summaryData.l1AtN12),
+                        xref: 'x',
+                        yref: 'y',
+                        text: `N = ${summaryData.closestN}<br>L = ${summaryData.l1AtN12} μH`,
+                        showarrow: false,
+                        font: { size: 12, color: 'red' },
+                        xanchor: 'left'
+                    }]
+                };
+                plotFigure('plot_l_vs_dc', traces, layout);
+            }
+
+
+            // Map plot IDs to their creation functions
+            const plotFunctions = {
+                'plot1': createPlot1,
+                'plot2': createPlot2,
+                'plot3': createPlot3,
+                'plot4': createPlot4,
+                'plot5': createPlot5,
+                'plot6': createPlot6,
+                'plot7': createPlot7,
+                'plot8': createPlot8,
+                'plot9': createPlot9,
+                'plot11': createPlot11,
+                'plot10': createPlot10,
+                'plot_aw_vs_n': createPlotAwVsN,
+                'plot_dc_vs_n': createPlotDcVsN,
+                'plot_l_vs_lg': createPlotLVsLg,
+                'plot_l_vs_dc': createPlotLVsDc
+            };
+
+            // --- Event Listeners for Checkboxes ---
             const checkboxes = document.querySelectorAll('.plot-controls input[type="checkbox"]');
 
             checkboxes.forEach(checkbox => {
@@ -270,8 +1122,17 @@
                     const plotContainer = document.getElementById(plotId);
                     if (this.checked) {
                         plotContainer.style.display = 'block';
+                        // Only create plot if it hasn't been created yet
+                        // Or if you want to re-render every time: Plotly.purge(plotId);
+                        if (!plotContainer.dataset.rendered) {
+                            plotFunctions[plotId]();
+                            plotContainer.dataset.rendered = 'true'; // Mark as rendered
+                        }
                     } else {
                         plotContainer.style.display = 'none';
+                        // Optional: Purge plot data from Plotly to free memory if many plots
+                        // Plotly.purge(plotId);
+                        // plotContainer.dataset.rendered = 'false';
                     }
                 });
             });
