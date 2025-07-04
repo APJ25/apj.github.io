@@ -11,6 +11,9 @@
             --text-color: #333;
             --accent-color: #17a2b8;
             --border-color: #dee2e6;
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         * {
@@ -23,22 +26,18 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: #fff;
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
         
         /* Header Styles */
         header {
-            background-color: var(--primary-color);
-            color: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 2rem 0;
             position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
         .header-content {
@@ -46,39 +45,58 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
         
         .profile-pic {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
-            margin-bottom: 1rem;
-            background-color: #e9ecef;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             display: flex;
-            align-items: left;
-            justify-content: left;
-            font-size: 4rem;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: var(--transition);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         
         .header-text h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .header-text p {
             font-size: 1.2rem;
-            opacity: 0.9;
+            color: #666;
+            font-weight: 300;
         }
         
         /* Navigation */
         nav {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .nav-links {
@@ -86,6 +104,8 @@
             justify-content: center;
             list-style: none;
             padding: 1rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .nav-links li {
@@ -95,70 +115,127 @@
         .nav-links a {
             text-decoration: none;
             color: var(--text-color);
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
         
-        .nav-links a:hover {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            transition: var(--transition);
+            z-index: -1;
         }
         
-        /* Section Styles */
-        section {
-            padding: 3rem 0;
-            border-bottom: 1px solid var(--border-color);
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            left: 0;
         }
         
-        section:last-child {
-            border-bottom: none;
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .section-title {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             color: var(--primary-color);
             position: relative;
+            font-size: 2.5rem;
+            font-weight: 700;
         }
         
         .section-title::after {
             content: '';
             display: block;
-            width: 50px;
-            height: 3px;
-            background-color: var(--accent-color);
-            margin: 0.5rem auto;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            margin: 1rem auto;
+            border-radius: 2px;
         }
         
         /* About Section */
         .about-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        
-        .about-text {
-            flex: 1;
-        }
-        
-        .contact-info {
-            margin-top: 1.5rem;
-        }
-        
-        .contact-info p {
-            margin-bottom: 0.5rem;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
             align-items: center;
         }
         
-        .contact-info i {
-            margin-right: 0.5rem;
-            color: var(--primary-color);
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
         }
         
-        /* Education Section */
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-info {
+            background: var(--secondary-color);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .contact-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .contact-info p {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+        
+        .contact-info .icon {
+            margin-right: 1rem;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        
+        /* Education Timeline */
         .timeline {
             position: relative;
             max-width: 800px;
@@ -168,12 +245,13 @@
         .timeline::after {
             content: '';
             position: absolute;
-            width: 2px;
-            background-color: var(--border-color);
+            width: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             top: 0;
             bottom: 0;
             left: 50%;
-            margin-left: -1px;
+            margin-left: -2px;
+            border-radius: 2px;
         }
         
         .timeline-item {
@@ -181,6 +259,7 @@
             position: relative;
             width: 50%;
             box-sizing: border-box;
+            animation: slideIn 0.6s ease-out;
         }
         
         .timeline-item:nth-child(odd) {
@@ -191,46 +270,89 @@
             left: 50%;
         }
         
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background: white;
+            border: 4px solid var(--accent-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
         .timeline-content {
-            padding: 20px;
-            background-color: var(--secondary-color);
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
         
         .timeline-content h3 {
             color: var(--primary-color);
             margin-bottom: 0.5rem;
-        }
-        
-        .timeline-content p {
-            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
         }
         
         .timeline-content .date {
             color: var(--accent-color);
             font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         /* Skills Section */
         .skills-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
         
         .skill-category {
-            background-color: var(--secondary-color);
-            padding: 1.5rem;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .skill-category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
         
         .skill-category h3 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
         }
         
         .skill-list {
@@ -238,13 +360,14 @@
         }
         
         .skill-list li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             padding-left: 1.5rem;
             position: relative;
+            font-size: 1.1rem;
         }
         
         .skill-list li::before {
-            content: '•';
+            content: '▶';
             color: var(--accent-color);
             font-weight: bold;
             position: absolute;
@@ -254,324 +377,201 @@
         /* Projects Section */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
         
         .project-card {
-            background-color: var(--secondary-color);
-            border-radius: 6px;
+            background: white;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            position: relative;
         }
         
         .project-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
         
         .project-image {
             height: 200px;
-            background-color: #e9ecef;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #adb5bd;
-            background-size: cover;
-            background-position: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            transition: var(--transition);
+        }
+        
+        .project-card:hover .project-image::before {
+            background: rgba(0,0,0,0.1);
         }
         
         .project-info {
-            padding: 1.5rem;
+            padding: 2rem;
         }
         
         .project-info h3 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .project-info p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
         
         .project-tags {
             display: flex;
             flex-wrap: wrap;
-            margin-top: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .project-tag {
-            background-color: var(--accent-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
             font-size: 0.8rem;
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
         
         .project-view-btn {
             display: inline-block;
-            margin-top: 1rem;
-            background-color: var(--primary-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            transition: var(--transition);
+            font-weight: 600;
         }
         
         .project-view-btn:hover {
-            background-color: #004494;
-        }
-        
-        /* Project Detail Page */
-        .project-detail {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .project-header {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        
-        .project-header h2 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .project-header p {
-            color: #6c757d;
-            font-style: italic;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        
-        .project-content {
-            margin-bottom: 2rem;
-        }
-        
-        .project-section {
-            margin-bottom: 2rem;
-        }
-        
-        .project-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .project-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .gallery-item {
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            cursor: pointer;
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        
-        .report-list {
-            list-style: none;
-            margin-top: 1.5rem;
-        }
-        
-        .report-item {
-            background-color: var(--secondary-color);
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .report-icon {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-right: 1rem;
-        }
-        
-        .report-info {
-            flex: 1;
-        }
-        
-        .report-info h4 {
-            margin-bottom: 0.25rem;
-            color: var(--text-color);
-        }
-        
-        .report-info p {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        
-        .report-download {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-        
-        .report-download:hover {
-            background-color: #138496;
-        }
-        
-        /* Modal for image gallery */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-        
-        .modal-content {
-            margin: auto;
-            display: block;
-            max-width: 90%;
-            max-height: 90%;
-        }
-        
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
         
         /* Publications Section */
         .publications-list {
             list-style: none;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
         
         .publication-item {
-            background-color: var(--secondary-color);
-            padding: 1.5rem;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .publication-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
         
         .publication-item h3 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
         
         .publication-meta {
             font-style: italic;
-            color: #6c757d;
+            color: #666;
             margin-bottom: 1rem;
         }
         
-        .publication-link {
-            display: inline-block;
-            margin-top: 1rem;
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-        
-        .publication-link:hover {
-            text-decoration: underline;
-        }
-        
-        /* Contact Form Section */
+        /* Contact Section */
         .contact-form {
             max-width: 600px;
             margin: 0 auto;
-            background-color: var(--secondary-color);
-            padding: 2rem;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--primary-color);
         }
         
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
             font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
         }
         
         .form-group textarea {
-            min-height: 150px;
+            min-height: 120px;
+            resize: vertical;
         }
         
         .form-submit {
-            background-color: var(--primary-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
+            padding: 1rem 2rem;
+            border-radius: 25px;
             cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 100%;
         }
         
         .form-submit:hover {
-            background-color: #004494;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
         
         /* Footer */
         footer {
-            background-color: var(--primary-color);
-            color: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--text-color);
             text-align: center;
             padding: 2rem 0;
             margin-top: 3rem;
@@ -582,18 +582,38 @@
         }
         
         .social-links a {
-            color: white;
-            margin: 0 0.5rem;
+            color: var(--primary-color);
+            margin: 0 1rem;
             font-size: 1.5rem;
-            transition: color 0.3s ease;
+            transition: var(--transition);
+            text-decoration: none;
         }
         
         .social-links a:hover {
-            color: var(--secondary-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
         }
         
-        /* Responsive Styles */
+        /* Responsive Design */
         @media screen and (max-width: 768px) {
+            .header-text h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
             .timeline::after {
                 left: 31px;
             }
@@ -608,17 +628,12 @@
                 left: 0;
             }
             
-            .nav-links {
-                flex-direction: column;
-                align-items: center;
+            .timeline-item::after {
+                left: 21px;
             }
             
-            .nav-links li {
-                margin: 0.5rem 0;
-            }
-            
-            .about-content {
-                flex-direction: column;
+            .timeline-item:nth-child(even)::after {
+                left: 21px;
             }
             
             .projects-grid,
@@ -626,193 +641,207 @@
                 grid-template-columns: 1fr;
             }
             
-            .project-gallery {
-                grid-template-columns: 1fr;
+            main {
+                padding: 1rem;
             }
             
-            .modal-content {
-                width: 100%;
+            .section {
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body>
-   <header>
-    <div class="container">
+    <header>
         <div class="header-content">
-            <img src="APJ.jpg" alt="Adarsh Pulimoottil Jolly" class="profile-pic">
+            <div class="profile-pic">APJ</div>
             <div class="header-text">
                 <h1>Adarsh Pulimoottil Jolly</h1>
-                <p>Power Electronics Engineer | DC-DC converters</p>
+                <p>Power Electronics Engineer | DC-DC Converters Specialist</p>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-    
     <nav>
-    <ul class="nav-links">
-        <li><a href="#" data-section="about">About</a></li>
-        <li><a href="#" data-section="education">Education</a></li>
-        <li><a href="#" data-section="skills">Skills</a></li>
-        <li><a href="#" data-section="projects">Projects</a></li>
-        <li><a href="#" data-section="publications">Publications</a></li>
-        <li><a href="#" data-section="contact">Contact</a></li>
-    </ul>
-</nav>
-    
-     <!-- ABOUT -->
-    <section id="about" class="section active">
-        <div class="about-content container">
-            <div class="about-text">
-                <h2 class="section-title">About Me</h2>
-                <p>I’m Adarsh Pulimoottil Jolly, a Power Electronics Engineer with a strong focus on energy-efficient systems, inverter topologies, and embedded control</p>
-            </div>
-        </div>
-    </section>
+        <ul class="nav-links">
+            <li><a href="#about" class="nav-link active">About</a></li>
+            <li><a href="#education" class="nav-link">Education</a></li>
+            <li><a href="#skills" class="nav-link">Skills</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#publications" class="nav-link">Publications</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
 
-    <!-- EDUCATION -->
-    <section id="education" class="section">
-        <div class="container">
-            <h2 class="section-title">Education</h2>
-            <p>[Your timeline content goes here]</p>
-        </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills" class="section">
-        <div class="container">
-            <h2 class="section-title">Skills</h2>
-            <p>[Your skills content goes here]</p>
-        </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects" class="section">
-        <div class="container">
-            <h2 class="section-title">Projects</h2>
-            <p>[Your projects content goes here]</p>
-        </div>
-    </section>
-
-    <!-- PUBLICATIONS -->
-    <section id="publications" class="section">
-        <div class="container">
-            <h2 class="section-title">Publications</h2>
-            <p>[Your publications content goes here]</p>
-        </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">Contact</h2>
-            <p>[Your contact content goes here]</p>
-        </div>
-    </section>
-   
-   
     <main>
-        <section id="projects" class="projects">
-            <div class="container">
-                <h2 class="section-title">Academic Projects</h2>
-                <div class="projects-grid">
-                    <div class="project-card">
-                        <div class="project-image" style="background-image: url('images/phase-shift-converter.jpg'); background-color: #e9ecef;">Master's Thesis</div>
-                        <div class="project-info">
-                            <h3>Magnetic optimization of a reconfigurable Phase-shift Full bridge converter</h3>
-                            <p>Developing optimization techniques for magnetic components in phase-shift full bridge converters with a focus on reconfigurable designs specific to railway applications.</p>
-                            <div class="project-tags">
-                                <span class="project-tag">Power Electronics</span>
-                                <span class="project-tag">Optimization</span>
-                                <span class="project-tag">Railway Applications</span>
-                            </div>
-                            <a href="projects/phase-shift-converter.html" class="project-view-btn">View Project</a>
-                        </div>
+        <!-- ABOUT SECTION -->
+        <section id="about" class="section active">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I'm Adarsh Pulimoottil Jolly, a dedicated Power Electronics Engineer with a passion for developing energy-efficient systems and innovative converter topologies. My expertise lies in DC-DC converters, inverter designs, and embedded control systems.</p>
+                    <p>With a strong foundation in both theoretical knowledge and practical application, I specialize in magnetic component optimization, power flow management, and advanced control strategies. My work focuses on creating sustainable and efficient power electronic solutions for modern applications.</p>
+                    <p>I'm constantly exploring new technologies and methodologies to push the boundaries of power electronics engineering, with particular interest in renewable energy systems and electric vehicle applications.</p>
+                </div>
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p><span class="icon">📧</span> adarshjolly245@gmail.com</p>
+                    <p><span class="icon">💼</span> linkedin.com/in/adarshp-j</p>
+                    <p><span class="icon">📍</span> Available for opportunities</p>
+                    <p><span class="icon">🎓</span> Master's in Power Electronics</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION SECTION -->
+        <section id="education" class="section">
+            <h2 class="section-title">Education</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Master of Science in Power Electronics</h3>
+                        <p><strong>Technical University</strong></p>
+                        <p class="date">2023 - 2025</p>
+                        <p>Specialization in DC-DC converters, magnetic component optimization, and power flow management. Current thesis focuses on magnetic optimization of reconfigurable Phase-shift Full bridge converters for railway applications.</p>
                     </div>
-                    <div class="project-card">
-                        <div class="project-image" style="background-image: url('images/fuzzy-logic.jpg'); background-color: #e9ecef;">Bachelor's Thesis</div>
-                        <div class="project-info">
-                            <h3>IGBT Switch Control Using Fuzzy Logic</h3>
-                            <p>Developed a fuzzy logic-based control strategy to adjust the duty cycle of an IGBT switch for fault current limitation. Enhanced circuit stability under various fault conditions through intelligent control.</p>
-                            <div class="project-tags">
-                                <span class="project-tag">Fuzzy Logic</span>
-                                <span class="project-tag">IGBT</span>
-                                <span class="project-tag">Fault Current Limitation</span>
-                            </div>
-                            <a href="projects/fuzzy-logic-control.html" class="project-view-btn">View Project</a>
-                        </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Bachelor of Technology in Electrical Engineering</h3>
+                        <p><strong>Engineering College</strong></p>
+                        <p class="date">2019 - 2023</p>
+                        <p>Strong foundation in electrical engineering principles with focus on power systems and control. Bachelor's thesis on IGBT Switch Control Using Fuzzy Logic for fault current limitation.</p>
                     </div>
-                    <div class="project-card">
-                        <div class="project-image" style="background-image: url('images/dc-dc-converter.jpg'); background-color: #e9ecef;">Converter Design</div>
-                        <div class="project-info">
-                            <h3>Bidirectional DC-DC Converter with Hybrid Energy Storage</h3>
-                            <p>Implementing analog and digital control for a bidirectional DC-DC converter integrating battery and supercapacitor systems. Optimizing power flow management between multiple energy storage elements.</p>
-                            <div class="project-tags">
-                                <span class="project-tag">DC-DC Converter</span>
-                                <span class="project-tag">Energy Storage</span>
-                                <span class="project-tag">Power Flow Management</span>
-                            </div>
-                            <a href="projects/bidirectional-converter.html" class="project-view-btn">View Project</a>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-image" style="background-image: url('images/pcb-design.jpg'); background-color: #e9ecef;">PCB Design</div>
-                        <div class="project-info">
-                            <h3>PCB Design and Assembly for Temperature Measurement</h3>
-                            <p>Designed and assembled PCBs for temperature measurement systems using ESP32. Optimized two-layer PCB layout to reduce electromagnetic interference (EMI).</p>
-                            <div class="project-tags">
-                                <span class="project-tag">PCB Design</span>
-                                <span class="project-tag">ESP32</span>
-                                <span class="project-tag">EMI Reduction</span>
-                            </div>
-                            <a href="projects/pcb-design.html" class="project-view-btn">View Project</a>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-image" style="background-image: url('images/semiconductor.jpg'); background-color: #e9ecef;">Semiconductor</div>
-                        <div class="project-info">
-                            <h3>Clean Room Work and Semiconductor Fabrication</h3>
-                            <p>Fabricated a P-N junction diode in a clean room environment. Performed IV and CV measurements for device characterization. Analyzed performance parameters and documented fabrication process.</p>
-                            <div class="project-tags">
-                                <span class="project-tag">Semiconductor</span>
-                                <span class="project-tag">P-N Junction</span>
-                                <span class="project-tag">Clean Room</span>
-                            </div>
-                            <a href="projects/semiconductor-fabrication.html" class="project-view-btn">View Project</a>
-                        </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Higher Secondary Education</h3>
+                        <p><strong>Science Stream</strong></p>
+                        <p class="date">2017 - 2019</p>
+                        <p>Physics, Chemistry, and Mathematics with excellent grades. Developed strong analytical and problem-solving skills that formed the foundation for engineering studies.</p>
                     </div>
                 </div>
             </div>
         </section>
-    </main>
-    
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Adarsh Pulimoottil Jolly. All Rights Reserved.</p>
-            <div class="social-links">
-                <a href="https://linkedin.com/in/adarshp-j" target="_blank">LinkedIn</a>
-                <a href="mailto:adarshjolly245@gmail.com">Email</a>
+
+        <!-- SKILLS SECTION -->
+        <section id="skills" class="section">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>Power Electronics</h3>
+                    <ul class="skill-list">
+                        <li>DC-DC Converter Design</li>
+                        <li>Inverter Topologies</li>
+                        <li>Phase-shift Full Bridge Converters</li>
+                        <li>Bidirectional Power Flow</li>
+                        <li>Magnetic Component Optimization</li>
+                        <li>Power Loss Analysis</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Control Systems</h3>
+                    <ul class="skill-list">
+                        <li>Fuzzy Logic Control</li>
+                        <li>PWM Control Strategies</li>
+                        <li>Embedded Control Systems</li>
+                        <li>Real-time Control</li>
+                        <li>Fault Current Limitation</li>
+                        <li>System Stability Analysis</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Design & Simulation</h3>
+                    <ul class="skill-list">
+                        <li>MATLAB/Simulink</li>
+                        <li>PSIM</li>
+                        <li>LTspice</li>
+                        <li>PCB Design (Altium/KiCad)</li>
+                        <li>EMI/EMC Analysis</li>
+                        <li>Thermal Management</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Hardware & Programming</h3>
+                    <ul class="skill-list">
+                        <li>ESP32/Arduino Programming</li>
+                        <li>C/C++ Programming</li>
+                        <li>Python for Analysis</li>
+                        <li>Laboratory Equipment</li>
+                        <li>Oscilloscope & Analyzers</li>
+                        <li>Clean Room Fabrication</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </footer>
-     <script>
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href').substring(1);
+        </section>
 
-        document.querySelectorAll('.section').forEach(section => {
-          section.classList.remove('active');
-        });
-
-        const targetSection = document.getElementById(targetId);
-        if(targetSection) {
-          targetSection.classList.add('active');
-          targetSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="section">
+            <h2 class="section-title">Academic Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">Master's Thesis</div>
+                    <div class="project-info">
+                        <h3>Magnetic Optimization of Reconfigurable Phase-shift Full Bridge Converter</h3>
+                        <p>Developing advanced optimization techniques for magnetic components in phase-shift full bridge converters with focus on reconfigurable designs for railway applications. Implementing novel control strategies to enhance efficiency and reduce losses.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Power Electronics</span>
+                            <span class="project-tag">Optimization</span>
+                            <span class="project-tag">Railway Applications</span>
+                            <span class="project-tag">Magnetic Design</span>
+                        </div>
+                        <a href="#" class="project-view-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">Bachelor's Thesis</div>
+                    <div class="project-info">
+                        <h3>IGBT Switch Control Using Fuzzy Logic</h3>
+                        <p>Developed an intelligent fuzzy logic-based control strategy to dynamically adjust IGBT switch duty cycles for effective fault current limitation. Enhanced circuit stability and protection under various fault conditions.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Fuzzy Logic</span>
+                            <span class="project-tag">IGBT Control</span>
+                            <span class="project-tag">Fault Protection</span>
+                            <span class="project-tag">Intelligent Control</span>
+                        </div>
+                        <a href="#" class="project-view-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">Converter Design</div>
+                    <div class="project-info">
+                        <h3>Bidirectional DC-DC Converter with Hybrid Energy Storage</h3>
+                        <p>Designed and implemented a sophisticated bidirectional DC-DC converter system integrating battery and supercapacitor technologies. Optimized power flow management between multiple energy storage elements for enhanced system efficiency.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">DC-DC Converter</span>
+                            <span class="project-tag">Energy Storage</span>
+                            <span class="project-tag">Power Management</span>
+                            <span class="project-tag">Hybrid Systems</span>
+                        </div>
+                        <a href="#" class="project-view-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">PCB Design</div>
+                    <div class="project-info">
+                        <h3>Advanced PCB Design for Temperature Measurement</h3>
+                        <p>Designed and assembled precision PCBs for temperature measurement systems using ESP32 microcontrollers. Implemented advanced two-layer PCB layout techniques to minimize electromagnetic interference and optimize signal integrity.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">PCB Design</span>
+                            <span class="project-tag">ESP32</span>
+                            <span class="project-tag">EMI Reduction</span>
+                            <span class="project-tag">Signal Integrity</span>
+                        </div>
+                        <a href="#" class="project-view-btn">View Details</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">Semiconductor Fab</div>
+                    <div class="project-info">
+                        <h3>Semiconductor Device Fabrication</h3>
+                        <p>Fabricated P-N junction diodes in a controlled clean room environment using advanced semiconductor processing techniques. Conducted comprehensive IV and CV measurements for detailed device characterization and performance analysis.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Semiconductor</span>
+                            <span class="project-tag">P-N Junction</span>
+                            <span class="project-tag">Clean Room</span>
+                            <span class="project-tag">Device
