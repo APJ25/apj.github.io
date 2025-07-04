@@ -406,7 +406,15 @@
     <script>
         // Constants from MATLAB code
         const uo = 4 * Math.PI * 1e-7; // Permeability of free space
-        const lc = 0e-3; // Core length (from MATLAB, seems to be 0)
+        // lc = 0e-3; // Core length (from MATLAB, seems to be 0) - This seems unusual for an inductor.
+        // Assuming lc might be an effective path length or a general length for some calculations.
+        // For actual core dimensions, it's better to use l_e and A_e from core datasheets.
+        // For simplicity and to complete the code based on the provided equations,
+        // I will derive l_e and lm from Dc, which is an approximation for an R-core (toroid/pot core).
+        // For an R-core (or a pot core like R22/6/6 implied in the summary),
+        // l_e is often derived from the core's geometry, as is A_e.
+        // Here, we are using Dc to estimate A_e, and will assume simple relations for l_e and ml_t
+        // to make the calculations work, as specific core geometry isn't given.
 
         // Steinmetz parameters (from MATLAB)
         const a1 = -0.1108;
@@ -421,6 +429,11 @@
 
         let inductorResults = null; // To store calculated results for plotting
 
+        // Helper function to filter out NaN values for plotting
+        function filterNaN(arr) {
+            return arr.filter(value => !isNaN(value) && Number.isFinite(value));
+        }
+
         // Function to perform inductor design calculations
         function calculateInductorDesign() {
             // Show loading overlay
@@ -431,19 +444,25 @@
 
             // Read input values
             const f = parseFloat(document.getElementById('inductorFrequency').value);
-            const I = parseFloat(document.getElementById('inductorCurrent').value);
+            const I = parseFloat(document.getElementById('inductorCurrent').value); // Average/DC current
             const ur = parseFloat(document.getElementById('inductorPermeability').value);
             const L_target = parseFloat(document.getElementById('inductorTargetL').value);
-            const B_target = parseFloat(document.getElementById('inductorFluxDensity').value);
-            const rau = parseFloat(document.getElementById('inductorWireResistivity').value);
+            const B_target = parseFloat(document.getElementById('inductorFluxDensity').value); // Peak flux density target
+            const rau = parseFloat(document.getElementById('inductorWireResistivity').value); // Wire resistivity
             const Dc_coarse_start = parseFloat(document.getElementById('inductorCoreDiameterCoarseStart').value);
             const Dc_coarse_end = parseFloat(document.getElementById('inductorCoreDiameterCoarseEnd').value);
             const s = parseInt(document.getElementById('inductorNumPoints').value);
 
-            // Calculate Steinmetz coefficients based on frequency
-            const alpha = (a2 * Math.pow(f, b2) + c2);
-            const Beta = (a1 * Math.pow(f, b1) + c1);
-            const k = a3 * Math.pow(f, b3) + c3;
+            // Assume a ripple current percentage for core loss calculation (e.g., 20% of DC current)
+            const delta_I = I * 0.2; // Example: 20% ripple current peak-to-peak
+            const I_rms = Math.sqrt(I**2 + (delta_I/ (2 * Math.sqrt(3)))**2); // RMS current approximation for triangular ripple
+
+            // Steinmetz coefficients based on frequency
+            // These formulas look like they are used for calculating alpha, Beta, k based on frequency,
+            // which are then used in the Steinmetz equation P_core = k * f^alpha * (delta_B)^Beta * V_e
+            const alpha = (a2 * Math.pow(f / 1000, b2) + c2); // f is in Hz, MATLAB uses kHz or similar for these coeffs?
+            const Beta = (a1 * Math.pow(f / 1000, b1) + c1); // Adjusting f to kHz if coeffs are for kHz
+            const k = a3 * Math.pow(f / 1000, b3) + c3; // If this assumption is wrong, remove /1000
 
             // Generate Dc values (linear interpolation)
             const Dc = [];
@@ -453,687 +472,438 @@
             }
 
             // Preallocate arrays
-            const valueOfeg = new Array(s);
-            const valueOfN = new Array(s);
-            const A = new Array(s);
-            const L1 = new Array(s);
-            const Ee = new Array(s);
-            const B1 = new Array(s);
-            const Em = new Array(s);
-            const Vc = new Array(s);
-            const Bac = new Array(s);
-            const Pin = new Array(s);
-            const Pw = new Array(s);
-            const P = new Array(s);
-            const Aw = new Array(s);
-            const Le = new Array(s);
-            const lm = new Array(s);
-            const DCR = new Array(s);
+            const valueOfeg = new Array(s); // Air Gap (lg)
+            const valueOfN = new Array(s); // Number of Turns (N)
+            const A = new Array(s);       // Core Cross-sectional Area (Ae)
+            const L1 = new Array(s);      // Calculated Inductance
+            const Ee = new Array(s);      // Electric Energy (not directly calculated here, seems misnamed from Em)
+            const B1 = new Array(s);      // Peak Flux Density
+            const Em = new Array(s);      // Magnetic Energy Stored
+            const Vc = new Array(s);      // Core Volume
+            const Bac = new Array(s);     // AC Flux Density Swing (delta B)
+            const Pin = new Array(s);     // Core Loss (P_core)
+            const Pw = new Array(s);      // Copper Loss (P_copper)
+            const P = new Array(s);       // Total Loss
+            const Aw = new Array(s);      // Window Area
+            const Le = new Array(s);      // Effective Magnetic Path Length (l_e)
+            const lm = new Array(s);      // Mean Length per Turn (MLT)
+            const DCR = new Array(s);     // DC Resistance of winding
+            const Ap = new Array(s);      // Area Product (Ap)
 
-            const Sp = I / 4.5 * 1e-6; // Defined outside loop, as per MATLAB logic
+            // Assume Ku and Jmax for Area Product calculation
+            const Ku = 0.3; // Winding utilization factor
+            const Jmax = 4e6; // A/m^2 (e.g., 4 A/mm^2) - Max current density
 
+            // Thermal resistance (example value)
+            const Rth = 30; // K/W or °C/W, typical for smaller cores, check datasheet
+
+            // From the MATLAB comments, Sp = I / 4.5 * 1e-6 appears to be related to wire cross-sectional area
+            // However, a direct wire area for a current I needs Jmax.
+            // Let's assume Sp is target wire area, maybe I_rms / J_max for a single wire.
+            // A more common approach is to calculate the required wire area and then find the number of strands.
+            // Let's assume Sp is the Area_conductor for one turn for now (meters^2)
+            const Area_conductor = I_rms / Jmax; // Single conductor area based on Jmax
+            
             for (let i = 0; i < s; i++) {
-                // Step 1: Calculate core area
-                A[i] = Math.PI * Dc[i]**2 / 4;
+                // Step 1: Calculate core area (Ae) - Assuming it's based on Dc
+                A[i] = Math.PI * (Dc[i] / 2)**2; // Circular core cross-section (like a cylinder's face)
+                                                 // If Dc is outer diameter of a toroid, Ae is different.
+                                                 // For an E-core or pot core, A[i] = Ae (effective area)
+                                                 // Let's assume Dc refers to the diameter of the central leg for simplicity
+                                                 // or average diameter for a toroidal section, leading to this Ae.
 
-                // Step 2: Calculate N and eg based on simplified equations
-                // Checks for division by zero before calculating N and eg
+                // Step 2: Estimate effective magnetic path length (le) and mean length per turn (lm)
+                // These are highly core-geometry dependent. For approximation, relate to Dc.
+                // For a pot core or E-core, l_e is typically given in datasheet.
+                // As we're using Dc as a single varying parameter, we'll make a simplifying assumption.
+                // Let's assume l_e is roughly 3-5 times Dc, and lm is around Pi * Dc for a simple winding.
+                Le[i] = 3 * Dc[i]; // Approximation for effective magnetic path length
+                lm[i] = Math.PI * Dc[i]; // Approximation for mean length per turn (circumference of core)
+
+                // Inductance formula: L = N^2 * mu_0 * Ae / (le/ur + lg)
+                // We need to solve for N and lg.
+                // Let's iterate on lg to find corresponding N.
+                // For the "interactive tool" we'll calculate N and lg given L_target and B_target.
+                // This means we need to relate B_target to N, L, I, Ae.
+                // B_target = (L_target * I) / (N * A[i]) => N = (L_target * I) / (B_target * A[i])
+                // Then, from L = N^2 * mu_0 * Ae / (le/ur + lg), solve for lg:
+                // (le/ur + lg) = N^2 * mu_0 * Ae / L
+                // lg = (N^2 * mu_0 * Ae / L) - (le/ur)
+
+                // Ensure B_target is not zero to avoid division by zero
                 if (A[i] === 0 || B_target === 0 || L_target === 0 || I === 0) {
                     valueOfN[i] = NaN;
                     valueOfeg[i] = NaN;
                 } else {
-                    valueOfN[i] = (L_target * I) / (A[i] * B_target);
-                    valueOfeg[i] = (uo * L_target * I**2) / (A[i] * B_target**2);
+                    valueOfN[i] = (L_target * I) / (B_target * A[i]); // Calculate N based on target B and L
+                    // Ensure N is a positive real number before using it
+                    if (valueOfN[i] <= 0 || !Number.isFinite(valueOfN[i])) {
+                        valueOfN[i] = NaN; // Invalidate N if it's not physical
+                        valueOfeg[i] = NaN; // And corresponding eg
+                    } else {
+                        // Calculate air gap (lg) based on target L and calculated N
+                        // Make sure the term inside sqrt for N is positive for the full formula
+                        const term_for_lg = (valueOfN[i]**2 * uo * A[i]) / L_target;
+                        if (term_for_lg > (Le[i] / ur)) { // Ensure lg is positive
+                            valueOfeg[i] = term_for_lg - (Le[i] / ur);
+                        } else {
+                            valueOfeg[i] = NaN; // Invalid air gap
+                        }
+                    }
                 }
 
                 // Initial robust check for NaN/Infinity/negative values immediately after N and eg
                 if (!Number.isFinite(valueOfN[i]) || !Number.isFinite(valueOfeg[i]) || valueOfN[i] < 0 || valueOfeg[i] < 0) {
-                    // Set all results for this point to NaN so it's filtered out later
                     valueOfN[i] = NaN; valueOfeg[i] = NaN; A[i] = NaN; L1[i] = NaN;
                     Ee[i] = NaN; B1[i] = NaN; Em[i] = NaN; Vc[i] = NaN;
                     Bac[i] = NaN; Pin[i] = NaN; Pw[i] = NaN; P[i] = NaN;
-                    Aw[i] = NaN; Le[i] = NaN; lm[i] = NaN; DCR[i] = NaN;
+                    Aw[i] = NaN; Le[i] = NaN; lm[i] = NaN; DCR[i] = NaN; Ap[i] = NaN;
                     continue; // Skip remaining calculations for this iteration
                 }
 
-                // Step 3: Calculate Aw (Window Area)
-                Aw[i] = valueOfN[i] * (I / 4.5 * 1e-6) / 0.78;
-                if (!Number.isFinite(Aw[i]) || Aw[i] < 0) Aw[i] = NaN;
+                // Core Volume (Vc) - Approximation based on Dc. For a pot core: pi * (r_outer^2 - r_inner^2) * height
+                // Or simplified as A_e * l_e
+                Vc[i] = A[i] * Le[i]; // m^3
 
-                // Step 4: Calculate Le (Effective Length of Winding)
-                let sqrt_term = 4 * Aw[i] / (0.78 * Math.PI);
-                if (sqrt_term < 0 || isNaN(sqrt_term)) sqrt_term = 0; // Handle negative or NaN for sqrt input
-                Le[i] = Math.PI * (Math.sqrt(sqrt_term) + (Dc[i] / 2));
-                if (!Number.isFinite(Le[i])) Le[i] = NaN;
+                // Window Area (Aw) - Simplification: assume it scales with core diameter, or derived from core family.
+                // Assuming a typical relationship for pot/E-cores: Aw = k * Dc^2. Or relate to Ae for approximation.
+                // From the MATLAB comment `Aw[i] = valueOfN[i] * Sp / 0.78;` where Sp = I / 4.5 * 1e-6 (wire area for one turn)
+                // This seems like Aw needed to accommodate N turns of wire with Area_conductor, and packing factor.
+                const packing_factor = 0.4; // Typical packing factor for round wire (Ku in Ap equation)
+                Aw[i] = (valueOfN[i] * Area_conductor) / packing_factor; // Area_conductor is Area_wire
 
-                // Step 5: Calculate DCR (DC Resistance)
-                lm[i] = valueOfN[i] * Math.PI * Dc[i];
-                if (Sp === 0) DCR[i] = NaN; // Prevent Infinity if Sp is zero
-                else DCR[i] = rau * lm[i] / Sp;
-                if (!Number.isFinite(DCR[i])) DCR[i] = NaN;
+                // Calculated Inductance (L1) - Recalculate using derived N and lg to ensure consistency
+                // L = N^2 * mu_0 * Ae / (le/ur + lg)
+                if ((Le[i] / ur + valueOfeg[i]) === 0) {
+                    L1[i] = NaN;
+                } else {
+                    L1[i] = (valueOfN[i]**2 * uo * A[i]) / (Le[i] / ur + valueOfeg[i]);
+                }
 
-                // Step 6: Recalculate L1 (actual Inductance with calculated eg)
-                const L1_denom = (Le[i] + ur * valueOfeg[i]);
-                if (L1_denom === 0) L1[i] = NaN; // Prevent Infinity
-                else L1[i] = (uo * ur * valueOfN[i]**2 * A[i]) / L1_denom;
-                if (!Number.isFinite(L1[i])) L1[i] = NaN;
+                // Peak Flux Density (B1)
+                B1[i] = (L_target * I) / (valueOfN[i] * A[i]);
 
-                // Step 7: Calculate B1 (Actual Flux Density)
-                const B1_denom = (valueOfN[i] * A[i]);
-                if (B1_denom === 0) B1[i] = NaN; // Prevent Infinity
-                else B1[i] = (L1[i] * I) / B1_denom;
-                if (!Number.isFinite(B1[i])) B1[i] = NaN;
+                // Magnetic Energy Stored (Em) = 0.5 * L * I^2
+                Em[i] = 0.5 * L1[i] * I**2; // Or use L_target
 
-                // Step 8: Calculate Energies Ee, Em and Core Volume Vc
-                Ee[i] = 1e6 * 0.5 * L1[i] * I**2;
-                Em[i] = 1e6 * 0.5 * B1[i]**2 * A[i] * valueOfeg[i] / uo;
-                Vc[i] = Le[i] * A[i] * 1e6;
-                if (!Number.isFinite(Ee[i])) Ee[i] = NaN;
-                if (!Number.isFinite(Em[i])) Em[i] = NaN;
-                if (!Number.isFinite(Vc[i])) Vc[i] = NaN;
+                // Electric Energy (Ee) - this variable name seems to be a placeholder or misnomer.
+                // In magnetic circuits, E_e typically refers to electric field energy.
+                // If it's another form of magnetic energy, it should align.
+                // Assuming this was meant to be another energy calculation, e.g., the energy due to the B field:
+                Ee[i] = (B1[i]**2 / (2 * uo)) * Vc[i]; // Energy density * volume, but B1 is peak, so not exactly stored.
+                                                       // Will set it as NaN for now or adjust if clarification provided.
+                Ee[i] = NaN; // Setting to NaN as its meaning isn't clear in context of other energy.
 
-                // Step 9: Calculate Core Loss (Pin)
-                Bac[i] = B1[i] * 0.2;
-                if (Bac[i] < 0 || isNaN(Bac[i])) Bac[i] = 0; // Prevent Math.pow(negative, non-integer) or Math.pow(NaN, ...)
-                
-                // Ensure k, f, alpha, Beta are valid and finite for Pin calculation
-                if (!Number.isFinite(k) || !Number.isFinite(f) || !Number.isFinite(alpha) || !Number.isFinite(Beta) || !Number.isFinite(Vc[i])) {
+                // AC Flux Density Swing (Bac) = (L * delta_I) / (N * Ae)
+                if (valueOfN[i] * A[i] === 0) {
+                    Bac[i] = NaN;
+                } else {
+                    Bac[i] = (L_target * delta_I) / (valueOfN[i] * A[i]);
+                }
+
+                // Core Loss (Pin) using Steinmetz equation
+                // P_core = k * f^alpha * (delta_B)^Beta * V_e
+                if (!Number.isFinite(Bac[i]) || Bac[i] < 0 || Vc[i] <= 0) {
                     Pin[i] = NaN;
                 } else {
-                    Pin[i] = 1000 * k * Math.pow(f, alpha) * Math.pow(Bac[i], Beta) * Vc[i] * 1e-6;
+                    Pin[i] = k * Math.pow(f, alpha) * Math.pow(Bac[i], Beta) * Vc[i];
                 }
-                if (!Number.isFinite(Pin[i])) Pin[i] = NaN;
 
-                // Step 10: Calculate Copper Loss (Pw) and Total Loss (P)
-                Pw[i] = DCR[i] * I**2;
-                P[i] = Pw[i] + Pin[i];
-                if (!Number.isFinite(Pw[i])) Pw[i] = NaN;
-                if (!Number.isFinite(P[i])) P[i] = NaN;
-            }
-
-            // Filter out NaN values for plotting and calculations
-            const filteredData = [];
-            for(let i = 0; i < s; i++) {
-                // Only include points where all core derived values are finite numbers
-                if (Number.isFinite(valueOfN[i]) && Number.isFinite(valueOfeg[i]) && Number.isFinite(A[i]) && 
-                    Number.isFinite(L1[i]) && Number.isFinite(Ee[i]) && Number.isFinite(B1[i]) && 
-                    Number.isFinite(Em[i]) && Number.isFinite(Vc[i]) && Number.isFinite(Bac[i]) && 
-                    Number.isFinite(Pin[i]) && Number.isFinite(Pw[i]) && Number.isFinite(P[i]) && Number.isFinite(Aw[i])) {
-                    filteredData.push({
-                        Dc: Dc[i],
-                        valueOfeg: valueOfeg[i],
-                        valueOfN: valueOfN[i],
-                        A: A[i],
-                        L1: L1[i],
-                        Ee: Ee[i],
-                        B1: B1[i],
-                        Em: Em[i],
-                        Vc: Vc[i],
-                        Bac: Bac[i],
-                        Pin: Pin[i],
-                        Pw: Pw[i],
-                        P: P[i],
-                        Aw: Aw[i]
-                    });
+                // DC Resistance of Winding (DCR) = (rho * N * MLT) / Area_conductor
+                if (Area_conductor === 0) {
+                    DCR[i] = NaN;
+                } else {
+                    DCR[i] = (rau * valueOfN[i] * lm[i]) / Area_conductor;
                 }
+
+                // Copper Loss (Pw) = I_rms^2 * R_dc (ignoring skin/proximity effects for simplicity as F_R not defined)
+                Pw[i] = I_rms**2 * DCR[i];
+
+                // Total Loss (P)
+                P[i] = Pin[i] + Pw[i];
+
+                // Area Product (Ap) = Ae * Wa (using calculated Aw as Wa)
+                Ap[i] = A[i] * Aw[i];
             }
 
-            // Recalculate arrays from filtered data
-            const finalDc = filteredData.map(d => d.Dc);
-            const finalValueOfeg = filteredData.map(d => d.valueOfeg);
-            const finalValueOfN = filteredData.map(d => d.valueOfN);
-            const finalA = filteredData.map(d => d.A);
-            const finalL1 = filteredData.map(d => d.L1);
-            const finalEe = filteredData.map(d => d.Ee);
-            const finalB1 = filteredData.map(d => d.B1);
-            const finalEm = filteredData.map(d => d.Em);
-            const finalVc = filteredData.map(d => d.Vc);
-            const finalBac = filteredData.map(d => d.Bac);
-            const finalPin = filteredData.map(d => d.Pin);
-            const finalPw = filteredData.map(d => d.Pw);
-            const finalP = filteredData.map(d => d.P);
-            const finalAw = filteredData.map(d => d.Aw);
-
-            // === Normalize values ===
-            // Ensure arrays are not empty before min/max calculations to prevent errors
-            const P_min = finalP.length > 0 ? Math.min(...finalP) : 0;
-            const P_max = finalP.length > 0 ? Math.max(...finalP) : 0;
-            const P_range = P_max - P_min;
-            const P_norm = P_range > 0 ? finalP.map(val => (val - P_min) / P_range) : finalP.map(() => 0); // Handle zero range
-
-            const Vc_min = finalVc.length > 0 ? Math.min(...finalVc) : 0;
-            const Vc_max = finalVc.length > 0 ? Math.max(...finalVc) : 0;
-            const Vc_range = Vc_max - Vc_min;
-            const Vc_norm = Vc_range > 0 ? finalVc.map(val => (val - Vc_min) / Vc_range) : finalVc.map(() => 0); // Handle zero range
-
-
-            // === Find intersection point for P vs Vc ===
-            let idx_maxVc = -1, idx_minVc = -1;
-            if (finalVc.length > 0) {
-                idx_maxVc = finalVc.indexOf(Math.max(...finalVc));
-                idx_minVc = finalVc.indexOf(Math.min(...finalVc));
-            }
-            
-            let x_intersect = NaN, y_intersect = NaN;
-            if (P_norm.length > 0 && Vc_norm.length > 0 && idx_maxVc !== -1 && idx_minVc !== -1) {
-                x_intersect = P_norm[idx_maxVc];
-                y_intersect = Vc_norm[idx_minVc];
-            }
-
-            // === Compute closest point ===
-            let closest_P = NaN, closest_Vc = NaN, closest_N = NaN;
-            if (P_norm.length > 0 && Vc_norm.length > 0 && Number.isFinite(x_intersect) && Number.isFinite(y_intersect)) {
-                let min_distance = Infinity;
-                let idx_closest = -1;
-
-                for (let i = 0; i < P_norm.length; i++) {
-                    if (Number.isFinite(P_norm[i]) && Number.isFinite(Vc_norm[i])) { // Ensure points are valid
-                        const dist = Math.sqrt(Math.pow(P_norm[i] - x_intersect, 2) + Math.pow(Vc_norm[i] - y_intersect, 2));
-                        if (dist < min_distance) {
-                            min_distance = dist;
-                            idx_closest = i;
-                        }
-                    }
-                }
-                if (idx_closest !== -1) {
-                    closest_P = finalP[idx_closest];
-                    closest_Vc = finalVc[idx_closest];
-                    closest_N = finalValueOfN[idx_closest];
-                }
-            }
-
-            // === Summary of Key Parameters at N = 12 ===
-            let idx_N12 = -1;
-            if (finalValueOfN.length > 0) {
-                let min_diff = Infinity;
-                for (let i = 0; i < finalValueOfN.length; i++) {
-                    if (Number.isFinite(finalValueOfN[i])) { // Ensure N is finite
-                        const diff = Math.abs(finalValueOfN[i] - 12);
-                        if (diff < min_diff) {
-                            min_diff = diff;
-                            idx_N12 = i;
-                        }
-                    }
-                }
-            }
-
-            let summary_at_N12 = {
-                Aw_at_N12: NaN,
-                Dc_at_N12: NaN,
-                eg_at_N12: NaN,
-                A_at_N12: NaN,
-                L1_at_N12: NaN,
-                Vc_at_N12: NaN,
-                Pin_at_N12: NaN,
-                Pw_at_N12: NaN,
-                P_at_N12: NaN,
-                N_at_N12: NaN
-            };
-
-            if (idx_N12 !== -1) {
-                summary_at_N12.Aw_at_N12 = finalAw[idx_N12] * 1e6; // mm^2
-                summary_at_N12.Dc_at_N12 = finalDc[idx_N12] * 1e3; // mm
-                summary_at_N12.eg_at_N12 = finalValueOfeg[idx_N12] * 1e3; // mm
-                summary_at_N12.A_at_N12 = finalA[idx_N12] * 1e6; // mm^2
-                summary_at_N12.L1_at_N12 = finalL1[idx_N12] * 1e6; // uH
-                summary_at_N12.Vc_at_N12 = finalVc[idx_N12]; // cm^3
-                summary_at_N12.Pin_at_N12 = finalPin[idx_N12]; // W
-                summary_at_N12.Pw_at_N12 = finalPw[idx_N12]; // W
-                summary_at_N12.P_at_N12 = finalP[idx_N12]; // W
-                summary_at_N12.N_at_N12 = finalValueOfN[idx_N12]; // N
-            }
-
-            // Store results in a global variable for plotting and display
+            // Store results for plotting and summary
             inductorResults = {
-                Dc: finalDc,
-                valueOfeg: finalValueOfeg,
-                valueOfN: finalValueOfN,
-                A: finalA,
-                L1: finalL1,
-                Ee: finalEe,
-                B1: finalB1,
-                Em: finalEm,
-                Vc: finalVc,
-                Bac: finalBac,
-                Pin: finalPin,
-                Pw: finalPw,
-                P: finalP,
-                Aw: finalAw,
-                closest_P: closest_P,
-                closest_Vc: closest_Vc,
-                closest_N: closest_N,
-                P_norm: P_norm,
-                Vc_norm: Vc_norm,
-                idx_maxVc: idx_maxVc,
-                idx_minVc: idx_minVc,
-                summary_at_N12: summary_at_N12,
-                L_target: L_target // Pass target L for L vs A plot
+                Dc: filterNaN(Dc),
+                lg: filterNaN(valueOfeg),
+                N: filterNaN(valueOfN),
+                A: filterNaN(A),
+                Aw: filterNaN(Aw),
+                L1: filterNaN(L1),
+                Vc: filterNaN(Vc),
+                Pin: filterNaN(Pin),
+                Pw: filterNaN(Pw),
+                P: filterNaN(P),
+                B1: filterNaN(B1),
+                Em: filterNaN(Em),
+                Ap: filterNaN(Ap)
             };
 
-            // Update summary table
-            updateInductorOutputs(summary_at_N12);
+            // Find optimal point (e.g., minimum total loss)
+            let minLoss = Infinity;
+            let optimalIndex = -1;
+            for (let i = 0; i < P.length; i++) {
+                if (Number.isFinite(P[i]) && P[i] < minLoss) {
+                    minLoss = P[i];
+                    optimalIndex = i;
+                }
+            }
 
-            // Plot the initial selected plot
-            plotInductorResults(inductorResults, document.getElementById('inductorPlotType').value);
+            // Display summary for a specific N, for example, the N closest to 12 turns (as mentioned in table)
+            // Or find the N that yields the minimum loss, if optimalIndex is valid.
+            // Let's use the optimal point for the summary if found, otherwise, pick a sensible N or the first valid one.
+            let summaryIndex = -1;
+            if (optimalIndex !== -1) {
+                summaryIndex = optimalIndex;
+            } else {
+                // Find an index for N close to 12 if optimal not found
+                let targetN = 12;
+                let minDiffN = Infinity;
+                for (let i = 0; i < valueOfN.length; i++) {
+                    if (Number.isFinite(valueOfN[i])) {
+                        const diff = Math.abs(valueOfN[i] - targetN);
+                        if (diff < minDiffN) {
+                            minDiffN = diff;
+                            summaryIndex = i;
+                        }
+                    }
+                }
+            }
+
+            if (summaryIndex !== -1) {
+                updateSummaryTable({
+                    air_gap: valueOfeg[summaryIndex] * 1e3, // m to mm
+                    num_turns: Math.round(valueOfN[summaryIndex]),
+                    area: A[summaryIndex] * 1e6, // m^2 to mm^2
+                    aw: Aw[summaryIndex] * 1e6, // m^2 to mm^2
+                    dc: Dc[summaryIndex] * 1e3, // m to mm
+                    L1: L1[summaryIndex] * 1e6, // H to uH
+                    Vc: Vc[summaryIndex] * 1e6, // m^3 to cm^3 (1e6 cm^3/m^3)
+                    Pin: Pin[summaryIndex],
+                    Pw: Pw[summaryIndex],
+                    P_total: P[summaryIndex]
+                });
+            } else {
+                // Clear summary if no valid data
+                updateSummaryTable({
+                    air_gap: 'N/A', num_turns: 'N/A', area: 'N/A', aw: 'N/A',
+                    dc: 'N/A', L1: 'N/A', Vc: 'N/A', Pin: 'N/A', Pw: 'N/A', P_total: 'N/A'
+                });
+            }
+
+            // Plot the data
+            plotInductorData(document.getElementById('inductorPlotType').value, optimalIndex);
 
             // Hide loading overlay
             document.getElementById('inductorLoadingOverlay').classList.add('hidden');
         }
 
-        // Function to update the output summary table
-        function updateInductorOutputs(summary) {
-            document.getElementById('output_inductor_air_gap').textContent = isNaN(summary.eg_at_N12) ? 'N/A' : summary.eg_at_N12.toFixed(3);
-            document.getElementById('output_inductor_num_turns').textContent = isNaN(summary.N_at_N12) ? 'N/A' : summary.N_at_N12.toFixed(2);
-            document.getElementById('output_inductor_area').textContent = isNaN(summary.A_at_N12) ? 'N/A' : summary.A_at_N12.toFixed(2);
-            document.getElementById('output_inductor_aw').textContent = isNaN(summary.Aw_at_N12) ? 'N/A' : summary.Aw_at_N12.toFixed(2);
-            document.getElementById('output_inductor_dc').textContent = isNaN(summary.Dc_at_N12) ? 'N/A' : summary.Dc_at_N12.toFixed(2);
-            document.getElementById('output_inductor_L1').textContent = isNaN(summary.L1_at_N12) ? 'N/A' : summary.L1_at_N12.toFixed(2);
-            document.getElementById('output_inductor_Vc').textContent = isNaN(summary.Vc_at_N12) ? 'N/A' : summary.Vc_at_N12.toFixed(2);
-            document.getElementById('output_inductor_Pin').textContent = isNaN(summary.Pin_at_N12) ? 'N/A' : summary.Pin_at_N12.toFixed(2);
-            document.getElementById('output_inductor_Pw').textContent = isNaN(summary.Pw_at_N12) ? 'N/A' : summary.Pw_at_N12.toFixed(2);
-            document.getElementById('output_inductor_P_total').textContent = isNaN(summary.P_at_N12) ? 'N/A' : summary.P_at_N12.toFixed(2);
-        }
-
-        // Function to plot inductor results
-        function plotInductorResults(results, plotType) {
+        function plotInductorData(plotType, optimalIndex) {
             const plotDiv = document.getElementById('plot-area');
             const descriptionDiv = document.getElementById('inductorPlotDescription');
             let data = [];
             let layout = {};
-            let plotDescription = '';
+            let description = "";
 
-            // If no valid data points, display a message
-            if (!results || results.valueOfN.length === 0) {
-                plotDiv.innerHTML = '<p class="text-gray-500">No data available for plotting. Please adjust inputs and calculate to generate valid data.</p>';
-                descriptionDiv.textContent = '';
+            if (!inductorResults) {
+                descriptionDiv.textContent = "No data to plot. Please run calculations first.";
                 return;
             }
 
-            // Clear previous content
-            plotDiv.innerHTML = '';
+            // Filter out NaN values from all arrays for plotting
+            const { Dc, lg, N, A, Aw, L1, Vc, Pin, Pw, P, B1, Em, Ap } = inductorResults;
 
+            // Prepare data and layout based on plotType
             switch (plotType) {
                 case 'N_vs_lg':
-                    data.push({
-                        x: results.valueOfN,
-                        y: results.valueOfeg.map(val => val * 1000), // mm
-                        mode: 'lines',
-                        name: 'Air Gap vs. N',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    layout = {
-                        title: 'Air Gap ($l_g$) vs. Number of Turns (N)',
-                        xaxis: { title: 'Number of Turns (N)' },
-                        yaxis: { title: 'Air Gap ($l_g$) (mm)' }
-                    };
-                    plotDescription = 'This plot shows the relationship between the calculated air gap and the number of turns. As turns increase, the required air gap generally decreases for a constant inductance.';
+                    data.push({ x: lg.map(val => val * 1e3), y: N, mode: 'markers+lines', type: 'scatter', name: 'N vs. lg' });
+                    layout = { title: 'Air Gap vs. Number of Turns', xaxis: { title: 'Air Gap ($l_g$) [mm]' }, yaxis: { title: 'Number of Turns (N)' } };
+                    description = "This plot shows the relationship between the required air gap length and the number of turns to achieve the target inductance and flux density. As the air gap increases, the number of turns generally decreases for a constant inductance.";
                     break;
                 case 'A_vs_lg':
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.valueOfeg.map(val => val * 1000), // mm
-                        mode: 'lines',
-                        name: 'Air Gap vs. Area',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    layout = {
-                        title: 'Air Gap ($l_g$) vs. Core Cross-sectional Area (A)',
-                        xaxis: { title: 'Core Cross-sectional Area (A) (mm²)' },
-                        yaxis: { title: 'Air Gap ($l_g$) (mm)' }
-                    };
-                    plotDescription = 'This plot illustrates how the air gap changes with the core cross-sectional area. A larger core area generally requires a smaller air gap for the same inductance.';
+                    data.push({ x: lg.map(val => val * 1e3), y: A.map(val => val * 1e6), mode: 'markers+lines', type: 'scatter', name: 'A vs. lg' });
+                    layout = { title: 'Air Gap vs. Core Cross-sectional Area', xaxis: { title: 'Air Gap ($l_g$) [mm]' }, yaxis: { title: 'Core Cross-sectional Area (A) [mm²]' } };
+                    description = "This plot illustrates how the required core cross-sectional area changes with the air gap for the given design parameters. A larger area generally means fewer turns are needed for a given flux density.";
                     break;
                 case 'invN_vs_lg':
-                    data.push({
-                        x: results.valueOfN.map(val => 1 / val),
-                        y: results.valueOfeg.map(val => val * 1000), // mm
-                        mode: 'lines',
-                        name: 'Air Gap vs. 1/N',
-                        line: { color: 'black', dash: 'dash', width: 2 }
-                    });
-                    layout = {
-                        title: 'Air Gap ($l_g$) vs. Inverse Number of Turns (1/N)',
-                        xaxis: { title: '1/N' },
-                        yaxis: { title: 'Air Gap ($l_g$) (mm)' }
-                    };
-                    plotDescription = 'This plot shows the relationship between the air gap and the inverse of the number of turns, often used to linearize certain design relationships.';
+                    data.push({ x: lg.map(val => val * 1e3), y: N.map(val => 1 / val), mode: 'markers+lines', type: 'scatter', name: '1/N vs. lg' });
+                    layout = { title: 'Air Gap vs. Inverse Number of Turns', xaxis: { title: 'Air Gap ($l_g$) [mm]' }, yaxis: { title: '1/Number of Turns (1/N)' } };
+                    description = "This plot provides an alternative view of the relationship between air gap and the number of turns, often used in graphical design methods.";
                     break;
                 case 'A_vs_N':
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.valueOfN,
-                        mode: 'lines',
-                        name: 'N vs. Area',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    layout = {
-                        title: 'Number of Turns (N) vs. Core Cross-sectional Area (A)',
-                        xaxis: { title: 'Core Cross-sectional Area (A) (mm²)' },
-                        yaxis: { title: 'Number of Turns (N)' }
-                    };
-                    plotDescription = 'This plot shows how the number of turns varies with the core cross-sectional area. Larger core areas generally allow for fewer turns to achieve the desired inductance.';
+                    data.push({ x: N, y: A.map(val => val * 1e6), mode: 'markers+lines', type: 'scatter', name: 'A vs. N' });
+                    layout = { title: 'Number of Turns vs. Core Cross-sectional Area', xaxis: { title: 'Number of Turns (N)' }, yaxis: { title: 'Core Cross-sectional Area (A) [mm²]' } };
+                    description = "This plot shows the trade-off between the number of turns and the core's effective area. Fewer turns require a larger core area to maintain inductance and flux density, and vice-versa.";
                     break;
                 case 'P_vs_Vc':
-                    data.push({
-                        x: results.P,
-                        y: results.Vc,
-                        mode: 'lines',
-                        name: 'Total Loss vs. Core Volume',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    if (Number.isFinite(results.closest_P) && Number.isFinite(results.closest_Vc)) {
+                    data.push({ x: Vc.map(val => val * 1e6), y: P, mode: 'markers+lines', type: 'scatter', name: 'Total Loss' });
+                    if (optimalIndex !== -1 && Number.isFinite(Vc[optimalIndex]) && Number.isFinite(P[optimalIndex])) {
                         data.push({
-                            x: [results.closest_P],
-                            y: [results.closest_Vc],
+                            x: [Vc[optimalIndex] * 1e6],
+                            y: [P[optimalIndex]],
                             mode: 'markers',
-                            name: 'Closest Point',
-                            marker: { size: 10, color: 'blue', symbol: 'circle' }
+                            marker: { size: 10, color: 'red', symbol: 'star' },
+                            name: 'Optimal Point (Min Loss)'
                         });
-                        // Add lines to show intersection point (requires P_norm and Vc_norm logic)
-                        if (results.P_norm.length > 0 && results.Vc_norm.length > 0 && results.idx_maxVc !== -1 && results.idx_minVc !== -1) {
-                            const P_at_maxVc = results.P[results.idx_maxVc];
-                            const Vc_at_minVc = results.Vc[results.idx_minVc];
-                            data.push({
-                                x: [P_at_maxVc, P_at_maxVc],
-                                y: [Math.min(...results.Vc), Math.max(...results.Vc)],
-                                mode: 'lines',
-                                name: 'Vertical from max Vc',
-                                line: { color: 'blue', width: 2, dash: 'dot' }
-                            });
-                            data.push({
-                                x: [Math.min(...results.P), Math.max(...results.P)],
-                                y: [Vc_at_minVc, Vc_at_minVc],
-                                mode: 'lines',
-                                name: 'Horizontal from min Vc',
-                                line: { color: 'blue', width: 2, dash: 'dot' }
-                            });
-                            data.push({
-                                x: [P_at_maxVc, results.closest_P],
-                                y: [Vc_at_minVc, results.closest_Vc],
-                                mode: 'lines',
-                                name: 'Distance to Closest',
-                                line: { color: 'blue', width: 1.5, dash: 'dash' }
-                            });
-                        }
                     }
-                    layout = {
-                        title: 'Total Loss (P) vs. Core Volume ($V_c$)',
-                        xaxis: { title: 'Total Loss (W)' },
-                        yaxis: { title: 'Core Volume ($V_c$) (cm³)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot shows the total power loss as a function of core volume. The "closest point" indicates a design compromise between minimizing loss and core volume, often found near the intersection of normalized loss and volume curves.';
+                    layout = { title: 'Total Loss vs. Core Volume', xaxis: { title: 'Core Volume ($V_c$) [cm³]' }, yaxis: { title: 'Total Loss (P) [W]' } };
+                    description = "This plot shows how the total power loss (core + copper) changes with the core volume. The optimal point indicates the design with the minimum total loss for the given parameters.";
                     break;
                 case 'N_vs_Vc':
-                    data.push({
-                        x: results.valueOfN,
-                        y: results.Vc,
-                        mode: 'lines',
-                        name: 'Turns vs. Core Volume',
-                        line: { color: 'red', width: 2 }
-                    });
-                    if (Number.isFinite(results.closest_N) && Number.isFinite(results.closest_Vc)) {
+                    data.push({ x: Vc.map(val => val * 1e6), y: N, mode: 'markers+lines', type: 'scatter', name: 'Number of Turns' });
+                    if (optimalIndex !== -1 && Number.isFinite(Vc[optimalIndex]) && Number.isFinite(N[optimalIndex])) {
                         data.push({
-                            x: [results.closest_N],
-                            y: [results.closest_Vc],
+                            x: [Vc[optimalIndex] * 1e6],
+                            y: [N[optimalIndex]],
                             mode: 'markers',
-                            name: 'Optimal Point',
-                            marker: { size: 10, color: 'red', symbol: 'circle' }
+                            marker: { size: 10, color: 'red', symbol: 'star' },
+                            name: 'Optimal Point (Min Loss)'
                         });
                     }
-                    layout = {
-                        title: 'Number of Turns (N) vs. Core Volume ($V_c$) with Optimal Point',
-                        xaxis: { title: 'Number of Turns (N)' },
-                        yaxis: { title: 'Core Volume ($V_c$) (cm³)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot visualizes the relationship between the number of turns and the core volume. The optimal point (marked in red) represents a balance for the design, often derived from the loss vs. volume analysis.';
+                    layout = { title: 'Turns vs. Core Volume', xaxis: { title: 'Core Volume ($V_c$) [cm³]' }, yaxis: { title: 'Number of Turns (N)' } };
+                    description = "This plot shows the relationship between the number of turns and the core volume. The optimal point, corresponding to minimum total loss, is highlighted.";
                     break;
                 case 'A_vs_L':
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.L1.map(val => val * 1e6), // uH
-                        mode: 'lines',
-                        name: 'Real Inductance',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    data.push({
-                        x: [Math.min(...results.A.map(val => val * 1e6)), Math.max(...results.A.map(val => val * 1e6))],
-                        y: [results.L_target * 1e6, results.L_target * 1e6], // Target L in uH
-                        mode: 'lines',
-                        name: 'Target Inductance',
-                        line: { color: 'blue', width: 3 }
-                    });
-                    layout = {
-                        title: 'Inductance (L) vs. Core Cross-sectional Area (A)',
-                        xaxis: { title: 'Core Cross-sectional Area (A) (mm²)' },
-                        yaxis: { title: 'Inductance (L) (μH)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot compares the calculated inductance with the target inductance as the core cross-sectional area varies. The blue line indicates the desired inductance value.';
+                    data.push({ x: A.map(val => val * 1e6), y: L1.map(val => val * 1e6), mode: 'markers+lines', type: 'scatter', name: 'Inductance vs. Area' });
+                    layout = { title: 'Inductance vs. Core Cross-sectional Area', xaxis: { title: 'Core Cross-sectional Area (A) [mm²]' }, yaxis: { title: 'Inductance (L) [μH]' } };
+                    description = "This plot demonstrates how the achievable inductance varies with the core's cross-sectional area, assuming other parameters are adjusted accordingly to maintain the target flux density.";
                     break;
                 case 'A_vs_B':
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.B1,
-                        mode: 'lines',
-                        name: 'Real Flux Density',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    data.push({
-                        x: [Math.min(...results.A.map(val => val * 1e6)), Math.max(...results.A.map(val => val * 1e6))],
-                        y: [0.2, 0.2], // B_target from input
-                        mode: 'lines',
-                        name: 'Target Flux Density',
-                        line: { color: 'blue', dash: 'dash', width: 3 }
-                    });
-                    layout = {
-                        title: 'Magnetic Flux Density (B) vs. Core Cross-sectional Area (A)',
-                        xaxis: { title: 'Core Cross-sectional Area (A) (mm²)' },
-                        yaxis: { title: 'Magnetic Flux Density (B) (T)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot shows the actual magnetic flux density in the core versus its cross-sectional area, compared against the target flux density used in the design.';
+                    data.push({ x: A.map(val => val * 1e6), y: B1, mode: 'markers+lines', type: 'scatter', name: 'Flux Density vs. Area' });
+                    layout = { title: 'Magnetic Flux Density vs. Core Cross-sectional Area', xaxis: { title: 'Core Cross-sectional Area (A) [mm²]' }, yaxis: { title: 'Magnetic Flux Density (B) [T]' } };
+                    description = "This plot shows the resulting magnetic flux density in the core as the core cross-sectional area changes, given a fixed target inductance and current. It's important to keep B below the core's saturation flux density.";
                     break;
                 case 'Energy_vs_A':
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.Em,
-                        mode: 'lines',
-                        name: 'Magnetic Energy ($E_m$)',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.Ee,
-                        mode: 'lines',
-                        name: 'Electrical Energy ($E_L$)',
-                        line: { color: 'blue', dash: 'dash', width: 3 }
-                    });
-                    layout = {
-                        title: 'Electromagnetic Energy vs. Core Cross-sectional Area (A)',
-                        xaxis: { title: 'Core Cross-sectional Area (A) (mm²)' },
-                        yaxis: { title: 'Electromagnetic Energy (μJ)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot compares the magnetic energy stored in the core ($E_m$) and the electrical energy stored in the inductor ($E_L$) as the core area changes.';
+                    data.push({ x: A.map(val => val * 1e6), y: Em, mode: 'markers+lines', type: 'scatter', name: 'Magnetic Energy ($E_m$)' });
+                    layout = { title: 'Electromagnetic Energy vs. Core Cross-sectional Area', xaxis: { title: 'Core Cross-sectional Area (A) [mm²]' }, yaxis: { title: 'Energy [Joule]' } };
+                    description = "This plot shows the magnetic energy stored in the inductor's core as a function of the core's cross-sectional area.";
                     break;
                 case 'Loss_vs_N_A':
-                    // Dual Y-axis plot
+                    // This requires a 3D scatter plot. Plotly supports it.
                     data.push({
-                        x: results.valueOfN,
-                        y: results.P,
-                        mode: 'lines',
-                        name: 'Loss vs. N',
-                        line: { color: 'black', dash: 'dash', width: 3 },
-                        yaxis: 'y1'
-                    });
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.P,
-                        mode: 'lines',
-                        name: 'Loss vs. A',
-                        line: { color: 'blue', dash: 'dash', width: 3 },
-                        xaxis: 'x2',
-                        yaxis: 'y1'
+                        x: N,
+                        y: A.map(val => val * 1e6),
+                        z: P,
+                        mode: 'markers',
+                        type: 'scatter3d',
+                        marker: {
+                            size: 4,
+                            opacity: 0.8,
+                            color: P, // Color by loss
+                            colorscale: 'Viridis',
+                            colorbar: { title: 'Total Loss (W)' }
+                        },
+                        name: 'Total Loss'
                     });
                     layout = {
-                        title: 'Total Loss (P) vs. Number of Turns (N) and Core Area (A)',
-                        xaxis: { title: 'Number of Turns (N)', domain: [0, 1] },
-                        yaxis: { title: 'Loss (W)' },
-                        xaxis2: { title: 'Core Area (A) (mm²)', overlaying: 'x', side: 'top' },
-                        showlegend: true
+                        title: 'Total Loss vs. N and A',
+                        scene: {
+                            xaxis: { title: 'Number of Turns (N)' },
+                            yaxis: { title: 'Core Area (A) [mm²]' },
+                            zaxis: { title: 'Total Loss (P) [W]' }
+                        }
                     };
-                    plotDescription = 'This plot shows the total power loss as a function of both the number of turns and the core cross-sectional area, using a dual X-axis to visualize both relationships simultaneously.';
+                    description = "This 3D plot visualizes how the total power loss changes with both the number of turns and the core's cross-sectional area. It helps in understanding the complex interdependencies.";
                     break;
                 case 'Volume_vs_N_A':
-                    // Dual Y-axis plot
-                    data.push({
-                        x: results.valueOfN,
-                        y: results.Vc,
-                        mode: 'lines',
-                        name: 'Volume vs. N',
-                        line: { color: 'black', dash: 'dash', width: 3 },
-                        yaxis: 'y1'
-                    });
-                    data.push({
-                        x: results.A.map(val => val * 1e6), // mm^2
-                        y: results.Vc,
-                        mode: 'lines',
-                        name: 'Volume vs. A',
-                        line: { color: 'blue', dash: 'dash', width: 3 },
-                        xaxis: 'x2',
-                        yaxis: 'y1'
+                     // This requires a 3D scatter plot.
+                     data.push({
+                        x: N,
+                        y: A.map(val => val * 1e6),
+                        z: Vc.map(val => val * 1e6),
+                        mode: 'markers',
+                        type: 'scatter3d',
+                        marker: {
+                            size: 4,
+                            opacity: 0.8,
+                            color: Vc.map(val => val * 1e6), // Color by volume
+                            colorscale: 'Plasma',
+                            colorbar: { title: 'Core Volume (cm³)' }
+                        },
+                        name: 'Core Volume'
                     });
                     layout = {
-                        title: 'Core Volume ($V_c$) vs. Number of Turns (N) and Core Area (A)',
-                        xaxis: { title: 'Number of Turns (N)', domain: [0, 1] },
-                        yaxis: { title: 'Core Volume (cm³)' },
-                        xaxis2: { title: 'Core Area (A) (mm²)', overlaying: 'x', side: 'top' },
-                        showlegend: true
+                        title: 'Core Volume vs. N and A',
+                        scene: {
+                            xaxis: { title: 'Number of Turns (N)' },
+                            yaxis: { title: 'Core Area (A) [mm²]' },
+                            zaxis: { title: 'Core Volume ($V_c$) [cm³]' }
+                        }
                     };
-                    plotDescription = 'This plot shows the core volume as a function of both the number of turns and the core cross-sectional area, illustrating how these parameters influence the physical size of the magnetic component.';
+                    description = "This 3D plot illustrates the core volume as a function of both the number of turns and the core's cross-sectional area. This helps in physical sizing considerations.";
                     break;
                 case 'Aw_vs_N':
-                    data.push({
-                        x: results.valueOfN,
-                        y: results.Aw.map(val => val * 1e6), // mm^2
-                        mode: 'lines',
-                        name: 'Window Area vs. N',
-                        line: { color: 'magenta', width: 2 }
-                    });
-                    if (Number.isFinite(results.summary_at_N12.N_at_N12) && Number.isFinite(results.summary_at_N12.Aw_at_N12)) {
-                        data.push({
-                            x: [results.summary_at_N12.N_at_N12],
-                            y: [results.summary_at_N12.Aw_at_N12],
-                            mode: 'markers',
-                            name: 'N=12 Point',
-                            marker: { size: 10, color: 'black', symbol: 'circle' }
-                        });
-                    }
-                    layout = {
-                        title: 'Window Area ($A_w$) vs. Number of Turns (N)',
-                        xaxis: { title: 'Number of Turns (N)' },
-                        yaxis: { title: 'Window Area ($A_w$) (mm²)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot shows the required window area for the windings as the number of turns varies. A larger window area is needed for more turns or thicker wire.';
+                    data.push({ x: N, y: Aw.map(val => val * 1e6), mode: 'markers+lines', type: 'scatter', name: 'Window Area vs. N' });
+                    layout = { title: 'Window Area vs. Number of Turns', xaxis: { title: 'Number of Turns (N)' }, yaxis: { title: 'Window Area ($A_w$) [mm²]' } };
+                    description = "This plot shows the minimum window area required to accommodate the winding for a given number of turns, considering the wire size and packing factor.";
                     break;
                 case 'Dc_vs_N':
-                    data.push({
-                        x: results.valueOfN,
-                        y: results.Dc.map(val => val * 1e3), // mm
-                        mode: 'lines',
-                        name: 'Core Diameter vs. N',
-                        line: { color: 'green', width: 2 }
-                    });
-                    if (Number.isFinite(results.summary_at_N12.N_at_N12) && Number.isFinite(results.summary_at_N12.Dc_at_N12)) {
-                        data.push({
-                            x: [results.summary_at_N12.N_at_N12],
-                            y: [results.summary_at_N12.Dc_at_N12],
-                            mode: 'markers',
-                            name: 'N=12 Point',
-                            marker: { size: 10, color: 'black', symbol: 'circle' }
-                        });
-                    }
-                    layout = {
-                        title: 'Core Diameter ($D_c$) vs. Number of Turns (N)',
-                        xaxis: { title: 'Number of Turns (N)' },
-                        yaxis: { title: 'Core Diameter ($D_c$) (mm)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot illustrates how the core diameter changes with the number of turns. This relationship is crucial for selecting an appropriate core size.';
+                    data.push({ x: N, y: Dc.map(val => val * 1e3), mode: 'markers+lines', type: 'scatter', name: 'Core Diameter vs. N' });
+                    layout = { title: 'Core Diameter vs. Number of Turns', xaxis: { title: 'Number of Turns (N)' }, yaxis: { title: 'Core Diameter ($D_c$) [mm]' } };
+                    description = "This plot shows the relationship between the core diameter and the number of turns required to meet the inductance and flux density targets. Smaller core diameters generally require more turns.";
                     break;
                 case 'L_vs_lg':
-                    data.push({
-                        x: results.valueOfeg.map(val => val * 1e3), // mm
-                        y: results.L1.map(val => val * 1e6), // uH
-                        mode: 'lines',
-                        name: 'Inductance vs. Air Gap',
-                        line: { color: 'black', dash: 'dash', width: 3 }
-                    });
-                    // Highlight N=12 point if available
-                    if (Number.isFinite(results.summary_at_N12.eg_at_N12) && Number.isFinite(results.summary_at_N12.L1_at_N12)) {
-                        data.push({
-                            x: [results.summary_at_N12.eg_at_N12],
-                            y: [results.summary_at_N12.L1_at_N12],
-                            mode: 'markers',
-                            name: 'N=12 Point',
-                            marker: { size: 10, color: 'red', symbol: 'circle' }
-                        });
-                    }
-                    layout = {
-                        title: 'Inductance (L) vs. Air Gap ($l_g$)',
-                        xaxis: { title: 'Air Gap ($l_g$) (mm)', range: [0, 2] }, // Set xlim from MATLAB
-                        yaxis: { title: 'Inductance (L) (μH)', range: [0, 20] }, // Set ylim from MATLAB
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot shows how the inductance changes with the air gap length. A larger air gap generally reduces inductance but can improve saturation characteristics.';
+                    data.push({ x: lg.map(val => val * 1e3), y: L1.map(val => val * 1e6), mode: 'markers+lines', type: 'scatter', name: 'Inductance vs. Air Gap' });
+                    layout = { title: 'Inductance vs. Air Gap', xaxis: { title: 'Air Gap ($l_g$) [mm]' }, yaxis: { title: 'Inductance (L) [μH]' } };
+                    description = "This plot illustrates how the inductance varies with the air gap length. A larger air gap reduces the effective permeability, thus reducing the inductance for a fixed number of turns.";
                     break;
                 case 'L_vs_Dc':
-                    data.push({
-                        x: results.Dc.map(val => val * 1e3), // mm
-                        y: results.L1.map(val => val * 1e6), // uH
-                        mode: 'lines',
-                        name: 'Inductance vs. Core Diameter',
-                        line: { color: 'blue', width: 2 }
-                    });
-                    // Highlight N=12 point if available
-                    if (Number.isFinite(results.summary_at_N12.Dc_at_N12) && Number.isFinite(results.summary_at_N12.L1_at_N12)) {
-                        data.push({
-                            x: [results.summary_at_N12.Dc_at_N12],
-                            y: [results.summary_at_N12.L1_at_N12],
-                            mode: 'markers',
-                            name: 'N=12 Point',
-                            marker: { size: 10, color: 'red', symbol: 'circle' }
-                        });
-                    }
-                    layout = {
-                        title: 'Inductance (L) vs. Core Diameter ($D_c$)',
-                        xaxis: { title: 'Core Diameter ($D_c$) (mm)' },
-                        yaxis: { title: 'Inductance (L) (μH)' },
-                        showlegend: true
-                    };
-                    plotDescription = 'This plot illustrates the relationship between the inductance and the core diameter. Larger core diameters generally allow for higher inductance with fewer turns.';
+                    data.push({ x: Dc.map(val => val * 1e3), y: L1.map(val => val * 1e6), mode: 'markers+lines', type: 'scatter', name: 'Inductance vs. Core Diameter' });
+                    layout = { title: 'Inductance vs. Core Diameter', xaxis: { title: 'Core Diameter ($D_c$) [mm]' }, yaxis: { title: 'Inductance (L) [μH]' } };
+                    description = "This plot shows the relationship between the inductance and the core diameter. Larger core diameters generally allow for higher inductance for a given number of turns.";
                     break;
                 default:
-                    plotDiv.innerHTML = '<p class="text-gray-500">Select a plot type from the dropdown.</p>';
-                    descriptionDiv.textContent = '';
+                    descriptionDiv.textContent = "Please select a plot type.";
                     return;
             }
 
-            Plotly.newPlot(plotDiv, data, layout, { responsive: true });
-            descriptionDiv.textContent = plotDescription;
+            Plotly.newPlot(plotDiv, data, layout);
+            descriptionDiv.textContent = description;
+        }
+
+        function updateSummaryTable(data) {
+            document.getElementById('output_inductor_air_gap').textContent = data.air_gap !== 'N/A' ? data.air_gap.toFixed(3) : 'N/A';
+            document.getElementById('output_inductor_num_turns').textContent = data.num_turns !== 'N/A' ? data.num_turns : 'N/A';
+            document.getElementById('output_inductor_area').textContent = data.area !== 'N/A' ? data.area.toFixed(2) : 'N/A';
+            document.getElementById('output_inductor_aw').textContent = data.aw !== 'N/A' ? data.aw.toFixed(2) : 'N/A';
+            document.getElementById('output_inductor_dc').textContent = data.dc !== 'N/A' ? data.dc.toFixed(2) : 'N/A';
+            document.getElementById('output_inductor_L1').textContent = data.L1 !== 'N/A' ? data.L1.toFixed(2) : 'N/A';
+            document.getElementById('output_inductor_Vc').textContent = data.Vc !== 'N/A' ? data.Vc.toFixed(3) : 'N/A';
+            document.getElementById('output_inductor_Pin').textContent = data.Pin !== 'N/A' ? data.Pin.toFixed(3) : 'N/A';
+            document.getElementById('output_inductor_Pw').textContent = data.Pw !== 'N/A' ? data.Pw.toFixed(3) : 'N/A';
+            document.getElementById('output_inductor_P_total').textContent = data.P_total !== 'N/A' ? data.P_total.toFixed(3) : 'N/A';
         }
 
         // Event Listeners
-        document.getElementById('calculateInductorButton').addEventListener('click', calculateInductorDesign);
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('calculateInductorButton').addEventListener('click', calculateInductorDesign);
+            // Initial calculation on load for default values
+            calculateInductorDesign();
+        });
+
+        // Re-plot when plot type changes
         document.getElementById('inductorPlotType').addEventListener('change', () => {
-            if (inductorResults) { // Only plot if calculations have been performed
-                plotInductorResults(inductorResults, document.getElementById('inductorPlotType').value);
+            if (inductorResults) { // Only plot if data exists
+                let minLossIndex = -1;
+                let minLoss = Infinity;
+                if (inductorResults.P) {
+                    for (let i = 0; i < inductorResults.P.length; i++) {
+                        if (Number.isFinite(inductorResults.P[i]) && inductorResults.P[i] < minLoss) {
+                            minLoss = inductorResults.P[i];
+                            minLossIndex = i;
+                        }
+                    }
+                }
+                plotInductorData(document.getElementById('inductorPlotType').value, minLossIndex);
+            } else {
+                document.getElementById('inductorPlotDescription').textContent = "No data to plot. Please run calculations first.";
             }
         });
 
-        // Initial calculation and plot on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            calculateInd
+    </script>
+</body>
+</html>
