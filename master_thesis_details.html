@@ -161,7 +161,59 @@
 
         <div class="section-content">
             <p>Electrified railway systems demand compact and efficient power supplies. This thesis addresses this need by optimizing the magnetic components of a reconfigurable Phase Shift Full Bridge (PSFB) converter. While current designs often use multiple transformer cores for varying input voltages, my work introduces a single transformer core with multiple windings, significantly reducing the system's footprint and cost. The design process emphasizes accurate AC resistance estimation for a range of EE transformer cores, and a filter inductor is also designed to support Zero Voltage Switching (ZVS). Despite time constraints for full system testing, the fabricated transformer and inductor were successfully validated, demonstrating the viability and benefits of this innovative single-core approach.</p>
-         <div>  
+        <h2>Optimized Power Conversion for Electrified Railways</h2>
+    <p>This work focuses on optimizing the <strong>onboard power supply systems</strong> in electrified railways, specifically targeting the <strong>reconfigurable Phase Shift Full Bridge (PSFB) converter</strong>. This critical component ensures efficient power delivery for various train systems, from propulsion to passenger comfort.</p>
+
+    <h3>The Challenge of Multiple Transformers</h3>
+    <p>Current PSFB converter implementations often rely on <strong>multiple transformer cores</strong> to manage the wide input voltage ranges encountered in railway applications. While offering some modularity, this approach presents significant drawbacks:</p>
+
+    <ul>
+        <li><strong>Increased Footprint:</strong> As shown in <strong>Table 1.1</strong>, using multiple smaller cores (e.g., four PQ20s) demands a substantially larger Printed Circuit Board (PCB) area compared to a single larger core (e.g., one PQ40). This leads to longer trace lengths, increased conduction losses, and higher electromagnetic interference (EMI).</li>
+    </ul>
+
+    <div style="overflow-x: auto;">
+        <table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+            <caption style="font-weight: bold; margin-bottom: 10px;">Table 1.1: Cost and footprint comparison between PQ20 and PQ40 cores</caption>
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Core Type</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Core Cost (USD)</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Coil Former Cost (USD)</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Footprint Area (mm²)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">PQ20</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">0.872 × 4 = 3.487</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">1.914 × 4 = 7.656</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">516.128 x 4 = 2064.5</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">PQ40</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">2.898</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">7.239</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">1354.836</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ul>
+        <li><strong>Higher Cost:</strong> The need for multiple cores, bobbins, and winding leads directly translates to increased system cost, as demonstrated in <strong>Table 1.1</strong>, where the PQ20 system is 10% more expensive than the PQ40.</li>
+        <li><strong>Thermal Management Issues:</strong> Minor mismatches in leakage inductance between identical cores can lead to current imbalances, increasing the risk of localized hotspots and thermal runaway. This necessitates complex and costly heat sinking solutions.</li>
+        <li><strong>Reduced Power Density:</strong> A larger footprint for the same power output results in lower power density, a significant disadvantage in space-constrained railway environments.</li>
+    </ul>
+
+    <h3>Our Innovative Single-Core Solution</h3>
+    <p>To address these limitations, my research proposes a novel <strong>single multi-winding transformer core solution</strong>. This approach, visualized in <strong>Figure 1.1</strong> comparing four PQ20 cores to a single PQ40, consolidates the magnetic component.</p>
+
+    <figure style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <img src="images/Figure1.1.jpg" alt="Comparison of four PQ20 cores and a single PQ40 core with their bobbins, illustrating size difference." style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+        <figcaption style="font-style: italic; margin-top: 10px;">Figure 1.1: Four PQ20 core and a single PQ40 core with their bobbins</figcaption>
+    </figure>
+
+            <div>  
 
         <h2>Project Highlights & Images</h2>
         <div class="image-gallery">
