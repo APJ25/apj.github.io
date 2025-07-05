@@ -206,14 +206,60 @@
     </ul>
 
     <h3>Our Innovative Single-Core Solution</h3>
-    <p>To address these limitations, my research proposes a novel <strong>single multi-winding transformer core solution</strong>. This approach, visualized in <strong>Figure 1.1</strong> comparing four PQ20 cores to a single PQ40, consolidates the magnetic component.</p>
+    <p>To address these limitations, my research proposes a novel <strong>single multi-winding transformer core solution</strong>. This approach, visualized in <strong>Figure 1.1</strong> comparing four PQ20 cores to a single PQ40, consolidates the magnetic component as an example .</p>
 
     <figure style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
         <img src="images/Figure1.1.jpg" alt="Comparison of four PQ20 cores and a single PQ40 core with their bobbins, illustrating size difference." style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
         <figcaption style="font-style: italic; margin-top: 10px;">Figure 1.1: Four PQ20 core and a single PQ40 core with their bobbins</figcaption>
     </figure>
+<h2>Scope and Specifications</h2>
+        <p>This project focuses on the design for a **reconfigurable PSFB converter** utilizing a two-transformer system (conceptually integrated into a single multi-winding core). Key aspects of the design are detailed below:</p>
 
-            <div>  
+        <ul>
+            <li>The system is designed for **series connection of primary windings at higher input voltages** (by turning off a specific branch) and **parallel connection at lower input voltages** (by activating a switching branch). This reconfigurable mode ensures a steady duty cycle across a wide input range.</li>
+            <li>**EE cores** were specifically chosen for this design due to their uniform exterior legs, allowing for the strategic winding of "T1" and "T2" transformer sections on a single EE core.</li>
+            <li>The investigation focuses on a specific range of ferrite cores, including **EE10/11, EE13, EE16, EE19, EE25/19, EE30, EE40, EE50, EE60, ETD39, EE35, EE42, EE55 from TDK**.</li>
+            <li>The **control aspects of the converter are not investigated** in this thesis; experiments will be conducted in open-loop operation.</li>
+            <li>Filter inductors are designed separately using a parametric approach (varying core size, turns, and air gap) to optimize system magnetics and support lossless switching (ZVS).</li>
+        </ul>
+
+        <h3>PSFB Converter Specifications</h3>
+        <p>The design adheres to the following critical parameters for the 500W reconfigurable PSFB converter:</p>
+        <table style="width: auto; margin-left: 0;">
+            <caption style="font-weight: bold; margin-bottom: 10px;">Table: Specifications of the PSFB Converter</caption>
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Parameter</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Output Power (PO)</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">500 W</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Output Voltage (VO)</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">24 V</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Input Voltage (Series Mode) (Vins)</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">80 V – 160 V</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Input Voltage (Parallel Mode)</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">40 V – 80 V</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Switching Frequency (fs)</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">100 KHz</td>
+                </tr>
+            </tbody>
+        </table>
+
+        
+            <div> 
+                
 
         <h2>Project Highlights & Images</h2>
         <div class="image-gallery">
