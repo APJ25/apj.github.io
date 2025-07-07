@@ -196,23 +196,24 @@
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Transformer Design Analysis</h1>
 
         <div class="explanation-section">
-            <h2>High-Frequency Transformer Design</h2>
-            <p>The framework for transformer design is discussed  in order to
-determine the optimum number of turns for the minimal loss condition for both parallel and
-series transformer operation.The entire design will be built on
-the E core due to its homogeneity, with the outer limbs having half the area of cross section
-of the inner limbs.
-The entire design will be for trying to combine the two transformer design as discussed
- onto a signle core.
-</p>
-            <p>The aim of the design is to optimize the performance of the transformer with lower losses
-and lower cost such that tuning the number of turns within the permissible limits give rise
-to a trend in the loss calculation in where the flux density,maximum allowable loss due to
-thermal limitations are within the permissible limit.
-This iterative process through the entire core dataset is done with the help of MATLAB
-editor,which allows to locate the most preferable core and the corresponding turns for the
-core.</p>
-       
+            <h2>Introduction to High-Frequency Transformer Design</h2>
+            <p>High-frequency transformers are indispensable components in modern power converters, particularly in isolated DC-DC topologies like the Phase-Shift Full Bridge (PSFB) converter used in railway applications. Their design critically influences the overall efficiency, power density, and thermal performance of the converter. This section details the theoretical foundations, design considerations, and calculation methodologies employed to optimize the transformer for our reconfigurable PSFB converter, complementing the interactive analysis tool below.</p>
+            <p>The primary goal was to achieve a robust and efficient magnetic component capable of handling varying input voltages and output power requirements while minimizing losses and maintaining acceptable thermal performance within a constrained volume.</p>
+        </div>
+
+        <div class="explanation-section">
+            <h2>Core Selection and Material Properties</h2>
+            <p>The selection of an appropriate magnetic core material and geometry is the first critical step in transformer design. Core losses are highly dependent on the material's properties (such as saturation flux density and loss coefficients) and the operating frequency and peak flux density. For high-frequency applications, ferrite materials are typically chosen due to their low losses at elevated frequencies.</p>
+            <p>The calculations below utilize parameters for various common ferrite core types, allowing for a comparative analysis to identify the most suitable core for a given set of operating conditions. Key parameters considered for each core include:</p>
+            <ul>
+                <li><strong>Effective Area ($A_e$)</strong>: The cross-sectional area through which the magnetic flux passes.</li>
+                <li><strong>Effective Magnetic Path Length ($l_e$)</strong>: The average length of the magnetic flux path.</li>
+                <li><strong>Window Area ($W_a$)</strong>: The area available for winding turns.</li>
+                <li><strong>Mean Length Per Turn (MLT)</strong>: The average length of a single winding turn.</li>
+                <li><strong>Thermal Resistance ($R_{th}$)</strong>: A measure of the core's ability to dissipate heat.</li>
+            </ul>
+            <p>These parameters are fundamental for calculating flux density, winding lengths, and thermal performance.</p>
+        </div>
 
         <div class="explanation-section">
             <h2>Fundamental Design Equations</h2>
@@ -225,14 +226,14 @@ core.</p>
                 N_p = \frac{V_{in}}{2 \cdot f \cdot B_{max} \cdot A_e}
                 $$
                 Where: <br>
-                $$V_{in}$$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).<br>
-                $$f$$ is the switching frequency.<br>
-                $$B_{max}$$ is the maximum allowable peak flux density in the core (dependent on material and temperature).<br>
-                $$A_e$$ is the effective cross-sectional area of the core.<br>
+                $V_{in}$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).<br>
+                $f$ is the switching frequency.<br>
+                $B_{max}$ is the maximum allowable peak flux density in the core (dependent on material and temperature).<br>
+                $A_e$ is the effective cross-sectional area of the core.
             </div>
 
             <h3>Turns Ratio and Secondary Turns:</h3>
-            <p>The turns ratio (n = N_p / N_s) determines the voltage transformation.  The turns ratio also considers voltage drops across rectifiers and desired output voltage.</p>
+            <p>The turns ratio ($n = N_p / N_s$) determines the voltage transformation. The number of secondary turns ($N_s$) is then simply $N_s = N_p / n$. The turns ratio also considers voltage drops across rectifiers and desired output voltage.</p>
             <div class="equation-block">
                 $$
                 n = \frac{V_{primary, RMS}}{V_{secondary, RMS}} \approx \frac{V_{in, nominal}}{V_{out, desired} + V_{diode\_drop}}
@@ -240,16 +241,16 @@ core.</p>
             </div>
 
             <h3>Core Loss Calculation (Steinmetz Equation):</h3>
-            <p>Core losses (P_{core}) primarily arise from hysteresis and eddy currents within the magnetic material. These are typically modeled using a modified Steinmetz equation:</p>
+            <p>Core losses ($P_{core}$) primarily arise from hysteresis and eddy currents within the magnetic material. These are typically modeled using a modified Steinmetz equation:</p>
             <div class="equation-block">
                 $$
                 P_{core} = k \cdot f^{\alpha} \cdot B_{ac}^{\beta} \cdot V_e
                 $$
-                Where: 
-                $$k, \alpha, \beta$$ are Steinmetz coefficients specific to the core material.<br>
-                $$f$$ is the switching frequency.<br>
-                $$B_{ac}$$ is the peak-to-peak AC flux density swing.<br>
-                $$V_e$$ is the effective core volume ($A_e \cdot l_e$).
+                Where: <br>
+                $k, \alpha, \beta$ are Steinmetz coefficients specific to the core material.<br>
+                $f$ is the switching frequency.<br>
+                $B_{ac}$ is the peak-to-peak AC flux density swing.<br>
+                $V_e$ is the effective core volume ($A_e \cdot l_e$).
             </div>
 
             <h3>Copper Loss Calculation:</h3>
@@ -259,11 +260,11 @@ core.</p>
                 P_{copper} = I_{rms}^2 \cdot R_{ac}
                 $$
                 <br>
-                The AC resistance ($$R_{ac}$$) is related to the DC resistance ($$R_{dc}$$) by the factor $$F_R$$:
+                The AC resistance ($R_{ac}$) is related to the DC resistance ($R_{dc}$) by the factor $F_R$:
                 $$
                 R_{ac} = F_R \cdot R_{dc}
                 $$
-                Where $$F_R$$ accounts for skin and proximity effects, calculated using more complex models (e.g., Dowell's curves), which depend on wire diameter, frequency, and winding geometry.
+                Where $F_R$ accounts for skin and proximity effects, calculated using more complex models (e.g., Dowell's curves), which depend on wire diameter, frequency, and winding geometry.
             </div>
 
             <h3>Total Power Loss:</h3>
@@ -275,82 +276,6 @@ core.</p>
             </div>
             <p>This total loss directly contributes to the temperature rise of the transformer.</p>
         </div>
-       
-
-            <div class="md:col-span-2">
-                
-                <div class="card" data-section-name="Setting Limits">
-                    <h2 id="limits">Setting Limits <button class="explain-button" onclick="getExplanation('limits')"></h2>
-                    <p>The parametrization of the transformer is constrained by two critical limits: an upper limit defined by physical space and a lower limit determined by Faraday's law of induction. These ensure the design is both physically realizable and electrically sound.</p>
-                    <h3 class="text-slate-700">Upper Limit: Maximum Number of Turns ($N_{pmax}$)</h3>
-                    <div class="equation"><span id="eq4_50"></span><span class="equation-label">(4.50)</span></div>
-                    <div class="equation"><span id="eq4_51"></span><span class="equation-label">(4.51)</span></div>
-                    <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
-                    <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
-                </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-            <div class="md:col-span-2">
-                
-                <!-- Setting Limits Section -->
-                <div class="card" data-section-name="Setting Limits">
-                    <h2 id="limits">Setting Limits <button class="explain-button" onclick="getExplanation('limits')">✨ Explain</button></h2>
-                    <p>The parametrization of the transformer is constrained by two critical limits: an upper limit defined by physical space and a lower limit determined by Faraday's law of induction. These ensure the design is both physically realizable and electrically sound.</p>
-                    <h3 class="text-slate-700">Upper Limit: Maximum Number of Turns ($N_{pmax}$)</h3>
-                    <div class="equation"><span id="eq4_50"></span><span class="equation-label">(4.50)</span></div>
-                    <div class="equation"><span id="eq4_51"></span><span class="equation-label">(4.51)</span></div>
-                    <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
-                    <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
-                </div>
-
-                <!-- Core & Flux Density Section -->
-                <div class="card" data-section-name="Flux Density and Core Loss">
-                    <h2 id="flux-density">Flux Density & Core Loss <button class="explain-button" onclick="getExplanation('flux-density')">✨ Explain</button></h2>
-                    <p>The maximum permitted flux density ($B_{max}$) is a crucial parameter, calculated based on the core's allowable peak power loss ($P_{max}$). This value is determined by the core material's thermal resistance ($R_{th}$) and the maximum allowable temperature rise.</p>
-                    <div class="equation"><span id="eq4_53"></span><span class="equation-label">(4.53)</span></div>
-                    <div class="equation"><span id="eq4_54"></span><span class="equation-label">(4.54)</span></div>
-                    <div class="equation"><span id="eq4_55"></span><span class="equation-label">(4.55)</span></div>
-                </div>
-                
-                <!-- Series vs Parallel Section -->
-                <div class="card" data-section-name="Series vs. Parallel Operation">
-                    <h2 id="series-parallel">Series vs. Parallel <button class="explain-button" onclick="getExplanation('series-parallel')">✨ Explain</button></h2>
-                    <p>The transformer's electrical conditions change based on its connection configuration, particularly affecting the voltage seen by each primary winding.</p>
-                    <div class="equation"><span id="eq4_56"></span><span class="equation-label">(4.56)</span></div>
-                </div>
-
-                <!-- Turns Ratio Section -->
-                <div class="card" data-section-name="Turns Ratio">
-                    <h2 id="turns-ratio">Turns Ratio (K) <button class="explain-button" onclick="getExplanation('turns-ratio')">✨ Explain</button></h2>
-                    <p>The turns ratio is determined by the input and output voltage requirements for both series and parallel modes.</p>
-                    <div class="equation"><span id="eq4_42"></span><span class="equation-label">(4.42)</span></div>
-                    <div class="equation"><span id="eq4_43"></span><span class="equation-label">(4.43)</span></div>
-                </div>
-
-                <!-- Wire Size Section -->
-                <div class="card" data-section-name="Wire Size Selection">
-                    <h2 id="wire-size">Wire Size Selection <button class="explain-button" onclick="getExplanation('wire-size')">✨ Explain</button></h2>
-                    <p>Wire sizes are selected based on the RMS current they must carry. To mitigate high-frequency losses (like skin effect), Litz wire is often used.</p>
-                    <div class="equation"><span id="eq4_47"></span><span class="equation-label">(4.47)</span></div>
-                    <div class="equation"><span id="eq4_48"></span><span class="equation-label">(4.48)</span></div>
-                    <div class="equation"><span id="eq4_49"></span><span class="equation-label">(4.49)</span></div>
-                </div>
-
-            </div>
-
-            <div class="md:col-span-1">
-                <div class="card sticky top-8">
-                    <h2 id="fill-factor-graph">Fill Factor ($K_u$) Trend</h2>
-                    <canvas id="fillFactorChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-   
-
-
-   
 
         <div class="explanation-section">
             <h2>Interpretation of Interactive Plots</h2>
@@ -463,14 +388,6 @@ core.</p>
     </div>
 
     <script>
-        window.onload = function() {
-            // KaTeX rendering for equations
-            const equations = {
-                'eq4_50': 'K_u \\cdot W_a = N_p S_p + N_s S_s', 'eq4_51': 'N_{pmax} \\le \\frac{K_u \\cdot W_a}{S_p + \\frac{S_s}{K}}', 'eq4_52': 'N_{pmin} = \\frac{V_{in} \\cdot D}{2 f_s A_c B_{max}}', 'eq4_53': 'P_{max} = \\frac{T_{max} - T_{min}}{R_{th}}', 'eq4_54': 'R_{th} = 53 \\cdot (V_{core})^{-0.54}', 'eq4_55': 'B_{max} = \\left( \\frac{P_{max}}{k f^{\\alpha} V_{core}} \\right)^{\\frac{1}{\\beta}}', 'eq4_56': 'B = \\frac{V_{in} \\cdot D}{2 \\cdot A_c f_s N}', 'eq4_42': 'V_{out(series)} = 2 \\cdot D_{eff} \\cdot \\frac{N_s}{N_p} \\cdot \\frac{V_{in}}{2}', 'eq4_43': 'V_{out(parallel)} = 2 \\cdot D_{eff} \\cdot \\frac{N_s}{N_p} \\cdot V_{in}', 'eq4_47': 'I_{prms} = \\frac{I_o}{2 \\cdot \\frac{N_s}{N_p}} \\cdot \\sqrt{2D}', 'eq4_48': 'I_{srms} = \\frac{I_o}{2} \\cdot \\sqrt{D}', 'eq4_49': 'd = \\sqrt{\\frac{4 I_{max}}{7.2 \\cdot \\pi}}',
-            };
-            for (const id in equations) {
-                katex.render(equations[id], document.getElementById(id), { throwOnError: false, displayMode: true });
-            }
         // Core Parameters and Constants (Translated from MATLAB)
         const colors = [
             [1, 0, 1], [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 1],
