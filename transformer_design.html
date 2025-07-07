@@ -224,15 +224,15 @@ core.</p>
                 $$
                 N_p = \frac{V_{in}}{2 \cdot f \cdot B_{max} \cdot A_e}
                 $$
-                Where: 
-                $V_{in}$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).
-                $f$ is the switching frequency.
-                $B_{max}$ is the maximum allowable peak flux density in the core (dependent on material and temperature).
-                $A_e$ is the effective cross-sectional area of the core.
+                Where: <br>
+                $$V_{in}$$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).<br>
+                $$f$$ is the switching frequency.<br>
+                $$B_{max}$$ is the maximum allowable peak flux density in the core (dependent on material and temperature).<br>
+                $$A_e$$ is the effective cross-sectional area of the core.<br>
             </div>
 
             <h3>Turns Ratio and Secondary Turns:</h3>
-            <p>The turns ratio ($n = N_p / N_s$) determines the voltage transformation. The number of secondary turns ($N_s$) is then simply $N_s = N_p / n$. The turns ratio also considers voltage drops across rectifiers and desired output voltage.</p>
+            <p>The turns ratio (n = N_p / N_s) determines the voltage transformation.  The turns ratio also considers voltage drops across rectifiers and desired output voltage.</p>
             <div class="equation-block">
                 $$
                 n = \frac{V_{primary, RMS}}{V_{secondary, RMS}} \approx \frac{V_{in, nominal}}{V_{out, desired} + V_{diode\_drop}}
@@ -240,16 +240,16 @@ core.</p>
             </div>
 
             <h3>Core Loss Calculation (Steinmetz Equation):</h3>
-            <p>Core losses ($P_{core}$) primarily arise from hysteresis and eddy currents within the magnetic material. These are typically modeled using a modified Steinmetz equation:</p>
+            <p>Core losses (P_{core}) primarily arise from hysteresis and eddy currents within the magnetic material. These are typically modeled using a modified Steinmetz equation:</p>
             <div class="equation-block">
                 $$
                 P_{core} = k \cdot f^{\alpha} \cdot B_{ac}^{\beta} \cdot V_e
                 $$
-                Where: <br>
-                $k, \alpha, \beta$ are Steinmetz coefficients specific to the core material.<br>
-                $f$ is the switching frequency.<br>
-                $B_{ac}$ is the peak-to-peak AC flux density swing.<br>
-                $V_e$ is the effective core volume ($A_e \cdot l_e$).
+                Where: 
+                $$k, \alpha, \beta$$ are Steinmetz coefficients specific to the core material.<br>
+                $$f$$ is the switching frequency.<br>
+                $$B_{ac}$$ is the peak-to-peak AC flux density swing.<br>
+                $$V_e$$ is the effective core volume ($A_e \cdot l_e$).
             </div>
 
             <h3>Copper Loss Calculation:</h3>
@@ -259,11 +259,11 @@ core.</p>
                 P_{copper} = I_{rms}^2 \cdot R_{ac}
                 $$
                 <br>
-                The AC resistance ($R_{ac}$) is related to the DC resistance ($R_{dc}$) by the factor $F_R$:
+                The AC resistance ($$R_{ac}$$) is related to the DC resistance ($$R_{dc}$$) by the factor $$F_R$$:
                 $$
                 R_{ac} = F_R \cdot R_{dc}
                 $$
-                Where $F_R$ accounts for skin and proximity effects, calculated using more complex models (e.g., Dowell's curves), which depend on wire diameter, frequency, and winding geometry.
+                Where $$F_R$$ accounts for skin and proximity effects, calculated using more complex models (e.g., Dowell's curves), which depend on wire diameter, frequency, and winding geometry.
             </div>
 
             <h3>Total Power Loss:</h3>
@@ -288,9 +288,22 @@ core.</p>
                     <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
                     <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
                 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-            <div class="md:col-span-2">
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div class="md:col-span-2">
+                
+                <!-- Setting Limits Section -->
+                <div class="card" data-section-name="Setting Limits">
+                    <h2 id="limits">Setting Limits <button class="explain-button" onclick="getExplanation('limits')">✨ Explain</button></h2>
+                    <p>The parametrization of the transformer is constrained by two critical limits: an upper limit defined by physical space and a lower limit determined by Faraday's law of induction. These ensure the design is both physically realizable and electrically sound.</p>
+                    <h3 class="text-slate-700">Upper Limit: Maximum Number of Turns ($N_{pmax}$)</h3>
+                    <div class="equation"><span id="eq4_50"></span><span class="equation-label">(4.50)</span></div>
+                    <div class="equation"><span id="eq4_51"></span><span class="equation-label">(4.51)</span></div>
+                    <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
+                    <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
+                </div>
+
+                <!-- Core & Flux Density Section -->
                 <div class="card" data-section-name="Flux Density and Core Loss">
                     <h2 id="flux-density">Flux Density & Core Loss <button class="explain-button" onclick="getExplanation('flux-density')">✨ Explain</button></h2>
                     <p>The maximum permitted flux density ($B_{max}$) is a crucial parameter, calculated based on the core's allowable peak power loss ($P_{max}$). This value is determined by the core material's thermal resistance ($R_{th}$) and the maximum allowable temperature rise.</p>
@@ -299,12 +312,14 @@ core.</p>
                     <div class="equation"><span id="eq4_55"></span><span class="equation-label">(4.55)</span></div>
                 </div>
                 
+                <!-- Series vs Parallel Section -->
                 <div class="card" data-section-name="Series vs. Parallel Operation">
                     <h2 id="series-parallel">Series vs. Parallel <button class="explain-button" onclick="getExplanation('series-parallel')">✨ Explain</button></h2>
                     <p>The transformer's electrical conditions change based on its connection configuration, particularly affecting the voltage seen by each primary winding.</p>
                     <div class="equation"><span id="eq4_56"></span><span class="equation-label">(4.56)</span></div>
                 </div>
 
+                <!-- Turns Ratio Section -->
                 <div class="card" data-section-name="Turns Ratio">
                     <h2 id="turns-ratio">Turns Ratio (K) <button class="explain-button" onclick="getExplanation('turns-ratio')">✨ Explain</button></h2>
                     <p>The turns ratio is determined by the input and output voltage requirements for both series and parallel modes.</p>
@@ -312,30 +327,13 @@ core.</p>
                     <div class="equation"><span id="eq4_43"></span><span class="equation-label">(4.43)</span></div>
                 </div>
 
+                <!-- Wire Size Section -->
                 <div class="card" data-section-name="Wire Size Selection">
                     <h2 id="wire-size">Wire Size Selection <button class="explain-button" onclick="getExplanation('wire-size')">✨ Explain</button></h2>
                     <p>Wire sizes are selected based on the RMS current they must carry. To mitigate high-frequency losses (like skin effect), Litz wire is often used.</p>
                     <div class="equation"><span id="eq4_47"></span><span class="equation-label">(4.47)</span></div>
                     <div class="equation"><span id="eq4_48"></span><span class="equation-label">(4.48)</span></div>
                     <div class="equation"><span id="eq4_49"></span><span class="equation-label">(4.49)</span></div>
-                </div>
-
-                <div class="explanation-section">
-                    <h2>Interpretation of Interactive Plots</h2>
-                    [cite_start]<p>The interactive plots generated by this tool provide crucial insights into the transformer's performance under various operating conditions and design choices. [cite: 45] [cite_start]By manipulating the input parameters, you can visualize the impact on key metrics: [cite: 45]</p>
-
-                    <h3>Core Loss vs. Flux Density / Turns:</h3>
-                    [cite_start]<p>These plots illustrate the relationship between the chosen core material's losses and the operating flux density or number of turns. [cite: 46] [cite_start]Lower core losses are generally desirable, but they often come at the expense of requiring more turns (larger transformer size) or a larger core. [cite: 47] [cite_start]The curve helps identify the optimal operating point for minimizing core losses for a selected core type. [cite: 47]</p>
-                    <h3>Copper Loss vs. Turns:</h3>
-                    [cite_start]<p>This plot shows how copper losses vary with the number of primary turns. [cite: 48] [cite_start]As turns increase, the wire length increases, raising DC resistance. [cite: 49] [cite_start]However, the skin and proximity effects (which are complexly modeled in the JavaScript) also play a significant role. [cite: 50] [cite_start]The goal is to find a balance where copper losses are minimized for a given power level and frequency. [cite: 50]</p>
-                    <h3>Total Power Loss vs. Flux Density / Turns:</h3>
-                    [cite_start]<p>These are the most critical plots as they represent the combined impact of all losses. [cite: 51] [cite_start]The objective is to identify the number of turns (or corresponding flux density) that results in the lowest total power loss, while also ensuring the total loss remains below the maximum allowable power loss for the core's thermal limits (represented by the $P_{max}$ line in the plots). [cite: 51]</p>
-                    <h3>Ku Factor vs. Turns:</h3>
-                    [cite_start]<p>The Ku factor (Window Utilization Factor) is a measure of how effectively the winding window area of the core is utilized by the copper windings. [cite: 52] [cite_start]A higher Ku factor indicates a more compact and efficient winding design. [cite: 53] [cite_start]This plot helps in understanding the space efficiency of the windings for different turn counts. [cite: 53]</p>
-                    <h3>Skeff & Proximity Effects:</h3>
-                    [cite_start]<p>This plot (if enabled) visualizes the skin effect factor ($S_{keff}$) and proximity effect factor ($F_R$) for different wire sizes or frequencies. [cite: 54] [cite_start]Understanding these effects is vital for selecting appropriate Litz wire constructions to minimize high-frequency copper losses. [cite: 54]</p>
-                    <h3>Core Loss Comparison:</h3>
-                    [cite_start]<p>The "Loss Difference Summary Table for All Cores" (generated below the plot) provides a quick comparison of the optimal power loss for different core types. [cite: 55] [cite_start]This helps in selecting the most thermally efficient core for your application based on your specified constraints. [cite: 55]</p>
                 </div>
 
             </div>
@@ -348,6 +346,75 @@ core.</p>
             </div>
         </div>
     </div>
+    
+    <!-- Modal for AI responses -->
+    <div id="aiModal" class="modal-backdrop" style="display: none;">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="text-2xl font-bold text-slate-800 mb-4"></h3>
+            <div id="modalBody"></div>
+            <button onclick="closeModal()" class="mt-6 w-full ai-button">Close</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- GEMINI API CALLER ---
+        async function callGemini(prompt) {
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // API key is handled by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    return "Sorry, I couldn't get a response. The response from the AI was empty or malformed.";
+                }
+            } catch (error) {
+                console.error("Gemini API call error:", error);
+                return `Sorry, an error occurred while contacting the AI advisor: ${error.message}`;
+            }
+        }
+
+        // --- UI & MODAL LOGIC ---
+        function showModal(title, body) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = body;
+            document.getElementById('aiModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+
+        async function getExplanation(sectionId) {
+            const sectionCard = document.getElementById(sectionId).closest('.card');
+            const sectionName = sectionCard.dataset.sectionName;
+            const sectionText = sectionCard.innerText.replace('✨ Explain','').trim();
+            
+            showModal(`✨ Explaining: ${sectionName}`, '<div class="flex justify-center items-center p-8"><div class="loader"></div></div>');
+
+            const prompt = `As an expert in power electronics, please explain the following concept from a transformer design document in a clear, simple, and conversational way for an engineering student. Explain the significance of the formulas and the practical implications.
+            
+            Concept: "${sectionName}"
+            
+            Text from document: "${sectionText}"`;
+
+            const explanation = await callGemini(prompt);
+            showModal(`✨ Explaining: ${sectionName}`, explanation.replace(/\n/g, '<br>'));
+        }
 
         <div class="explanation-section">
             <h2>Interpretation of Interactive Plots</h2>
