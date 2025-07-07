@@ -181,7 +181,7 @@
 									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Setting Design Limits</h3>
 									<p class="text-gray-600 leading-relaxed">The maximum flux density ($B_{max}$) is constrained by the core's thermal properties:</p>
 									<div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ P_{max} = \frac{T_{max} - T_{min}}{R_{th}} $$
+										$$ P_{max} = \frac{T_{max} - T_{min}}{R_{th}} \quad \text{where} \quad R_{th} = 53 \cdot (V_{core})^{-0.54} $$
                                         $$ B_{max} = \left( \frac{P_{max}}{k f V_{core}} \right) ^ {\frac{1}{\beta}} $$
 									</div>
                                     <p class="text-gray-600 leading-relaxed">The number of turns ($N_p$) must be within physical and magnetic limits:</p>
@@ -200,14 +200,14 @@
             <div class="lg:col-span-2 space-y-8">
                 
                 <!-- Plot Card -->
-                <div class="bg-white border border-gray-200 rounded-xl shadow-md min-h-[500px] flex items-center justify-center p-4">
-                    <div id="plotDiv" class="w-full h-full relative">
-                        <div class="loading-overlay hidden absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg" id="loadingOverlay">
-                            <div class="spinner"></div>
-                        </div>
-                        <div class="w-full h-full flex items-center justify-center">
+                <div class="bg-white border border-gray-200 rounded-xl shadow-md min-h-[500px] flex items-center justify-center p-4 relative">
+                    <div id="plotDiv" class="w-full h-full">
+                        <div id="plotPlaceholder" class="w-full h-full flex items-center justify-center">
                             <p class="text-gray-400">Select parameters and click 'Calculate & Plot' to see results.</p>
                         </div>
+                    </div>
+                    <div class="loading-overlay hidden absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-xl" id="loadingOverlay">
+                        <div class="spinner"></div>
                     </div>
                 </div>
 
@@ -256,7 +256,7 @@
 
     // --- Main Calculation Function ---
     function calculateLosses() {
-        // Read input parameters
+        // Read input parameters from HTML fields
         const Po = parseFloat(document.getElementById('outputPower').value);
         const Vpp = parseFloat(document.getElementById('primaryVoltageParallel').value);
         const Vps = parseFloat(document.getElementById('primaryVoltageSeries').value);
@@ -265,7 +265,7 @@
         const Tmax = parseFloat(document.getElementById('maxTemperature').value);
         const selectedCoreIndex = parseInt(document.getElementById('coreType').value);
 
-        // Fixed parameters from original code
+        // Fixed physical & material parameters
         const Vd = 1.4;
         const dps = 0.0008;
         const dpp = dps;
@@ -279,7 +279,7 @@
         const ns = 3;
         const np = 3;
 
-        // Intermediate calculations
+        // Intermediate calculations based on inputs
         const I24 = Po / 2 / (Vs2 + 2 * Vd);
         const Isrms = ((Vs1 / Vps) * I24 + (Vs2 / Vps) * I24) * Math.sqrt(D);
         const Iprms = ((Vs1 / Vpp) * I24 + (Vs2 / Vpp) * I24) * Math.sqrt(D);
@@ -421,12 +421,13 @@
     }
     
     function plotData(data, plotDivId, plotConfig) {
+        const plotDiv = document.getElementById(plotDivId);
+        plotDiv.innerHTML = ''; // Clear previous plot or message
         const traces = plotConfig.traces(data);
-        // Check if all trace arrays are empty or undefined
         const isDataEmpty = traces.every(t => !t.x || t.x.length === 0);
 
         if (isDataEmpty) {
-             document.getElementById(plotDivId).innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-gray-400">No valid data to plot for the selected parameters.</p></div>`;
+             plotDiv.innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-gray-400">No valid data to plot for the selected parameters.</p></div>`;
              return;
         }
         const layout = getPlotlyLayout(plotConfig.title);
@@ -500,7 +501,6 @@
         const plotDiv = document.getElementById('plotDiv');
         const loadingOverlay = document.getElementById('loadingOverlay');
         loadingOverlay.classList.remove('hidden');
-        plotDiv.innerHTML = ''; // Clear previous plot or message
         
         setTimeout(() => {
             try {
@@ -514,7 +514,7 @@
                 updateLossDiffTable(allCoresLossSummary);
             } catch (error) {
                 console.error("Error during calculation or plotting:", error);
-                plotDiv.innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-red-600">Error: ${error.message}. Check console.</p></div>`;
+                plotDiv.innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-red-600 p-4">${error.message}</p></div>`;
             } finally {
                 loadingOverlay.classList.add('hidden');
             }
