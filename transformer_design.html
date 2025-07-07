@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-slate-900">
+<html lang="en" class="bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,22 +23,14 @@
         /* Base styles for the page */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* bg-slate-900 */
-            color: #cbd5e1; /* text-slate-300 */
-        }
-
-        /* Styling for Plotly's dark theme to ensure text is visible */
-        .plotly-dark .xtitle, .plotly-dark .ytitle, .plotly-dark .legendtext {
-            fill: #94a3b8 !important; /* slate-400 */
-        }
-        .plotly-dark .tick text {
-            fill: #94a3b8 !important; /* slate-400 */
+            background-color: #f9fafb; /* bg-gray-50 */
+            color: #374151; /* text-gray-700 */
         }
 
         /* Custom spinner for loading overlay */
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: #22d3ee; /* cyan-400 */
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3b82f6; /* blue-500 */
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -60,15 +52,22 @@
         details[open] summary .arrow {
             transform: rotate(90deg);
         }
+        .animated-graph {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .animated-graph:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-screen-2xl mx-auto">
         <!-- Header Section -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-white mb-2">Transformer Design Analysis Dashboard</h1>
-            <p class="text-lg text-slate-400">An interactive tool for high-frequency transformer optimization.</p>
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">Transformer Design Analysis</h1>
+            <p class="text-lg text-gray-600">An interactive tool for high-frequency transformer optimization.</p>
         </header>
 
         <!-- Main Content Grid -->
@@ -79,45 +78,45 @@
                 <div class="sticky top-8 space-y-8">
                     
                     <!-- Control Panel Card -->
-                    <div class="bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
-                        <div class="p-6 border-b border-slate-700">
-                            <h2 class="text-2xl font-semibold text-white">Design Parameters</h2>
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-md">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-2xl font-semibold text-gray-800">Design Parameters</h2>
                         </div>
                         <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
                             <!-- Input Fields -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="input-group">
-                                    <label for="outputPower" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><path d="M12 2L12 8"/><path d="M12 16L12 22"/><path d="M17 5L19.5 7.5L17 10"/><path d="M7 5L4.5 7.5L7 10"/><path d="M17 14L19.5 16.5L17 19"/><path d="M7 14L4.5 16.5L7 19"/></svg>Output Power (Po) [W]</label>
-                                    <input type="number" id="outputPower" value="500" step="10" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+                                    <label for="outputPower" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><path d="M12 2L12 8"/><path d="M12 16L12 22"/><path d="M17 5L19.5 7.5L17 10"/><path d="M7 5L4.5 7.5L7 10"/><path d="M17 14L19.5 16.5L17 19"/><path d="M7 14L4.5 16.5L7 19"/></svg>Output Power (Po) [W]</label>
+                                    <input type="number" id="outputPower" value="500" step="10" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                                 <div class="input-group">
-                                    <label for="primaryVoltageParallel" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><line x1="21" x2="3" y1="6" y2="6"/><line x1="21" x2="3" y1="12" y2="12"/><line x1="21" x2="3" y1="18" y2="18"/></svg>Primary Voltage (Vpp) [V]</label>
-                                    <input type="number" id="primaryVoltageParallel" value="80" step="5" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+                                    <label for="primaryVoltageParallel" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><line x1="21" x2="3" y1="6" y2="6"/><line x1="21" x2="3" y1="12" y2="12"/><line x1="21" x2="3" y1="18" y2="18"/></svg>Primary Voltage (Vpp) [V]</label>
+                                    <input type="number" id="primaryVoltageParallel" value="80" step="5" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                                 <div class="input-group">
-                                    <label for="primaryVoltageSeries" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><line x1="6" x2="6" y1="3" y2="21"/><line x1="12" x2="12" y1="3" y2="21"/><line x1="18" x2="18" y1="3" y2="21"/></svg>Primary Voltage (Vps) [V]</label>
-                                    <input type="number" id="primaryVoltageSeries" value="160" step="5" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+                                    <label for="primaryVoltageSeries" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><line x1="6" x2="6" y1="3" y2="21"/><line x1="12" x2="12" y1="3" y2="21"/><line x1="18" x2="18" y1="3" y2="21"/></svg>Primary Voltage (Vps) [V]</label>
+                                    <input type="number" id="primaryVoltageSeries" value="160" step="5" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                                 <div class="input-group">
-                                    <label for="frequency" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Frequency (f) [Hz]</label>
-                                    <input type="number" id="frequency" value="100000" step="1000" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+                                    <label for="frequency" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Frequency (f) [Hz]</label>
+                                    <input type="number" id="frequency" value="100000" step="1000" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                                 <div class="input-group">
-                                    <label for="dutyCycle" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><path d="M12 2v20"/><path d="M18 6l-6 6-6-6"/></svg>Duty Cycle (D)</label>
-                                    <input type="number" id="dutyCycle" value="0.8" step="0.05" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+                                    <label for="dutyCycle" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><path d="M12 2v20"/><path d="M18 6l-6 6-6-6"/></svg>Duty Cycle (D)</label>
+                                    <input type="number" id="dutyCycle" value="0.8" step="0.05" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                                 <div class="input-group">
-                                    <label for="maxTemperature" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>Max Temp (Tmax) [°C]</label>
-                                    <input type="number" id="maxTemperature" value="75" step="1" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+                                    <label for="maxTemperature" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>Max Temp (Tmax) [°C]</label>
+                                    <input type="number" id="maxTemperature" value="75" step="1" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                                 </div>
                             </div>
                             <div class="input-group pt-2">
-								<label for="coreType" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>Select Core Type</label>
-								<select id="coreType" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none"></select>
+								<label for="coreType" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>Select Core Type</label>
+								<select id="coreType" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></select>
 							</div>
 							<div class="input-group">
-								<label for="plotType" class="flex items-center text-sm font-medium text-slate-300 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-cyan-400"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Select Plot</label>
-								<select id="plotType" class="w-full bg-slate-700 text-white border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none">
+								<label for="plotType" class="flex items-center text-sm font-medium text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Select Plot</label>
+								<select id="plotType" class="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
 									<option value="total_power_loss_vs_turns_combined">Total Power Loss vs Turns (Combined)</option>
 									<option value="compare_core">Compare Core Losses</option>
 									<option value="ku_vs_turns">Ku Factor vs Turns (Series)</option>
@@ -130,8 +129,8 @@
 								</select>
 							</div>
                         </div>
-						<div class="p-6 border-t border-slate-700">
-							<button id="calculateButton" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center">
+						<div class="p-6 border-t border-gray-200">
+							<button id="calculateButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5z" /></svg>
 								Calculate & Plot
 							</button>
@@ -139,41 +138,56 @@
                     </div>
 
                     <!-- Theory Section Card -->
-                    <div class="bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-md">
                         <details>
                             <summary class="p-6 flex justify-between items-center">
-                                <h2 class="text-2xl font-semibold text-white">Design Theory & Equations</h2>
-                                <span class="text-cyan-400 transform transition-transform duration-300 arrow">
+                                <h2 class="text-2xl font-semibold text-gray-800">Design Theory & Equations</h2>
+                                <span class="text-blue-600 transform transition-transform duration-300 arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                                 </span>
                             </summary>
-                            <div class="px-6 pb-6 space-y-6 border-t border-slate-700 text-slate-300">
+                            <div class="px-6 pb-6 space-y-6 border-t border-gray-200 text-gray-700">
                                 <div class="explanation-section">
-									<h3 class="text-xl font-semibold text-white mt-4 mb-2">Introduction</h3>
-									<p class="text-slate-400 leading-relaxed">High-frequency transformers are indispensable components in modern power converters, particularly in isolated DC-DC topologies like the Phase-Shift Full Bridge (PSFB). Their design critically influences the overall efficiency, power density, and thermal performance. This tool provides an interactive analysis of these factors.</p>
+									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">The Problem with Fill Factor ($K_u$)</h3>
+									<p class="text-gray-600 leading-relaxed">
+                                        Traditional transformer design often relies on the Fill Factor ($K_u$) to estimate the required core size. However, $K_u$ is not a fixed value; it depends on the wire size, insulation, and the number of turns—parameters that are not known at the start of the design.
+                                    </p>
+                                    <p class="text-gray-600 leading-relaxed">
+                                        As the animated graph shows, the required core geometry is highly sensitive to $K_u$. A small change in the assumed Fill Factor can lead to a large change in the calculated core size, making the process iterative and prone to error.
+                                    </p>
+                                    <div class="my-6 flex justify-center">
+                                        <img src="https://i.imgur.com/8YjZ1v4.png" alt="Graph showing Kgfe is inversely proportional to Ku" class="rounded-lg shadow-md animated-graph">
+                                    </div>
+                                    <p class="font-semibold text-gray-700 leading-relaxed">
+                                        This tool avoids this issue by optimizing directly over the number of turns, a physical parameter, providing a more direct and accurate design process.
+                                    </p>
 								</div>
 						
 								<div class="explanation-section">
-									<h3 class="text-xl font-semibold text-white mt-4 mb-2">Core Selection</h3>
-									<p class="text-slate-400 leading-relaxed">The choice of magnetic core material and geometry is a foundational step. For high-frequency applications, ferrite materials are preferred due to their low losses. This tool allows comparison between various common ferrite core types to identify the most suitable option for a given set of operating conditions.</p>
+									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Turns Ratio, Current & Winding Size</h3>
+									<p class="text-gray-600 leading-relaxed">The output voltage for each mode is determined by the turns ratio and input voltage:</p>
+									<div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
+										$$ V_{out(series)} = 2 \cdot D_{eff} \cdot \frac{N_s}{N_p} \cdot \frac{V_{in}}{2} $$
+                                        $$ V_{out(parallel)} = 2 \cdot D_{eff} \cdot \frac{N_s}{N_p} \cdot V_{in} $$
+									</div>
+                                    <p class="text-gray-600 leading-relaxed">RMS currents for the windings are calculated as:</p>
+                                    <div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
+										$$ I_{prms} = \frac{I_o}{2} \cdot \frac{N_s}{N_p} \cdot \sqrt{2D} $$
+                                        $$ I_{srms} = \frac{I_o}{2} \cdot \sqrt{D} $$
+									</div>
 								</div>
-						
-								<div class="explanation-section">
-									<h3 class="text-xl font-semibold text-white mt-4 mb-2">Fundamental Equations</h3>
-									
-									<h4 class="font-semibold text-slate-200 mt-3 mb-1">Primary Turns ($N_p$):</h4>
-									<div class="equation-block bg-slate-900 border-l-4 border-cyan-400 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ N_p = \frac{V_{in}}{2 \cdot f \cdot B_{max} \cdot A_e} $$
+                                
+                                <div class="explanation-section">
+									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Setting Design Limits</h3>
+									<p class="text-gray-600 leading-relaxed">The maximum flux density ($B_{max}$) is constrained by the core's thermal properties:</p>
+									<div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
+										$$ P_{max} = \frac{T_{max} - T_{min}}{R_{th}} $$
+                                        $$ B_{max} = \left( \frac{P_{max}}{k f V_{core}} \right) ^ {\frac{1}{\beta}} $$
 									</div>
-						
-									<h4 class="font-semibold text-slate-200 mt-3 mb-1">Core Loss ($P_{core}$):</h4>
-									<div class="equation-block bg-slate-900 border-l-4 border-cyan-400 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ P_{core} = k \cdot f^{\alpha} \cdot B_{ac}^{\beta} \cdot V_e $$
-									</div>
-						
-									<h4 class="font-semibold text-slate-200 mt-3 mb-1">Copper Loss ($P_{copper}$):</h4>
-									<div class="equation-block bg-slate-900 border-l-4 border-cyan-400 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ P_{copper} = I_{rms}^2 \cdot R_{ac} $$
+                                    <p class="text-gray-600 leading-relaxed">The number of turns ($N_p$) must be within physical and magnetic limits:</p>
+                                    <div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
+										$$ N_{pmin} = \frac{V_{in} \cdot D}{2 f_s A_c B_{max}} $$
+                                        $$ N_{pmax} \le \frac{K_u \cdot W_a}{S_p + \frac{S_s}{K}} $$
 									</div>
 								</div>
                             </div>
@@ -186,21 +200,21 @@
             <div class="lg:col-span-2 space-y-8">
                 
                 <!-- Plot Card -->
-                <div class="bg-slate-800 border border-slate-700 rounded-xl shadow-lg min-h-[500px] flex items-center justify-center p-4">
+                <div class="bg-white border border-gray-200 rounded-xl shadow-md min-h-[500px] flex items-center justify-center p-4">
                     <div id="plotDiv" class="w-full h-full relative">
-                        <div class="loading-overlay hidden absolute inset-0 bg-slate-800 bg-opacity-75 flex items-center justify-center z-10 rounded-lg" id="loadingOverlay">
+                        <div class="loading-overlay hidden absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg" id="loadingOverlay">
                             <div class="spinner"></div>
                         </div>
                         <div class="w-full h-full flex items-center justify-center">
-                            <p class="text-slate-500">Select parameters and click 'Calculate & Plot' to see results.</p>
+                            <p class="text-gray-400">Select parameters and click 'Calculate & Plot' to see results.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Loss Summary Table Card -->
-                <div class="bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
-                    <div class="p-6 border-b border-slate-700">
-                        <h2 class="text-2xl font-semibold text-white">Core Performance Summary</h2>
+                <div class="bg-white border border-gray-200 rounded-xl shadow-md">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-2xl font-semibold text-gray-800">Core Performance Summary</h2>
                     </div>
                     <div id="lossDiffTableContainer" class="p-2 md:p-4">
                         <div id="lossDiffTable" class="overflow-x-auto">
@@ -211,7 +225,7 @@
 				
 				<!-- Back Button -->
 				<div class="flex justify-center mt-6">
-					<a href="#" class="text-slate-400 hover:text-white transition-colors duration-200 flex items-center" onclick="event.preventDefault(); alert('Navigation to Thesis Details page.');">
+					<a href="master_thesis_details.html" class="text-gray-500 hover:text-blue-600 transition-colors duration-200 flex items-center">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 0 1-.02 1.06L8.832 10l3.938 3.71a.75.75 0 1 1-1.04 1.08l-4.5-4.25a.75.75 0 0 1 0-1.08l4.5-4.25a.75.75 0 0 1 1.06.02Z" clip-rule="evenodd" /></svg>
 						Back to Thesis Details
 					</a>
@@ -222,7 +236,7 @@
 	
 	<script>
     // --- Core Data and Constants ---
-    const colors = ['#22d3ee', '#f43f5e', '#34d399', '#a78bfa', '#fbbf24', '#f87171', '#60a5fa', '#d946ef'];
+    const colors = ['#3b82f6', '#ef4444', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#60a5fa', '#d946ef'];
     const core_names = ['EE10/11', 'EE13', 'EE16', 'EE19', 'EE25/19', 'EE30', 'EE40', 'EE50', 'EE60', 'ETD39', 'EE35', 'EE42', 'EE55'];
     const num_cores = core_names.length;
     const lms = [38.4, 45.4, 53.6, 66.8, 78.08, 94.2, 126.2, 156.2, 180.6, 149, 107.7, 144.55, 165.3].map(x => x * 1e-3);
@@ -313,11 +327,15 @@
             
             let Nps_range_core = [];
             const Nps_min_core = Math.ceil((0.5 * Vps * D) / (2 * Acs[i] * f * Bsmax_core));
-            for (let n = Nps_min_core; n <= Npsmax_core; n++) { Nps_range_core.push(n); }
+            if (isFinite(Nps_min_core) && Nps_min_core <= Npsmax_core) {
+                for (let n = Nps_min_core; n <= Npsmax_core; n++) { Nps_range_core.push(n); }
+            }
 
             let Npp_range_core = [];
             const Npp_min_core = Math.ceil((Vpp * D) / (2 * Acp[i] * f * Bpmax_core));
-            for (let n = Npp_min_core; n <= Nppmax_core; n++) { Npp_range_core.push(n); }
+            if (isFinite(Npp_min_core) && Npp_min_core <= Nppmax_core) {
+                for (let n = Npp_min_core; n <= Nppmax_core; n++) { Npp_range_core.push(n); }
+            }
             
             const B_series_full_core = Nps_range_core.map(Np => (0.5 * Vps * D) / (2 * Acs[i] * f * Np));
             const B_parallel_full_core = Npp_range_core.map(Np => (Vpp * D) / (2 * Acp[i] * f * Np));
@@ -390,23 +408,27 @@
     // --- Plotting and UI Update Functions ---
     function getPlotlyLayout(title) {
         return {
-            title: { text: title, font: { color: 'white' } },
-            xaxis: { gridcolor: 'rgba(255, 255, 255, 0.1)', titlefont: { color: '#94a3b8' }, tickfont: { color: '#94a3b8' } },
-            yaxis: { gridcolor: 'rgba(255, 255, 255, 0.1)', titlefont: { color: '#94a3b8' }, tickfont: { color: '#94a3b8' } },
+            title: { text: title, font: { color: '#1f2937' } }, // gray-800
+            xaxis: { gridcolor: '#e5e7eb', titlefont: { color: '#4b5563' }, tickfont: { color: '#4b5563' } }, // gray-200, gray-600
+            yaxis: { gridcolor: '#e5e7eb', titlefont: { color: '#4b5563' }, tickfont: { color: '#4b5563' } }, // gray-200, gray-600
             hovermode: 'x unified',
             showlegend: true,
             paper_bgcolor: 'transparent',
             plot_bgcolor: 'transparent',
-            legend: { font: { color: '#cbd5e1' }, orientation: 'h', y: -0.2 },
+            legend: { font: { color: '#374151' }, orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center' }, // gray-700
             margin: { l: 60, r: 30, b: 80, t: 50 }
         };
     }
     
     function plotData(data, plotDivId, plotConfig) {
         const traces = plotConfig.traces(data);
+        if (traces.every(t => !t.x || t.x.length === 0)) {
+             document.getElementById(plotDivId).innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-gray-400">No valid data to plot for the selected parameters.</p></div>`;
+             return;
+        }
         const layout = getPlotlyLayout(plotConfig.title);
-        layout.xaxis.title = plotConfig.xaxis;
-        layout.yaxis.title = plotConfig.yaxis;
+        layout.xaxis.title = { text: plotConfig.xaxis };
+        layout.yaxis.title = { text: plotConfig.yaxis };
         Plotly.newPlot(plotDivId, traces, layout, {responsive: true});
     }
 
@@ -444,14 +466,14 @@
             ]
         }
     };
-    plotConfigs.total_power_loss_vs_turns_series = { ...plotConfigs.total_power_loss_vs_turns_combined, traces: (d) => [plotConfigs.total_power_loss_vs_turns_combined.traces(d)[0], plotConfigs.total_power_loss_vs_turns_combined.traces(d)[2]] };
-    plotConfigs.total_power_loss_vs_turns_parallel = { ...plotConfigs.total_power_loss_vs_turns_combined, traces: (d) => [plotConfigs.total_power_loss_vs_turns_combined.traces(d)[1], plotConfigs.total_power_loss_vs_turns_combined.traces(d)[3]] };
+    plotConfigs.total_power_loss_vs_turns_series = { ...plotConfigs.total_power_loss_vs_turns_combined, title: 'Total Power Loss vs. Primary Turns (Series)', traces: (d) => [plotConfigs.total_power_loss_vs_turns_combined.traces(d)[0], plotConfigs.total_power_loss_vs_turns_combined.traces(d)[2]] };
+    plotConfigs.total_power_loss_vs_turns_parallel = { ...plotConfigs.total_power_loss_vs_turns_combined, title: 'Total Power Loss vs. Primary Turns (Parallel)', traces: (d) => [plotConfigs.total_power_loss_vs_turns_combined.traces(d)[1], plotConfigs.total_power_loss_vs_turns_combined.traces(d)[3]] };
     plotConfigs.layers_vs_turns = { ...plotConfigs.ku_vs_turns, title: 'Number of Layers vs. Primary Turns', yaxis: 'Layers (Approx.)'}; // Re-using Ku for layer plot as an example
 
     function updateLossDiffTable(summaryData) {
         const tableContainer = document.getElementById('lossDiffTable');
-        let tableHTML = `<table class="w-full text-sm text-left text-slate-300">
-            <thead class="text-xs text-slate-400 uppercase bg-slate-700">
+        let tableHTML = `<table class="w-full text-sm text-left text-gray-700">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                     <th scope="col" class="px-6 py-3">Core Type</th>
                     <th scope="col" class="px-6 py-3">Optimal Series Loss [W] (Np)</th>
@@ -459,10 +481,10 @@
                 </tr>
             </thead><tbody>`;
         summaryData.forEach(core => {
-            const seriesText = !isNaN(core.OptimalSeriesPower) ? `${core.OptimalSeriesPower.toFixed(2)} (${core.OptimalSeriesNp})` : 'N/A';
-            const parallelText = !isNaN(core.OptimalParallelPower) ? `${core.OptimalParallelPower.toFixed(2)} (${core.OptimalParallelNp})` : 'N/A';
-            tableHTML += `<tr class="bg-slate-800 border-b border-slate-700 hover:bg-slate-600">
-                <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">${core.coreName}</th>
+            const seriesText = !isNaN(core.OptimalSeriesPower) ? `${core.OptimalSeriesPower.toFixed(2)} (${core.OptimalSeriesNp || 'N/A'})` : 'N/A';
+            const parallelText = !isNaN(core.OptimalParallelPower) ? `${core.OptimalParallelPower.toFixed(2)} (${core.OptimalParallelNp || 'N/A'})` : 'N/A';
+            tableHTML += `<tr class="bg-white border-b hover:bg-gray-50">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${core.coreName}</th>
                 <td class="px-6 py-4">${seriesText}</td>
                 <td class="px-6 py-4">${parallelText}</td></tr>`;
         });
@@ -475,22 +497,21 @@
         const plotDiv = document.getElementById('plotDiv');
         const loadingOverlay = document.getElementById('loadingOverlay');
         loadingOverlay.classList.remove('hidden');
-        plotDiv.firstElementChild.classList.add('hidden'); // Hide the placeholder text
-        Plotly.purge(plotDiv);
-
+        plotDiv.innerHTML = ''; // Clear previous plot or message
+        
         setTimeout(() => {
             try {
                 const { selectedCoreResults, allCoresLossSummary } = calculateLosses();
                 const plotType = document.getElementById('plotType').value;
                 const config = plotConfigs[plotType] || plotConfigs.total_power_loss_vs_turns_combined;
                 
-                const dataToPlote = plotType === 'compare_core' ? allCoresLossSummary : selectedCoreResults;
-                plotData(dataToPlote, 'plotDiv', config);
+                const dataToPlot = plotType === 'compare_core' ? allCoresLossSummary : selectedCoreResults;
+                plotData(dataToPlot, 'plotDiv', config);
                 
                 updateLossDiffTable(allCoresLossSummary);
             } catch (error) {
                 console.error("Error during calculation or plotting:", error);
-                plotDiv.innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-red-400">Error: ${error.message}. Check console.</p></div>`;
+                plotDiv.innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-red-600">Error: ${error.message}. Check console.</p></div>`;
             } finally {
                 loadingOverlay.classList.add('hidden');
             }
