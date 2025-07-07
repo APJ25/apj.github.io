@@ -52,13 +52,6 @@
         details[open] summary .arrow {
             transform: rotate(90deg);
         }
-        .animated-graph {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .animated-graph:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -156,7 +149,7 @@
                                         As the animated graph shows, the required core geometry is highly sensitive to $K_u$. A small change in the assumed Fill Factor can lead to a large change in the calculated core size, making the process iterative and prone to error.
                                     </p>
                                     <div class="my-6 flex justify-center">
-                                        <img src="https://i.imgur.com/8YjZ1v4.png" alt="Graph showing Kgfe is inversely proportional to Ku" class="rounded-lg shadow-md animated-graph">
+                                        <div id="fillFactorGraph" class="w-full h-64"></div>
                                     </div>
                                     <p class="font-semibold text-gray-700 leading-relaxed">
                                         This tool avoids this issue by optimizing directly over the number of turns, a physical parameter, providing a more direct and accurate design process.
@@ -496,6 +489,30 @@
         tableContainer.innerHTML = tableHTML;
     }
 
+    function animateFillFactorGraph() {
+        const divId = 'fillFactorGraph';
+        const ku_values = [];
+        const kgfe_values = [];
+        for (let i = 30; i <= 60; i++) {
+            const ku = i / 100;
+            ku_values.push(ku);
+            kgfe_values.push(1 / ku); // Simplified inverse relationship for visualization
+        }
+
+        const layout = getPlotlyLayout('');
+        layout.xaxis.title = { text: 'Fill Factor (Ku)' };
+        layout.yaxis.title = { text: 'Required Core Geometry (Kgfe)'};
+        layout.yaxis.range = [1.5, 3.5];
+        layout.title.text = 'Kgfe ∝ 1/Ku';
+
+        Plotly.newPlot(divId, [{
+            x: ku_values,
+            y: kgfe_values,
+            mode: 'lines',
+            line: { color: '#3b82f6', width: 3 }
+        }], layout, {responsive: true});
+    }
+
     // --- Event Listeners and Initialization ---
     document.getElementById('calculateButton').addEventListener('click', () => {
         const plotDiv = document.getElementById('plotDiv');
@@ -536,7 +553,9 @@
             coreTypeSelect.value = ee42_index;
         }
 
+        // Initial plot and animation
         document.getElementById('calculateButton').click();
+        animateFillFactorGraph();
     });
 	</script>
 </body>
