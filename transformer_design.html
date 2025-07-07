@@ -289,29 +289,7 @@ core.</p>
             </div>
             <p>This total loss directly contributes to the temperature rise of the transformer.</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-             <div class="card bg-indigo-50 border-2 border-indigo-200">
-            <h2 id="ai-advisor" class="text-indigo-800">✨ AI Design Advisor</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <div><label class="font-medium">Input Voltage (Vin)</label><input id="vin" type="number" value="80" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Duty Cycle (D)</label><input id="d" type="number" value="0.4" step="0.01" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Frequency (fs, kHz)</label><input id="fs" type="number" value="100" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Core Area (Ac, mm²)</label><input id="ac" type="number" value="127" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Max Flux (Bmax, T)</label><input id="bmax" type="number" value="0.3" step="0.01" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Output Current (Io, A)</label><input id="io" type="number" value="10" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Turns Ratio (K)</label><input id="k" type="number" value="3" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Fill Factor (Ku)</label><input id="ku" type="number" value="0.4" step="0.01" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Primary Wire Area (Sp, mm²)</label><input id="sp" type="number" value="0.518" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Secondary Wire Area (Ss, mm²)</label><input id="ss" type="number" value="0.823" class="w-full p-2 border rounded mt-1"></div>
-                <div><label class="font-medium">Window Area (Wa, mm²)</label><input id="wa" type="number" value="173" class="w-full p-2 border rounded mt-1"></div>
-            </div>
-            <div class="flex items-center gap-4">
-                <button id="calculateBtn" class="ai-button bg-slate-700 hover:bg-slate-600">Calculate Parameters</button>
-                <button id="aiBtn" class="ai-button" disabled>✨ Get AI Design Advice</button>
-            </div>
-            <div id="results" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-            <div id="aiAdvice" class="mt-6 p-4 bg-white rounded-lg border border-indigo-200" style="display: none;"></div>
-        </div>
+       
 
             <div class="md:col-span-2">
                 
@@ -324,6 +302,8 @@ core.</p>
                     <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
                     <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
                 </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div class="md:col-span-2">
 
                 <div class="card" data-section-name="Flux Density and Core Loss">
                     <h2 id="flux-density">Flux Density & Core Loss <button class="explain-button" onclick="getExplanation('flux-density')">✨ Explain</button></h2>
