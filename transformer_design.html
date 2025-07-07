@@ -422,7 +422,10 @@
     
     function plotData(data, plotDivId, plotConfig) {
         const traces = plotConfig.traces(data);
-        if (traces.every(t => !t.x || t.x.length === 0)) {
+        // Check if all trace arrays are empty or undefined
+        const isDataEmpty = traces.every(t => !t.x || t.x.length === 0);
+
+        if (isDataEmpty) {
              document.getElementById(plotDivId).innerHTML = `<div class="w-full h-full flex items-center justify-center"><p class="text-gray-400">No valid data to plot for the selected parameters.</p></div>`;
              return;
         }
