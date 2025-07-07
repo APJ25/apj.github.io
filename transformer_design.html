@@ -196,9 +196,22 @@
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Transformer Design Analysis</h1>
 
         <div class="explanation-section">
-            <h2>Introduction to High-Frequency Transformer Design</h2>
-            <p>High-frequency transformers are indispensable components in modern power converters, particularly in isolated DC-DC topologies like the Phase-Shift Full Bridge (PSFB) converter used in railway applications. Their design critically influences the overall efficiency, power density, and thermal performance of the converter. This section details the theoretical foundations, design considerations, and calculation methodologies employed to optimize the transformer for our reconfigurable PSFB converter, complementing the interactive analysis tool below.</p>
-            <p>The primary goal was to achieve a robust and efficient magnetic component capable of handling varying input voltages and output power requirements while minimizing losses and maintaining acceptable thermal performance within a constrained volume.</p>
+            <h2>High-Frequency Transformer Design</h2>
+            <p>The framework for transformer design is discussed  in order to
+determine the optimum number of turns for the minimal loss condition for both parallel and
+series transformer operation.The entire design will be built on
+the E core due to its homogeneity, with the outer limbs having half the area of cross section
+of the inner limbs.
+The entire design will be for trying to combine the two transformer design as discussed
+ onto a signle core.
+</p>
+            <p>The aim of the design is to optimize the performance of the transformer with lower losses
+and lower cost such that tuning the number of turns within the permissible limits give rise
+to a trend in the loss calculation in where the flux density,maximum allowable loss due to
+thermal limitations are within the permissible limit.
+This iterative process through the entire core dataset is done with the help of MATLAB
+editor,which allows to locate the most preferable core and the corresponding turns for the
+core.</p>
         </div>
 
         <div class="explanation-section">
@@ -276,6 +289,76 @@
             </div>
             <p>This total loss directly contributes to the temperature rise of the transformer.</p>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div class="md:col-span-2">
+                
+                <div class="card" data-section-name="Setting Limits">
+                    <h2 id="limits">Setting Limits <button class="explain-button" onclick="getExplanation('limits')"></h2>
+                    <p>The parametrization of the transformer is constrained by two critical limits: an upper limit defined by physical space and a lower limit determined by Faraday's law of induction. These ensure the design is both physically realizable and electrically sound.</p>
+                    <h3 class="text-slate-700">Upper Limit: Maximum Number of Turns ($N_{pmax}$)</h3>
+                    <div class="equation"><span id="eq4_50"></span><span class="equation-label">(4.50)</span></div>
+                    <div class="equation"><span id="eq4_51"></span><span class="equation-label">(4.51)</span></div>
+                    <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
+                    <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
+                </div>
+
+                <div class="card" data-section-name="Flux Density and Core Loss">
+                    <h2 id="flux-density">Flux Density & Core Loss <button class="explain-button" onclick="getExplanation('flux-density')">✨ Explain</button></h2>
+                    <p>The maximum permitted flux density ($B_{max}$) is a crucial parameter, calculated based on the core's allowable peak power loss ($P_{max}$). This value is determined by the core material's thermal resistance ($R_{th}$) and the maximum allowable temperature rise.</p>
+                    <div class="equation"><span id="eq4_53"></span><span class="equation-label">(4.53)</span></div>
+                    <div class="equation"><span id="eq4_54"></span><span class="equation-label">(4.54)</span></div>
+                    <div class="equation"><span id="eq4_55"></span><span class="equation-label">(4.55)</span></div>
+                </div>
+                
+                <div class="card" data-section-name="Series vs. Parallel Operation">
+                    <h2 id="series-parallel">Series vs. Parallel <button class="explain-button" onclick="getExplanation('series-parallel')">✨ Explain</button></h2>
+                    <p>The transformer's electrical conditions change based on its connection configuration, particularly affecting the voltage seen by each primary winding.</p>
+                    <div class="equation"><span id="eq4_56"></span><span class="equation-label">(4.56)</span></div>
+                </div>
+
+                <div class="card" data-section-name="Turns Ratio">
+                    <h2 id="turns-ratio">Turns Ratio (K) <button class="explain-button" onclick="getExplanation('turns-ratio')">✨ Explain</button></h2>
+                    <p>The turns ratio is determined by the input and output voltage requirements for both series and parallel modes.</p>
+                    <div class="equation"><span id="eq4_42"></span><span class="equation-label">(4.42)</span></div>
+                    <div class="equation"><span id="eq4_43"></span><span class="equation-label">(4.43)</span></div>
+                </div>
+
+                <div class="card" data-section-name="Wire Size Selection">
+                    <h2 id="wire-size">Wire Size Selection <button class="explain-button" onclick="getExplanation('wire-size')">✨ Explain</button></h2>
+                    <p>Wire sizes are selected based on the RMS current they must carry. To mitigate high-frequency losses (like skin effect), Litz wire is often used.</p>
+                    <div class="equation"><span id="eq4_47"></span><span class="equation-label">(4.47)</span></div>
+                    <div class="equation"><span id="eq4_48"></span><span class="equation-label">(4.48)</span></div>
+                    <div class="equation"><span id="eq4_49"></span><span class="equation-label">(4.49)</span></div>
+                </div>
+
+                <div class="explanation-section">
+                    <h2>Interpretation of Interactive Plots</h2>
+                    [cite_start]<p>The interactive plots generated by this tool provide crucial insights into the transformer's performance under various operating conditions and design choices. [cite: 45] [cite_start]By manipulating the input parameters, you can visualize the impact on key metrics: [cite: 45]</p>
+
+                    <h3>Core Loss vs. Flux Density / Turns:</h3>
+                    [cite_start]<p>These plots illustrate the relationship between the chosen core material's losses and the operating flux density or number of turns. [cite: 46] [cite_start]Lower core losses are generally desirable, but they often come at the expense of requiring more turns (larger transformer size) or a larger core. [cite: 47] [cite_start]The curve helps identify the optimal operating point for minimizing core losses for a selected core type. [cite: 47]</p>
+                    <h3>Copper Loss vs. Turns:</h3>
+                    [cite_start]<p>This plot shows how copper losses vary with the number of primary turns. [cite: 48] [cite_start]As turns increase, the wire length increases, raising DC resistance. [cite: 49] [cite_start]However, the skin and proximity effects (which are complexly modeled in the JavaScript) also play a significant role. [cite: 50] [cite_start]The goal is to find a balance where copper losses are minimized for a given power level and frequency. [cite: 50]</p>
+                    <h3>Total Power Loss vs. Flux Density / Turns:</h3>
+                    [cite_start]<p>These are the most critical plots as they represent the combined impact of all losses. [cite: 51] [cite_start]The objective is to identify the number of turns (or corresponding flux density) that results in the lowest total power loss, while also ensuring the total loss remains below the maximum allowable power loss for the core's thermal limits (represented by the $P_{max}$ line in the plots). [cite: 51]</p>
+                    <h3>Ku Factor vs. Turns:</h3>
+                    [cite_start]<p>The Ku factor (Window Utilization Factor) is a measure of how effectively the winding window area of the core is utilized by the copper windings. [cite: 52] [cite_start]A higher Ku factor indicates a more compact and efficient winding design. [cite: 53] [cite_start]This plot helps in understanding the space efficiency of the windings for different turn counts. [cite: 53]</p>
+                    <h3>Skeff & Proximity Effects:</h3>
+                    [cite_start]<p>This plot (if enabled) visualizes the skin effect factor ($S_{keff}$) and proximity effect factor ($F_R$) for different wire sizes or frequencies. [cite: 54] [cite_start]Understanding these effects is vital for selecting appropriate Litz wire constructions to minimize high-frequency copper losses. [cite: 54]</p>
+                    <h3>Core Loss Comparison:</h3>
+                    [cite_start]<p>The "Loss Difference Summary Table for All Cores" (generated below the plot) provides a quick comparison of the optimal power loss for different core types. [cite: 55] [cite_start]This helps in selecting the most thermally efficient core for your application based on your specified constraints. [cite: 55]</p>
+                </div>
+
+            </div>
+
+            <div class="md:col-span-1">
+                <div class="card sticky top-8">
+                    <h2 id="fill-factor-graph">Fill Factor ($K_u$) Trend</h2>
+                    <canvas id="fillFactorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="explanation-section">
             <h2>Interpretation of Interactive Plots</h2>
