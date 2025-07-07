@@ -347,74 +347,10 @@ core.</p>
         </div>
     </div>
     
-    <!-- Modal for AI responses -->
-    <div id="aiModal" class="modal-backdrop" style="display: none;">
-        <div class="modal-content">
-            <h3 id="modalTitle" class="text-2xl font-bold text-slate-800 mb-4"></h3>
-            <div id="modalBody"></div>
-            <button onclick="closeModal()" class="mt-6 w-full ai-button">Close</button>
-        </div>
-    </div>
+   
 
 
-    <script>
-        // --- GEMINI API CALLER ---
-        async function callGemini(prompt) {
-            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const apiKey = ""; // API key is handled by the environment
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}`);
-                }
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    return "Sorry, I couldn't get a response. The response from the AI was empty or malformed.";
-                }
-            } catch (error) {
-                console.error("Gemini API call error:", error);
-                return `Sorry, an error occurred while contacting the AI advisor: ${error.message}`;
-            }
-        }
-
-        // --- UI & MODAL LOGIC ---
-        function showModal(title, body) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalBody').innerHTML = body;
-            document.getElementById('aiModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('aiModal').style.display = 'none';
-        }
-
-        async function getExplanation(sectionId) {
-            const sectionCard = document.getElementById(sectionId).closest('.card');
-            const sectionName = sectionCard.dataset.sectionName;
-            const sectionText = sectionCard.innerText.replace('✨ Explain','').trim();
-            
-            showModal(`✨ Explaining: ${sectionName}`, '<div class="flex justify-center items-center p-8"><div class="loader"></div></div>');
-
-            const prompt = `As an expert in power electronics, please explain the following concept from a transformer design document in a clear, simple, and conversational way for an engineering student. Explain the significance of the formulas and the practical implications.
-            
-            Concept: "${sectionName}"
-            
-            Text from document: "${sectionText}"`;
-
-            const explanation = await callGemini(prompt);
-            showModal(`✨ Explaining: ${sectionName}`, explanation.replace(/\n/g, '<br>'));
-        }
+   
 
         <div class="explanation-section">
             <h2>Interpretation of Interactive Plots</h2>
@@ -527,6 +463,14 @@ core.</p>
     </div>
 
     <script>
+        window.onload = function() {
+            // KaTeX rendering for equations
+            const equations = {
+                'eq4_50': 'K_u \\cdot W_a = N_p S_p + N_s S_s', 'eq4_51': 'N_{pmax} \\le \\frac{K_u \\cdot W_a}{S_p + \\frac{S_s}{K}}', 'eq4_52': 'N_{pmin} = \\frac{V_{in} \\cdot D}{2 f_s A_c B_{max}}', 'eq4_53': 'P_{max} = \\frac{T_{max} - T_{min}}{R_{th}}', 'eq4_54': 'R_{th} = 53 \\cdot (V_{core})^{-0.54}', 'eq4_55': 'B_{max} = \\left( \\frac{P_{max}}{k f^{\\alpha} V_{core}} \\right)^{\\frac{1}{\\beta}}', 'eq4_56': 'B = \\frac{V_{in} \\cdot D}{2 \\cdot A_c f_s N}', 'eq4_42': 'V_{out(series)} = 2 \\cdot D_{eff} \\cdot \\frac{N_s}{N_p} \\cdot \\frac{V_{in}}{2}', 'eq4_43': 'V_{out(parallel)} = 2 \\cdot D_{eff} \\cdot \\frac{N_s}{N_p} \\cdot V_{in}', 'eq4_47': 'I_{prms} = \\frac{I_o}{2 \\cdot \\frac{N_s}{N_p}} \\cdot \\sqrt{2D}', 'eq4_48': 'I_{srms} = \\frac{I_o}{2} \\cdot \\sqrt{D}', 'eq4_49': 'd = \\sqrt{\\frac{4 I_{max}}{7.2 \\cdot \\pi}}',
+            };
+            for (const id in equations) {
+                katex.render(equations[id], document.getElementById(id), { throwOnError: false, displayMode: true });
+            }
         // Core Parameters and Constants (Translated from MATLAB)
         const colors = [
             [1, 0, 1], [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 1],
