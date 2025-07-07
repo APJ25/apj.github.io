@@ -212,21 +212,7 @@ thermal limitations are within the permissible limit.
 This iterative process through the entire core dataset is done with the help of MATLAB
 editor,which allows to locate the most preferable core and the corresponding turns for the
 core.</p>
-        </div>
-
-        <div class="explanation-section">
-            <h2>Core Selection and Material Properties</h2>
-            <p>The selection of an appropriate magnetic core material and geometry is the first critical step in transformer design. Core losses are highly dependent on the material's properties (such as saturation flux density and loss coefficients) and the operating frequency and peak flux density. For high-frequency applications, ferrite materials are typically chosen due to their low losses at elevated frequencies.</p>
-            <p>The calculations below utilize parameters for various common ferrite core types, allowing for a comparative analysis to identify the most suitable core for a given set of operating conditions. Key parameters considered for each core include:</p>
-            <ul>
-                <li><strong>Effective Area ($A_e$)</strong>: The cross-sectional area through which the magnetic flux passes.</li>
-                <li><strong>Effective Magnetic Path Length ($l_e$)</strong>: The average length of the magnetic flux path.</li>
-                <li><strong>Window Area ($W_a$)</strong>: The area available for winding turns.</li>
-                <li><strong>Mean Length Per Turn (MLT)</strong>: The average length of a single winding turn.</li>
-                <li><strong>Thermal Resistance ($R_{th}$)</strong>: A measure of the core's ability to dissipate heat.</li>
-            </ul>
-            <p>These parameters are fundamental for calculating flux density, winding lengths, and thermal performance.</p>
-        </div>
+       
 
         <div class="explanation-section">
             <h2>Fundamental Design Equations</h2>
@@ -238,10 +224,10 @@ core.</p>
                 $$
                 N_p = \frac{V_{in}}{2 \cdot f \cdot B_{max} \cdot A_e}
                 $$
-                Where: <br>
-                $V_{in}$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).<br>
-                $f$ is the switching frequency.<br>
-                $B_{max}$ is the maximum allowable peak flux density in the core (dependent on material and temperature).<br>
+                Where: 
+                $V_{in}$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).
+                $f$ is the switching frequency.
+                $B_{max}$ is the maximum allowable peak flux density in the core (dependent on material and temperature).
                 $A_e$ is the effective cross-sectional area of the core.
             </div>
 
