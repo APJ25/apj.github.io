@@ -3,123 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transformer Design Analysis</title>
+    <title>Interactive Transformer Design with AI Advisor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Your existing styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            color: #334155;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .katex {
+            font-size: 1.1em;
         }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 1rem;
-        }
-        .input-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        .input-group input, .input-group select {
-            padding: 0.75rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            background-color: #ffffff;
-            transition: border-color 0.2s;
-        }
-        .input-group input:focus, .input-group select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-        }
-        .btn {
-            padding: 0.75rem 1.5rem;
-            background-color: #3b82f6;
-            color: white;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            border: none;
-        }
-        .btn:hover {
-            background-color: #2563eb;
-            transform: translateY(-1px);
-        }
-        .btn:active {
-            transform: translateY(0);
-        }
-        .plot-container {
-            background-color: #ffffff;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+        h2 {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
             margin-top: 2rem;
-            min-height: 400px; /* Ensure plot div has height */
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 600;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            position: relative; /* For loading indicator */
         }
-        .loading-overlay {
-            position: absolute;
+        h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .equation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+        .equation-label {
+            color: #64748b;
+            font-weight: 500;
+            margin-left: 1.5rem;
+        }
+        .ai-button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .ai-button:hover {
+            background-color: #4338ca;
+        }
+        .ai-button:disabled {
+            background-color: #a5b4fc;
+            cursor: not-allowed;
+        }
+        .explain-button {
+            background: none;
+            border: 1px solid #c7d2fe;
+            color: #4f46e5;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .explain-button:hover {
+            background-color: #e0e7ff;
+        }
+        /* Modal styles */
+        .modal-backdrop {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10;
-            border-radius: 0.75rem;
+            z-index: 1000;
         }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #3b82f6;
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            max-width: 90%;
+            width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #FFF;
+            border-bottom-color: transparent;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-            background-color: #ffffff;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* For rounded corners on table */
-        }
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background-color: #f8fafc;
-            font-weight: 600;
-            color: #475569;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        tr:hover {
-            background-color: #f0f4f8;
-        }
-
         /* NEW STYLES FOR THE EXPLANATION SECTIONS */
         .explanation-section {
             margin-bottom: 2rem;
@@ -147,1332 +152,370 @@
             margin-bottom: 1rem;
             line-height: 1.7;
         }
-        .equation-block {
-            background-color: #f8fafc; /* Lighter background for equations */
-            border-left: 4px solid #3b82f6; /* Blue border for emphasis */
-            padding: 1.25rem;
-            margin: 1.5rem 0;
-            border-radius: 0.5rem;
-            font-family: 'Fira Code', 'Cascadia Code', monospace; /* Monospace font for math */
-            font-size: 1.05rem;
-            overflow-x: auto; /* For long equations */
-        }
-        .equation-block .katex-display { /* MathJax/KaTeX specific style */
-            margin: 0 !important; /* Override default margin */
-        }
-        /* Style for plot descriptions */
-        .plot-description {
-            text-align: center;
-            font-style: italic;
-            font-size: 0.95rem;
-            color: #64748b;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        /* Back to main portfolio button styles */
-        .back-button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 3rem;
-        }
-        .back-to-portfolio-btn {
-            background-color: #6c757d; /* Grey button */
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-        .back-to-portfolio-btn:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-        }
-
     </style>
 </head>
-<body class="p-4">
-    <div class="container bg-white rounded-xl shadow-lg p-6 md:p-8">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Transformer Design Analysis</h1>
+<body>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800">Magnetic Optimization of RPSFB for Railway Application</h1>
+            <p class="text-lg text-slate-600 mt-2">An Interactive Guide with AI-Powered Design Tools</p>
+        </header>
 
         <div class="explanation-section">
             <h2>Introduction to High-Frequency Transformer Design</h2>
-            <p>High-frequency transformers are indispensable components in modern power converters, particularly in isolated DC-DC topologies like the Phase-Shift Full Bridge (PSFB) converter used in railway applications. Their design critically influences the overall efficiency, power density, and thermal performance of the converter. This section details the theoretical foundations, design considerations, and calculation methodologies employed to optimize the transformer for our reconfigurable PSFB converter, complementing the interactive analysis tool below.</p>
-            <p>The primary goal was to achieve a robust and efficient magnetic component capable of handling varying input voltages and output power requirements while minimizing losses and maintaining acceptable thermal performance within a constrained volume.</p>
+            [cite_start]<p>High-frequency transformers are indispensable components in modern power converters, particularly in isolated DC-DC topologies like the Phase-Shift Full Bridge (PSFB) converter used in railway applications. [cite: 28] [cite_start]Their design critically influences the overall efficiency, power density, and thermal performance of the converter. [cite: 29] [cite_start]This section details the theoretical foundations, design considerations, and calculation methodologies employed to optimize the transformer for our reconfigurable PSFB converter, complementing the interactive analysis tool below. [cite: 30]</p>
+            [cite_start]<p>The primary goal was to achieve a robust and efficient magnetic component capable of handling varying input voltages and output power requirements while minimizing losses and maintaining acceptable thermal performance within a constrained volume. [cite: 30]</p>
         </div>
 
         <div class="explanation-section">
             <h2>Core Selection and Material Properties</h2>
-            <p>The selection of an appropriate magnetic core material and geometry is the first critical step in transformer design. Core losses are highly dependent on the material's properties (such as saturation flux density and loss coefficients) and the operating frequency and peak flux density. For high-frequency applications, ferrite materials are typically chosen due to their low losses at elevated frequencies.</p>
-            <p>The calculations below utilize parameters for various common ferrite core types, allowing for a comparative analysis to identify the most suitable core for a given set of operating conditions. Key parameters considered for each core include:</p>
+            [cite_start]<p>The selection of an appropriate magnetic core material and geometry is the first critical step in transformer design. [cite: 31] [cite_start]Core losses are highly dependent on the material's properties (such as saturation flux density and loss coefficients) and the operating frequency and peak flux density. [cite: 31] [cite_start]For high-frequency applications, ferrite materials are typically chosen due to their low losses at elevated frequencies. [cite: 32]</p>
+            [cite_start]<p>The calculations below utilize parameters for various common ferrite core types, allowing for a comparative analysis to identify the most suitable core for a given set of operating conditions. [cite: 33] [cite_start]Key parameters considered for each core include: [cite: 33]</p>
             <ul>
-                <li><strong>Effective Area ($A_e$)</strong>: The cross-sectional area through which the magnetic flux passes.</li>
-                <li><strong>Effective Magnetic Path Length ($l_e$)</strong>: The average length of the magnetic flux path.</li>
-                <li><strong>Window Area ($W_a$)</strong>: The area available for winding turns.</li>
-                <li><strong>Mean Length Per Turn (MLT)</strong>: The average length of a single winding turn.</li>
-                <li><strong>Thermal Resistance ($R_{th}$)</strong>: A measure of the core's ability to dissipate heat.</li>
+                [cite_start]<li><strong>Effective Area ($A_e$)</strong>: The cross-sectional area through which the magnetic flux passes. [cite: 33]</li>
+                [cite_start]<li><strong>Effective Magnetic Path Length ($l_e$)</strong>: The average length of the magnetic flux path. [cite: 33]</li>
+                [cite_start]<li><strong>Window Area ($W_a$)</strong>: The area available for winding turns. [cite: 33]</li>
+                [cite_start]<li><strong>Mean Length Per Turn (MLT)</strong>: The average length of a single winding turn. [cite: 33]</li>
+                [cite_start]<li><strong>Thermal Resistance ($R_{th}$)</strong>: A measure of the core's ability to dissipate heat. [cite: 33]</li>
             </ul>
-            <p>These parameters are fundamental for calculating flux density, winding lengths, and thermal performance.</p>
+            [cite_start]<p>These parameters are fundamental for calculating flux density, winding lengths, and thermal performance. [cite: 33]</p>
         </div>
 
         <div class="explanation-section">
             <h2>Fundamental Design Equations</h2>
-            <p>The transformer design process involves several iterative calculations to determine optimal turns, wire gauges, and minimize losses. The core equations governing transformer operation are derived from Faraday's Law of Induction and principles of current density and power loss.</p>
+            [cite_start]<p>The transformer design process involves several iterative calculations to determine optimal turns, wire gauges, and minimize losses. [cite: 34] [cite_start]The core equations governing transformer operation are derived from Faraday's Law of Induction and principles of current density and power loss. [cite: 34]</p>
 
             <h3>Faraday's Law for Primary Turns Calculation:</h3>
-            <p>The minimum number of primary turns ($N_p$) is crucial to prevent core saturation. It is inversely proportional to the maximum operating flux density ($B_{max}$), switching frequency ($f$), and effective core area ($A_e$). For a unipolar flux swing (e.g., in a push-pull or full-bridge configuration):</p>
-            <div class="equation-block">
-                $$
-                N_p = \frac{V_{in}}{2 \cdot f \cdot B_{max} \cdot A_e}
-                $$
-                Where: <br>
-                $V_{in}$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary).<br>
-                $f$ is the switching frequency.<br>
-                $B_{max}$ is the maximum allowable peak flux density in the core (dependent on material and temperature).<br>
-                $A_e$ is the effective cross-sectional area of the core.
-            </div>
+            [cite_start]<p>The minimum number of primary turns ($N_p$) is crucial to prevent core saturation. [cite: 35] [cite_start]It is inversely proportional to the maximum operating flux density ($B_{max}$), switching frequency ($f$), and effective core area ($A_e$). [cite: 36] [cite_start]For a unipolar flux swing (e.g., in a push-pull or full-bridge configuration): [cite: 36]</p>
+            <div class="equation"><span id="eq_Np"></span><span class="equation-label"></span></div>
+            <p>Where: <br>
+            [cite_start]$V_{in}$ is the input voltage across the primary winding (peak voltage for AC, or DC voltage for square-wave driven primary). [cite: 36]<br>
+            [cite_start]$f$ is the switching frequency. [cite: 36]<br>
+            [cite_start]$B_{max}$ is the maximum allowable peak flux density in the core (dependent on material and temperature). [cite: 36]<br>
+            [cite_start]$A_e$ is the effective cross-sectional area of the core. [cite: 37]</p>
 
             <h3>Turns Ratio and Secondary Turns:</h3>
-            <p>The turns ratio ($n = N_p / N_s$) determines the voltage transformation. The number of secondary turns ($N_s$) is then simply $N_s = N_p / n$. The turns ratio also considers voltage drops across rectifiers and desired output voltage.</p>
-            <div class="equation-block">
-                $$
-                n = \frac{V_{primary, RMS}}{V_{secondary, RMS}} \approx \frac{V_{in, nominal}}{V_{out, desired} + V_{diode\_drop}}
-                $$
-            </div>
+            [cite_start]<p>The turns ratio ($n = N_p / N_s$) determines the voltage transformation. [cite: 38] [cite_start]The number of secondary turns ($N_s$) is then simply $N_s = N_p / n$. [cite: 39] [cite_start]The turns ratio also considers voltage drops across rectifiers and desired output voltage. [cite: 39]</p>
+            <div class="equation"><span id="eq_n"></span><span class="equation-label"></span></div>
 
             <h3>Core Loss Calculation (Steinmetz Equation):</h3>
-            <p>Core losses ($P_{core}$) primarily arise from hysteresis and eddy currents within the magnetic material. These are typically modeled using a modified Steinmetz equation:</p>
-            <div class="equation-block">
-                $$
-                P_{core} = k \cdot f^{\alpha} \cdot B_{ac}^{\beta} \cdot V_e
-                $$
-                Where: <br>
-                $k, \alpha, \beta$ are Steinmetz coefficients specific to the core material.<br>
-                $f$ is the switching frequency.<br>
-                $B_{ac}$ is the peak-to-peak AC flux density swing.<br>
-                $V_e$ is the effective core volume ($A_e \cdot l_e$).
-            </div>
+            [cite_start]<p>Core losses ($P_{core}$) primarily arise from hysteresis and eddy currents within the magnetic material. [cite: 40] [cite_start]These are typically modeled using a modified Steinmetz equation: [cite: 40]</p>
+            <div class="equation"><span id="eq_Pcore"></span><span class="equation-label"></span></div>
+            <p>Where: <br>
+            [cite_start]$k, \alpha, \beta$ are Steinmetz coefficients specific to the core material. [cite: 41]<br>
+            [cite_start]$f$ is the switching frequency. [cite: 41]<br>
+            [cite_start]$B_{ac}$ is the peak-to-peak AC flux density swing. [cite: 41]<br>
+            [cite_start]$V_e$ is the effective core volume ($A_e \cdot l_e$). [cite: 41]</p>
 
             <h3>Copper Loss Calculation:</h3>
-            <p>Copper losses ($P_{copper}$) occur in the windings due to the resistance of the wire. At high frequencies, these losses are significantly exacerbated by **skin effect** (current concentrating near the conductor surface) and **proximity effect** (current redistribution due to adjacent magnetic fields). These effects increase the effective AC resistance ($R_{ac}$) of the winding compared to its DC resistance ($R_{dc}$).</p>
-            <div class="equation-block">
-                $$
-                P_{copper} = I_{rms}^2 \cdot R_{ac}
-                $$
-                <br>
-                The AC resistance ($R_{ac}$) is related to the DC resistance ($R_{dc}$) by the factor $F_R$:
-                $$
-                R_{ac} = F_R \cdot R_{dc}
-                $$
-                Where $F_R$ accounts for skin and proximity effects, calculated using more complex models (e.g., Dowell's curves), which depend on wire diameter, frequency, and winding geometry.
-            </div>
+            [cite_start]<p>Copper losses ($P_{copper}$) occur in the windings due to the resistance of the wire. [cite: 42] [cite_start]At high frequencies, these losses are significantly exacerbated by <strong>skin effect</strong> (current concentrating near the conductor surface) and <strong>proximity effect</strong> (current redistribution due to adjacent magnetic fields). [cite: 42] [cite_start]These effects increase the effective AC resistance ($R_{ac}$) of the winding compared to its DC resistance ($R_{dc}$). [cite: 43]</p>
+            <div class="equation"><span id="eq_Pcopper"></span><span class="equation-label"></span></div>
+            <br>
+            [cite_start]<p>The AC resistance ($R_{ac}$) is related to the DC resistance ($R_{dc}$) by the factor $F_R$: [cite: 43]</p>
+            <div class="equation"><span id="eq_Rac"></span><span class="equation-label"></span></div>
+            [cite_start]<p>Where $F_R$ accounts for skin and proximity effects, calculated using more complex models (e.g., Dowell's curves), which depend on wire diameter, frequency, and winding geometry. [cite: 44]</p>
 
             <h3>Total Power Loss:</h3>
-            <p>The total power loss in the transformer is the sum of the core and copper losses:</p>
-            <div class="equation-block">
-                $$
-                P_{total\_loss} = P_{core} + P_{copper}
-                $$
-            </div>
-            <p>This total loss directly contributes to the temperature rise of the transformer.</p>
+            [cite_start]<p>The total power loss in the transformer is the sum of the core and copper losses: [cite: 44]</p>
+            <div class="equation"><span id="eq_Ptotalloss"></span><span class="equation-label"></span></div>
+            [cite_start]<p>This total loss directly contributes to the temperature rise of the transformer. [cite: 44]</p>
         </div>
 
-        <div class="explanation-section">
-            <h2>Interpretation of Interactive Plots</h2>
-            <p>The interactive plots generated by this tool provide crucial insights into the transformer's performance under various operating conditions and design choices. By manipulating the input parameters, you can visualize the impact on key metrics:</p>
-
-            <h3>Core Loss vs. Flux Density / Turns:</h3>
-            <p>These plots illustrate the relationship between the chosen core material's losses and the operating flux density or number of turns. Lower core losses are generally desirable, but they often come at the expense of requiring more turns (larger transformer size) or a larger core. The curve helps identify the optimal operating point for minimizing core losses for a selected core type.</p>
-            <h3>Copper Loss vs. Turns:</h3>
-            <p>This plot shows how copper losses vary with the number of primary turns. As turns increase, the wire length increases, raising DC resistance. However, the skin and proximity effects (which are complexly modeled in the JavaScript) also play a significant role. The goal is to find a balance where copper losses are minimized for a given power level and frequency.</p>
-            <h3>Total Power Loss vs. Flux Density / Turns:</h3>
-            <p>These are the most critical plots as they represent the combined impact of all losses. The objective is to identify the number of turns (or corresponding flux density) that results in the lowest total power loss, while also ensuring the total loss remains below the maximum allowable power loss for the core's thermal limits (represented by the $P_{max}$ line in the plots).</p>
-            <h3>Ku Factor vs. Turns:</h3>
-            <p>The Ku factor (Window Utilization Factor) is a measure of how effectively the winding window area of the core is utilized by the copper windings. A higher Ku factor indicates a more compact and efficient winding design. This plot helps in understanding the space efficiency of the windings for different turn counts.</p>
-            <h3>Skeff & Proximity Effects:</h3>
-            <p>This plot (if enabled) visualizes the skin effect factor ($S_{keff}$) and proximity effect factor ($F_R$) for different wire sizes or frequencies. Understanding these effects is vital for selecting appropriate Litz wire constructions to minimize high-frequency copper losses.</p>
-            <h3>Core Loss Comparison:</h3>
-            <p>The "Loss Difference Summary Table for All Cores" (generated below the plot) provides a quick comparison of the optimal power loss for different core types. This helps in selecting the most thermally efficient core for your application based on your specified constraints.</p>
-        </div>
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Interactive Transformer Design Tool</h2>
-        <p class="text-center text-gray-600 mb-6">Adjust the parameters below to explore different transformer designs and visualize their performance characteristics. Select a plot type to view specific analyses.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            <div class="input-group">
-                <label for="outputPower">Output Power (Po) [W]:</label>
-                <input type="number" id="outputPower" value="500" step="10">
+        <div class="card bg-indigo-50 border-2 border-indigo-200">
+            <h2 id="ai-advisor" class="text-indigo-800">✨ AI Design Advisor</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <div><label class="font-medium">Input Voltage (Vin)</label><input id="vin" type="number" value="80" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Duty Cycle (D)</label><input id="d" type="number" value="0.4" step="0.01" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Frequency (fs, kHz)</label><input id="fs" type="number" value="100" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Core Area (Ac, mm²)</label><input id="ac" type="number" value="127" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Max Flux (Bmax, T)</label><input id="bmax" type="number" value="0.3" step="0.01" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Output Current (Io, A)</label><input id="io" type="number" value="10" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Turns Ratio (K)</label><input id="k" type="number" value="3" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Fill Factor (Ku)</label><input id="ku" type="number" value="0.4" step="0.01" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Primary Wire Area (Sp, mm²)</label><input id="sp" type="number" value="0.518" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Secondary Wire Area (Ss, mm²)</label><input id="ss" type="number" value="0.823" class="w-full p-2 border rounded mt-1"></div>
+                <div><label class="font-medium">Window Area (Wa, mm²)</label><input id="wa" type="number" value="173" class="w-full p-2 border rounded mt-1"></div>
             </div>
-            <div class="input-group">
-                <label for="primaryVoltageParallel">Primary Voltage (Vpp) [V]:</label>
-                <input type="number" id="primaryVoltageParallel" value="80" step="5">
+            <div class="flex items-center gap-4">
+                <button id="calculateBtn" class="ai-button bg-slate-700 hover:bg-slate-600">Calculate Parameters</button>
+                <button id="aiBtn" class="ai-button" disabled>✨ Get AI Design Advice</button>
             </div>
-            <div class="input-group">
-                <label for="primaryVoltageSeries">Primary Voltage (Vps) [V]:</label>
-                <input type="number" id="primaryVoltageSeries" value="160" step="5">
-            </div>
-            <div class="input-group">
-                <label for="frequency">Frequency (f) [Hz]:</label>
-                <input type="number" id="frequency" value="100000" step="1000">
-            </div>
-            <div class="input-group">
-                <label for="voltageDrop">Voltage Drop (Vd) [V]:</label>
-                <input type="number" id="voltageDrop" value="1.4" step="0.1">
-            </div>
-            <div class="input-group">
-                <label for="dutyCycle">Duty Cycle (D):</label>
-                <input type="number" id="dutyCycle" value="0.8" step="0.05">
-            </div>
-            <div class="input-group">
-                <label for="maxPowerLoss">Max Power Loss (Ploss_max) [W]:</label>
-                <input type="number" id="maxPowerLoss" value="20" step="1">
-            </div>
-            <div class="input-group">
-                <label for="wireDiameterPrimary">Primary Wire Diameter (dps/dpp) [m]:</label>
-                <input type="number" id="wireDiameterPrimary" value="0.0008" step="0.00001">
-            </div>
-            <div class="input-group">
-                <label for="wireDiameterSecondary">Secondary Wire Diameter (ds) [m]:</label>
-                <input type="number" id="wireDiameterSecondary" value="0.000812" step="0.00001">
-            </div>
-            <div class="input-group">
-                <label for="ambientTemperature">Ambient Temperature (Tamb) [°C]:</label>
-                <input type="number" id="ambientTemperature" value="25" step="1">
-            </div>
-            <div class="input-group">
-                <label for="maxTemperature">Max Temperature (Tmax) [°C]:</label>
-                <input type="number" id="maxTemperature" value="75" step="1">
-            </div>
-            <div class="input-group">
-                <label for="coreType">Select Core Type:</label>
-                <select id="coreType" class="w-full"></select>
-            </div>
-            <div class="input-group">
-                <label for="plotType">Select Plot:</label>
-                <select id="plotType" class="w-full">
-                    <option value="loss_vs_flux">Core Loss vs Flux Density</option>
-                    <option value="loss_vs_turns">Core Loss vs Turns</option>
-                    <option value="flux_vs_turns">Flux Density vs Turns</option>
-                    <option value="compare_core">Compare Core Losses</option>
-                    <option value="layers_vs_turns">Number of Layers vs Turns</option>
-                    <option value="skeff_proximity">Skeff & Proximity Effects</option>
-                    <option value="copper_loss_vs_turns">Copper Loss vs Turns</option>
-                    <option value="total_power_loss_vs_flux_series">Total Power Loss vs Flux Density (Series)</option>
-                    <option value="total_power_loss_vs_flux_parallel">Total Power Loss vs Flux Density (Parallel)</option>
-                    <option value="total_power_loss_vs_turns_series">Total Power Loss vs Turns (Series)</option>
-                    <option value="total_power_loss_vs_turns_parallel">Total Power Loss vs Turns (Parallel)</option>
-                    <option value="total_power_loss_vs_turns_combined">Total Power Loss vs Turns (Combined)</option>
-                    <option value="ku_vs_turns">Ku vs Number of Primary Turns (Series)</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="flex justify-center mb-8">
-            <button id="calculateButton" class="btn">Calculate and Plot</button>
+            <div id="results" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            <div id="aiAdvice" class="mt-6 p-4 bg-white rounded-lg border border-indigo-200" style="display: none;"></div>
         </div>
 
-        <div id="plotDiv" class="plot-container">
-            <div class="loading-overlay hidden" id="loadingOverlay">
-                <div class="spinner"></div>
-            </div>
-            <p class="text-gray-500">Select parameters and click 'Calculate and Plot' to see results.</p>
-        </div>
-        <div id="lossDiffTableContainer" class="mt-8">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Loss Difference Summary for All Cores</h2>
-            <div id="lossDiffTable" class="overflow-x-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div class="md:col-span-2">
+                
+                <div class="card" data-section-name="Setting Limits">
+                    <h2 id="limits">Setting Limits <button class="explain-button" onclick="getExplanation('limits')">✨ Explain</button></h2>
+                    <p>The parametrization of the transformer is constrained by two critical limits: an upper limit defined by physical space and a lower limit determined by Faraday's law of induction. These ensure the design is both physically realizable and electrically sound.</p>
+                    <h3 class="text-slate-700">Upper Limit: Maximum Number of Turns ($N_{pmax}$)</h3>
+                    <div class="equation"><span id="eq4_50"></span><span class="equation-label">(4.50)</span></div>
+                    <div class="equation"><span id="eq4_51"></span><span class="equation-label">(4.51)</span></div>
+                    <h3 class="text-slate-700">Lower Limit: Minimum Number of Turns ($N_{pmin}$)</h3>
+                    <div class="equation"><span id="eq4_52"></span><span class="equation-label">(4.52)</span></div>
                 </div>
-        </div>
 
-        <div class="back-button-container">
-            <a href="master_thesis_details.html" class="back-to-portfolio-btn">← Back to Thesis Details</a>
+                <div class="card" data-section-name="Flux Density and Core Loss">
+                    <h2 id="flux-density">Flux Density & Core Loss <button class="explain-button" onclick="getExplanation('flux-density')">✨ Explain</button></h2>
+                    <p>The maximum permitted flux density ($B_{max}$) is a crucial parameter, calculated based on the core's allowable peak power loss ($P_{max}$). This value is determined by the core material's thermal resistance ($R_{th}$) and the maximum allowable temperature rise.</p>
+                    <div class="equation"><span id="eq4_53"></span><span class="equation-label">(4.53)</span></div>
+                    <div class="equation"><span id="eq4_54"></span><span class="equation-label">(4.54)</span></div>
+                    <div class="equation"><span id="eq4_55"></span><span class="equation-label">(4.55)</span></div>
+                </div>
+                
+                <div class="card" data-section-name="Series vs. Parallel Operation">
+                    <h2 id="series-parallel">Series vs. Parallel <button class="explain-button" onclick="getExplanation('series-parallel')">✨ Explain</button></h2>
+                    <p>The transformer's electrical conditions change based on its connection configuration, particularly affecting the voltage seen by each primary winding.</p>
+                    <div class="equation"><span id="eq4_56"></span><span class="equation-label">(4.56)</span></div>
+                </div>
+
+                <div class="card" data-section-name="Turns Ratio">
+                    <h2 id="turns-ratio">Turns Ratio (K) <button class="explain-button" onclick="getExplanation('turns-ratio')">✨ Explain</button></h2>
+                    <p>The turns ratio is determined by the input and output voltage requirements for both series and parallel modes.</p>
+                    <div class="equation"><span id="eq4_42"></span><span class="equation-label">(4.42)</span></div>
+                    <div class="equation"><span id="eq4_43"></span><span class="equation-label">(4.43)</span></div>
+                </div>
+
+                <div class="card" data-section-name="Wire Size Selection">
+                    <h2 id="wire-size">Wire Size Selection <button class="explain-button" onclick="getExplanation('wire-size')">✨ Explain</button></h2>
+                    <p>Wire sizes are selected based on the RMS current they must carry. To mitigate high-frequency losses (like skin effect), Litz wire is often used.</p>
+                    <div class="equation"><span id="eq4_47"></span><span class="equation-label">(4.47)</span></div>
+                    <div class="equation"><span id="eq4_48"></span><span class="equation-label">(4.48)</span></div>
+                    <div class="equation"><span id="eq4_49"></span><span class="equation-label">(4.49)</span></div>
+                </div>
+
+                <div class="explanation-section">
+                    <h2>Interpretation of Interactive Plots</h2>
+                    [cite_start]<p>The interactive plots generated by this tool provide crucial insights into the transformer's performance under various operating conditions and design choices. [cite: 45] [cite_start]By manipulating the input parameters, you can visualize the impact on key metrics: [cite: 45]</p>
+
+                    <h3>Core Loss vs. Flux Density / Turns:</h3>
+                    [cite_start]<p>These plots illustrate the relationship between the chosen core material's losses and the operating flux density or number of turns. [cite: 46] [cite_start]Lower core losses are generally desirable, but they often come at the expense of requiring more turns (larger transformer size) or a larger core. [cite: 47] [cite_start]The curve helps identify the optimal operating point for minimizing core losses for a selected core type. [cite: 47]</p>
+                    <h3>Copper Loss vs. Turns:</h3>
+                    [cite_start]<p>This plot shows how copper losses vary with the number of primary turns. [cite: 48] [cite_start]As turns increase, the wire length increases, raising DC resistance. [cite: 49] [cite_start]However, the skin and proximity effects (which are complexly modeled in the JavaScript) also play a significant role. [cite: 50] [cite_start]The goal is to find a balance where copper losses are minimized for a given power level and frequency. [cite: 50]</p>
+                    <h3>Total Power Loss vs. Flux Density / Turns:</h3>
+                    [cite_start]<p>These are the most critical plots as they represent the combined impact of all losses. [cite: 51] [cite_start]The objective is to identify the number of turns (or corresponding flux density) that results in the lowest total power loss, while also ensuring the total loss remains below the maximum allowable power loss for the core's thermal limits (represented by the $P_{max}$ line in the plots). [cite: 51]</p>
+                    <h3>Ku Factor vs. Turns:</h3>
+                    [cite_start]<p>The Ku factor (Window Utilization Factor) is a measure of how effectively the winding window area of the core is utilized by the copper windings. [cite: 52] [cite_start]A higher Ku factor indicates a more compact and efficient winding design. [cite: 53] [cite_start]This plot helps in understanding the space efficiency of the windings for different turn counts. [cite: 53]</p>
+                    <h3>Skeff & Proximity Effects:</h3>
+                    [cite_start]<p>This plot (if enabled) visualizes the skin effect factor ($S_{keff}$) and proximity effect factor ($F_R$) for different wire sizes or frequencies. [cite: 54] [cite_start]Understanding these effects is vital for selecting appropriate Litz wire constructions to minimize high-frequency copper losses. [cite: 54]</p>
+                    <h3>Core Loss Comparison:</h3>
+                    [cite_start]<p>The "Loss Difference Summary Table for All Cores" (generated below the plot) provides a quick comparison of the optimal power loss for different core types. [cite: 55] [cite_start]This helps in selecting the most thermally efficient core for your application based on your specified constraints. [cite: 55]</p>
+                </div>
+
+            </div>
+
+            <div class="md:col-span-1">
+                <div class="card sticky top-8">
+                    <h2 id="fill-factor-graph">Fill Factor ($K_u$) Trend</h2>
+                    <canvas id="fillFactorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="aiModal" class="modal-backdrop" style="display: none;">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="text-2xl font-bold text-slate-800 mb-4"></h3>
+            <div id="modalBody"></div>
+            <button onclick="closeModal()" class="mt-6 w-full ai-button">Close</button>
         </div>
     </div>
 
+
     <script>
-        // Core Parameters and Constants (Translated from MATLAB)
-        const colors = [
-            [1, 0, 1], [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 1],
-            [0, 0, 0], [1, 0.5, 0], [0.5, 0, 0.5], [0.5, 0.5, 0], [0.2, 0.6, 1],
-            [1, 0.2, 0.2], [0.3, 0.3, 0.3], [0.8, 0.4, 0]
-        ];
-
-        const core_names = ['EE10/11', 'EE13', 'EE16', 'EE19', 'EE25/19', 'EE30', 'EE40', 'EE50', 'EE60', 'ETD39', 'EE35', 'EE42', 'EE55'];
-        const num_cores = core_names.length;
-
-        const lms = [38.4, 45.4, 53.6, 66.8, 78.08, 94.2, 126.2, 156.2, 180.6, 149, 107.7, 144.55, 165.3].map(x => x * 1e-3);
-        const Acs = [5.39, 8.82, 10, 11.96, 20.1528, 55, 66, 112.5, 123.2, 58.9, 45.2675, 118.69, 176.571].map(x => x * 1e-6);
-        const Was = [46.62, 68.6, 82.8, 111.6, 158, 151.6, 328, 524, 814, 514, 93.7 * 2, 191.64 * 2, 331.82 * 2].map(x => x * 1e-6 / 2); // Divided by 2 as per MATLAB comments
-        const MLTs = [12, 15.4, 14, 15, 19.18, 32, 34, 45, 47.4, 40.21, 29.32, 42.45, 51.46].map(x => x * 1e-3);
-        const hs = [4.2 * 2, 4.6 * 2, 5.0 * 2, 5.6 * 2, 6.41 * 2, 8.15 * 2, 10.25 * 2, 12.75 * 2, 14.05 * 2, 14.6 * 2, 9.71 * 2, 15.15 * 2, 18.8 * 2].map(x => x * 1e-3 - 4e-3);
-        const Vse = lms.map((lm, i) => lm * Acs[i]);
-
-        const lmp = [52.2, 60.4, 69, 78.8, 97.4, 115.4, 154.6, 191.6, 220, 184.2, 127.12, 174.85, 202.9].map(x => x * 1e-3);
-        const Acp = Acs;
-        const Wap = Was;
-        const MLTp = MLTs;
-        const hp = hs;
-        const Vsp = lmp.map((lm, i) => lm * Acp[i]);
-
-        const Rths = [63.8, 62.5, 76, 60, 41.49, 21.80, 16.87, 11.2, 9.925, 16.40, 22.53, 11.42, 8.572];
-        const Rthp = [63.8, 62.5, 76, 60, 36.82, 19.54, 15.12, 10.10, 8.921, 14.63, 20.63, 10.31, 7.674];
-
-        // Main calculation function
-        function calculateLosses() {
-            // Read input parameters (these are common for all core calculations)
-            const Po = parseFloat(document.getElementById('outputPower').value);
-            const Vpp = parseFloat(document.getElementById('primaryVoltageParallel').value);
-            const Vps = parseFloat(document.getElementById('primaryVoltageSeries').value);
-            const f = parseFloat(document.getElementById('frequency').value);
-            const Vd = parseFloat(document.getElementById('voltageDrop').value);
-            const D = parseFloat(document.getElementById('dutyCycle').value);
-            const Ploss_max = parseFloat(document.getElementById('maxPowerLoss').value);
-            const ds = parseFloat(document.getElementById('wireDiameterSecondary').value);
-            const dps = parseFloat(document.getElementById('wireDiameterPrimary').value); // dps and dpp are same as per MATLAB
-            const dpp = dps;
-            const Tamb = parseFloat(document.getElementById('ambientTemperature').value);
-            const Tmax = parseFloat(document.getElementById('maxTemperature').value);
-
-            const selectedCoreIndex = parseInt(document.getElementById('coreType').value);
-
-            // Derived constants (these are common for all core calculations)
-            const k = 0.160e3;
-            const alpha = 1.078;
-            const Beta = 2.92;
-            const Vs1 = 24; // Fixed in MATLAB
-            const Vs2 = 24; // Fixed in MATLAB
-            const ns = 3; // Fixed in MATLAB
-            const np = 3; // Fixed in MATLAB
-
-            // Intermediate calculations (common for all core calculations)
-            const I24 = Po / 2 / (Vs2 + 2 * Vd);
-            const Isrms = ((Vs1 / Vps) * I24 + (Vs2 / Vps) * I24) * Math.sqrt(D);
-            const Iprms = ((Vs1 / Vpp) * I24 + (Vs2 / Vpp) * I24) * Math.sqrt(D);
-            const I01rms = (1 / 2) * (I24 * Math.sqrt(1 + D));
-
-            const Awps = 2 * Math.PI * (dps / 2)**2;
-            const Awpp = 2 * Math.PI * (dpp / 2)**2;
-            const Aws = Math.PI * (ds / 2)**2; 
-
-            const rho = 1.724e-8;
-            const muc = 1.256629e-6;
-
-            // Calculate wire parameters (these are global and don't depend on core)
-            const Sd = Math.sqrt(rho * (1 + 0.0393 * (Tmax - 25)) / (Math.PI * f * muc));
-            const nus = (Math.sqrt(Math.PI) * dps) / (2 * (dps + 0.051e-3));
-            const nup = (Math.sqrt(Math.PI) * dpp) / (2 * (dpp + 0.051e-3));
-
-            const deltaps = (Math.PI / 4)**0.75 * (dps / Sd) * Math.sqrt(nus);
-            const deltapp = (Math.PI / 4)**0.75 * (dpp / Sd) * Math.sqrt(nup);
-            const deltas = (Math.PI / 4)**0.75 * (ds / Sd) * Math.sqrt(nup); 
-
-            const Skeffs = (Math.sinh(2 * deltaps) + Math.sin(2 * deltaps)) / (Math.cosh(2 * deltaps) - Math.cos(2 * deltaps));
-            const Skeffp = (Math.sinh(2 * deltapp) + Math.sin(2 * deltapp)) / (Math.cosh(2 * deltapp) + Math.cos(2 * deltapp));
-            const Proxeffs = (Math.sinh(deltaps) - Math.sin(deltaps)) / (Math.cosh(deltaps) + Math.cos(deltaps));
-            const Proxeffp = (Math.sinh(deltapp) - Math.sin(deltapp)) / (Math.cosh(deltapp) + Math.cos(deltapp));
-
-            // Initialize a structure to hold results for all cores for the summary table
-            const allCoresLossSummary = [];
-
-            // Initialize results for the currently selected core (for plotting)
-            const selectedCoreResults = {
-                selectedCoreIndex: selectedCoreIndex,
-                Turns: { Series: { Primary: [], Secondary: [] }, Parallel: { Primary: [], Secondary: [] } },
-                Flux: { Series: [], Parallel: [] },
-                Pfes: [], Pfep: [],
-                Layers: { Series: { Primary: [], Secondary: [] }, Parallel: { Primary: [], Secondary: [] } },
-                Lfactor: { Series: { Primary: [], Secondary: [] }, Parallel: { Primary: [], Secondary: [] } },
-                Fr: { Series: { Primary: [], Secondary: [] }, Parallel: { Primary: [], Secondary: [] } },
-                Resistance: { Series: { Primary: [], Secondary: [] }, Parallel: { Primary: [], Secondary: [] } },
-                CopperLoss: { Series: [], Parallel: [] },
-                PowerLoss: { Series: [], Parallel: [] },
-                FillFactor: { Series: [] },
-                Ku: { Series: [] },
-                Optimal: {
-                    Series: { Power: NaN, B: NaN, Np: NaN },
-                    Parallel: { Power: NaN, B: NaN, Np: NaN }
-                },
-                Pmaxs: NaN,
-                Pmaxp: NaN
-            };
-
-            // Loop through all cores to calculate summary data
-            for (let i = 0; i < num_cores; i++) {
-                const current_lms = lms[i];
-                const current_Acs = Acs[i];
-                const current_Was = Was[i];
-                const current_MLTs = MLTs[i];
-                const current_hs = hs[i];
-                const current_Vse = Vse[i];
-
-                const current_lmp = lmp[i];
-                const current_Acp = Acp[i];
-                const current_Wap = Wap[i];
-                const current_MLTp = MLTp[i];
-                const current_hp = hp[i];
-                const current_Vsp = Vsp[i];
-
-                const current_Rths = Rths[i];
-                const current_Rthp = Rthp[i];
-
-                const Pmax_series_core = (Tmax - Tamb) / current_Rths;
-                const Pmax_parallel_core = (Tmax - Tamb) / current_Rthp;
-
-                const Bsmax_core = (Pmax_series_core / (k * f**alpha * current_Vse))**(1/Beta);
-                const Bpmax_core = (Pmax_parallel_core / (k * f**alpha * current_Vsp))**(1/Beta);
-
-                const Npsmax_core = (0.78 * current_Was) / (Awps + Aws / ns);
-                const Nppmax_core = (0.78 * current_Wap) / (Awpp + Aws / np);
-
-                // Calculate turns ranges for current core
-                let Nps_range_core = [];
-                const Nps_min_core = Math.ceil((0.5 * Vps * D) / (2 * current_Acs * f * Bsmax_core));
-                for (let n = Nps_min_core; n <= Npsmax_core; n++) { Nps_range_core.push(n); }
-
-                let Npp_range_core = [];
-                const Npp_min_core = Math.ceil((Vpp * D) / (2 * current_Acp * f * Bpmax_core));
-                for (let n = Npp_min_core; n <= Nppmax_core; n++) { Npp_range_core.push(n); }
-
-                const B_series_full_core = Nps_range_core.map(Np => (0.5 * Vps * D) / (2 * current_Acs * f * Np));
-                const B_parallel_full_core = Npp_range_core.map(Np => (Vpp * D) / (2 * current_Acp * f * Np));
-
-                const valid_idx_series_core = B_series_full_core.map(B => B <= Bsmax_core);
-                const valid_idx_parallel_core = B_parallel_full_core.map(B => B <= Bpmax_core);
-
-                const B_series_core = B_series_full_core.filter((_, idx) => valid_idx_series_core[idx]);
-                const B_parallel_core = B_parallel_full_core.filter((_, idx) => valid_idx_parallel_core[idx]);
-                const Nps_valid_core = Nps_range_core.filter((_, idx) => valid_idx_series_core[idx]);
-                const Npp_valid_core = Npp_range_core.filter((_, idx) => valid_idx_parallel_core[idx]);
-
-                const Pfes_core = B_series_core.map(B => k * f**alpha * B**Beta * current_Acs * current_lms);
-                const Pfep_core = B_parallel_core.map(B => k * f**alpha * B**Beta * current_Acp * current_lmp);
-
-                const Ns_series_core = Nps_valid_core.map(Np => Np / ns);
-                const Ns_parallel_core = Npp_valid_core.map(Np => Np / np);
-
-                const Lfactor_series_primary_core = Nps_valid_core.map(Np => (2 * (Math.max((0.5 * Np * dps) / current_hs, 1)**2) - 1) / 3);
-                const Lfactor_series_secondary_core = Ns_series_core.map(Ns => (2 * (Math.max((0.5 * Ns * ds) / current_hs, 1)**2) - 1) / 3);
-                const Lfactor_parallel_primary_core = Npp_valid_core.map(Np => (2 * (Math.max((0.5 * Np * dpp) / current_hp, 1)**2) - 1) / 3);
-                const Lfactor_parallel_secondary_core = Ns_parallel_core.map(Ns => (2 * (Math.max((0.5 * Ns * ds) / current_hp, 1)**2) - 1) / 3);
-
-                const Fr_series_primary_core = Lfactor_series_primary_core.map(Lfactor => deltaps * (Skeffs + Lfactor * Proxeffs));
-                const Fr_series_secondary_core = Lfactor_series_secondary_core.map(Lfactor => deltas * (Skeffs + Lfactor * Proxeffs));
-                const Fr_parallel_primary_core = Lfactor_parallel_primary_core.map(Lfactor => deltapp * (Skeffp + Lfactor * Proxeffp));
-                const Fr_parallel_secondary_core = Lfactor_parallel_secondary_core.map(Lfactor => deltas * (Skeffp + Lfactor * Proxeffp));
-
-                const Resistance_series_primary_core = Fr_series_primary_core.map((Fr, idx) => Fr * Nps_valid_core[idx] * (rho / Awps) * current_MLTs);
-                const Resistance_series_secondary_core = Fr_series_secondary_core.map((Fr, idx) => Fr * Ns_series_core[idx] * (rho / Aws) * current_MLTs);
-                const Resistance_parallel_primary_core = Fr_parallel_primary_core.map((Fr, idx) => Fr * Npp_valid_core[idx] * (rho / Awpp) * current_MLTp);
-                const Resistance_parallel_secondary_core = Fr_parallel_secondary_core.map((Fr, idx) => Fr * Ns_parallel_core[idx] * (rho / Aws) * current_MLTp);
-
-                const CopperLoss_series_core = Resistance_series_primary_core.map((R_p, idx) => R_p * Isrms**2 + Resistance_series_secondary_core[idx] * I01rms**2);
-                const CopperLoss_parallel_core = Resistance_parallel_primary_core.map((R_p, idx) => 0.5 * R_p * (0.5 * Iprms)**2 + Resistance_parallel_secondary_core[idx] * I01rms**2);
-
-                const PowerLoss_series_core = CopperLoss_series_core.map((Closs, idx) => Closs + Pfes_core[idx]);
-                const PowerLoss_parallel_core = CopperLoss_parallel_core.map((Closs, idx) => Closs + Pfep_core[idx]);
-
-                let optimalSeriesPower = NaN;
-                let optimalSeriesNp = NaN;
-                if (PowerLoss_series_core && PowerLoss_series_core.length > 0) {
-                    let minLossIdx = 0;
-                    for (let j = 0; j < PowerLoss_series_core.length; j++) {
-                        if (PowerLoss_series_core[j] < PowerLoss_series_core[minLossIdx]) {
-                            minLossIdx = j;
-                        }
-                    }
-                    optimalSeriesPower = PowerLoss_series_core[minLossIdx];
-                    optimalSeriesNp = Nps_valid_core[minLossIdx];
-                }
-
-                let optimalParallelPower = NaN;
-                let optimalParallelNp = NaN;
-                if (PowerLoss_parallel_core && PowerLoss_parallel_core.length > 0) {
-                    let minLossIdx = 0;
-                    for (let j = 0; j < PowerLoss_parallel_core.length; j++) {
-                        if (PowerLoss_parallel_core[j] < PowerLoss_parallel_core[minLossIdx]) {
-                            minLossIdx = j;
-                        }
-                    }
-                    optimalParallelPower = PowerLoss_parallel_core[minLossIdx];
-                    optimalParallelNp = Npp_valid_core[minLossIdx];
-                }
-
-                allCoresLossSummary.push({
-                    coreName: core_names[i],
-                    Pmaxs: Pmax_series_core,
-                    OptimalSeriesPower: optimalSeriesPower,
-                    OptimalSeriesNp: optimalSeriesNp, // Added optimal Np for series
-                    Pmaxp: Pmax_parallel_core,
-                    OptimalParallelPower: optimalParallelPower,
-                    OptimalParallelNp: optimalParallelNp // Added optimal Np for parallel
-                });
-
-                // If this is the selected core, populate selectedCoreResults for plotting
-                if (i === selectedCoreIndex) {
-                    selectedCoreResults.Turns.Series.Primary = Nps_valid_core;
-                    selectedCoreResults.Turns.Parallel.Primary = Npp_valid_core;
-                    selectedCoreResults.Flux.Series = B_series_core;
-                    selectedCoreResults.Flux.Parallel = B_parallel_core;
-                    selectedCoreResults.Pfes = Pfes_core;
-                    selectedCoreResults.Pfep = Pfep_core;
-                    
-                    selectedCoreResults.Turns.Series.Secondary = Ns_series_core;
-                    selectedCoreResults.Turns.Parallel.Secondary = Ns_parallel_core;
-
-                    selectedCoreResults.Layers.Series.Primary = Nps_valid_core.map(Np => Math.max((0.5 * Np * dps) / current_hs, 1));
-                    selectedCoreResults.Layers.Series.Secondary = Ns_series_core.map(Ns => Math.max((0.5 * Ns * ds) / current_hs, 1));
-                    selectedCoreResults.Layers.Parallel.Primary = Npp_valid_core.map(Np => Math.max((0.5 * Np * dpp) / current_hp, 1));
-                    selectedCoreResults.Layers.Parallel.Secondary = Ns_parallel_core.map(Ns => Math.max((0.5 * Ns * ds) / current_hp, 1));
-
-                    selectedCoreResults.Lfactor.Series.Primary = Lfactor_series_primary_core;
-                    selectedCoreResults.Lfactor.Series.Secondary = Lfactor_series_secondary_core;
-                    selectedCoreResults.Lfactor.Parallel.Primary = Lfactor_parallel_primary_core;
-                    selectedCoreResults.Lfactor.Parallel.Secondary = Lfactor_parallel_secondary_core;
-
-                    selectedCoreResults.Fr.Series.Primary = Fr_series_primary_core;
-                    selectedCoreResults.Fr.Series.Secondary = Fr_series_secondary_core;
-                    selectedCoreResults.Fr.Parallel.Primary = Fr_parallel_primary_core;
-                    selectedCoreResults.Fr.Parallel.Secondary = Fr_parallel_secondary_core;
-
-                    selectedCoreResults.Resistance.Series.Primary = Resistance_series_primary_core;
-                    selectedCoreResults.Resistance.Series.Secondary = Resistance_series_secondary_core;
-                    selectedCoreResults.Resistance.Parallel.Primary = Resistance_parallel_primary_core;
-                    selectedCoreResults.Resistance.Parallel.Secondary = Resistance_parallel_secondary_core;
-
-                    selectedCoreResults.CopperLoss.Series = CopperLoss_series_core;
-                    selectedCoreResults.CopperLoss.Parallel = CopperLoss_parallel_core;
-                    selectedCoreResults.PowerLoss.Series = PowerLoss_series_core;
-                    selectedCoreResults.PowerLoss.Parallel = PowerLoss_parallel_core;
-
-                    // Recalculate Ku for the selected core
-                    const t_ins = 0.051e-3; // Interlayer insulation thickness (m)
-                    const d_barep = 0.4e-3;
-                    const d_insulatedp = 0.442e-3;
-                    const A_copperp = 2 * Math.PI * (d_barep / 2)**2; 
-                    const A_total_wirep = Math.PI * (d_insulatedp / 2)**2;
-                    const d_bares = 0.812e-3;
-                    const d_insulateds = 1.082e-3;
-                    const A_coppers = Math.PI * (d_bares / 2)**2;
-                    const A_total_wires = Math.PI * (d_insulateds / 2)**2;
-                    const A_total_wire = A_total_wirep + A_total_wires;
-                    const S1 = (A_copperp + A_coppers) / A_total_wire;
-
-                    selectedCoreResults.FillFactor.Series = [];
-                    selectedCoreResults.Ku.Series = [];
-
-                    const h = current_hs;
-                    const margin = 1.5e-3;
-                    const top_clearance = 1e-3;
-                    const bottom_clearance = 1e-3;
-                    const usable_width = current_Was / h;
-                    const usable_width_eff = usable_width - margin;
-                    const usable_height_eff = h - top_clearance - bottom_clearance;
-                    const A_usable_window = usable_width_eff * usable_height_eff;
-                    const S3 = (usable_width_eff * usable_height_eff) / (usable_width * h);
-
-                    for (let j = 0; j < Nps_valid_core.length; j++) {
-                        const Np = Nps_valid_core[j];
-                        const Ns = Ns_series_core[j];
-                        const Nlp = selectedCoreResults.Layers.Series.Primary[j];
-                        const Nls = selectedCoreResults.Layers.Series.Secondary[j];
-
-                        const Awp_total = Np * Awps;
-                        const Aws_total = Ns * Aws;
-                        const A_copper_total = Awp_total + Aws_total;
-
-                        const A_allocated = current_Was - (current_Was - A_copper_total);
-                        const S2_dynamic = A_copper_total / A_allocated;
-                        const layer_penalty = 1 - 0.02 * (Nlp + Nls - 1);
-                        const S2 = Math.max(Math.min(S2_dynamic * layer_penalty, 1), 0);
-
-                        const A_ins = (Nlp + Nls - 1) * t_ins * h;
-                        const S4 = A_usable_window / (A_usable_window + A_ins);
-
-                        const ku_dynamic = S1 * S2 * S3 * S4;
-                        selectedCoreResults.Ku.Series.push(ku_dynamic);
-                        selectedCoreResults.FillFactor.Series.push(ku_dynamic);
-                    }
-
-                    // Optimal points calculation for selected core
-                    selectedCoreResults.Optimal.Series.Power = optimalSeriesPower;
-                    selectedCoreResults.Optimal.Series.Np = optimalSeriesNp;
-                    selectedCoreResults.Optimal.Parallel.Power = optimalParallelPower;
-                    selectedCoreResults.Optimal.Parallel.Np = optimalParallelNp;
-                    
-                    if (selectedCoreResults.PowerLoss.Series && selectedCoreResults.PowerLoss.Series.length > 0) {
-                        let minLossIdx = 0;
-                        for (let j = 0; j < selectedCoreResults.PowerLoss.Series.length; j++) {
-                            if (selectedCoreResults.PowerLoss.Series[j] < selectedCoreResults.PowerLoss.Series[minLossIdx]) {
-                                minLossIdx = j;
-                            }
-                        }
-                        selectedCoreResults.Optimal.Series.B = selectedCoreResults.Flux.Series[minLossIdx];
-                    } else {
-                        selectedCoreResults.Optimal.Series.B = NaN;
-                    }
-
-                    if (selectedCoreResults.PowerLoss.Parallel && selectedCoreResults.PowerLoss.Parallel.length > 0) {
-                        let minLossIdx = 0;
-                        for (let j = 0; j < selectedCoreResults.PowerLoss.Parallel.length; j++) {
-                            if (selectedCoreResults.PowerLoss.Parallel[j] < selectedCoreResults.PowerLoss.Parallel[minLossIdx]) {
-                                minLossIdx = j;
-                            }
-                        }
-                        selectedCoreResults.Optimal.Parallel.B = selectedCoreResults.Flux.Parallel[minLossIdx];
-                    } else {
-                        selectedCoreResults.Optimal.Parallel.B = NaN;
-                    }
-
-                    selectedCoreResults.Pmaxs = Pmax_series_core;
-                    selectedCoreResults.Pmaxp = Pmax_parallel_core;
-                }
-            }
-
-            // Log the valid turns arrays for debugging
-            console.log("Nps_valid_core for selected core:", selectedCoreResults.Turns.Series.Primary);
-            console.log("Npp_valid_core for selected core:", selectedCoreResults.Turns.Parallel.Primary);
-            console.log("PowerLoss.Series for selected core:", selectedCoreResults.PowerLoss.Series);
-            console.log("PowerLoss.Parallel for selected core:", selectedCoreResults.PowerLoss.Parallel);
-
-
-            // Return both the selected core's detailed results and the summary for all cores
-            return { selectedCoreResults, allCoresLossSummary };
-        }
-
-        // Helper function to get Plotly color string from RGB array
-        function getPlotlyColor(rgbArray) {
-            return `rgb(${rgbArray[0]*255},${rgbArray[1]*255},${rgbArray[2]*255})`;
-        }
-
-        // Plotting functions (translated from MATLAB's plotCoreLosses cases)
-        function plotLossVsFlux(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            // Plot Series (solid line)
-            if (data.Flux.Series && data.Pfes && data.Flux.Series.length > 0 && data.Flux.Series.every(val => !isNaN(val)) && data.Pfes.every(val => !isNaN(val))) {
-                traces.push({
-                    x: data.Flux.Series,
-                    y: data.Pfes,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-S`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-            }
-            // Plot Parallel (dashed line)
-            if (data.Flux.Parallel && data.Pfep && data.Flux.Parallel.length > 0 && data.Flux.Parallel.every(val => !isNaN(val)) && data.Pfep.every(val => !isNaN(val))) {
-                traces.push({
-                    x: data.Flux.Parallel,
-                    y: data.Pfep,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-P`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], dash: 'dash', width: 2 } // Added dash for parallel
-                });
-            }
+        // --- GEMINI API CALLER ---
+        async function callGemini(prompt) {
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // API key is handled by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             
-            // Add Pmax lines
-            if (!isNaN(data.Pmaxs)) {
-                traces.push({
-                    x: [Math.min(...data.Flux.Series, 0), Math.max(...data.Flux.Series, 0.5)], // Extend line across plot
-                    y: [data.Pmaxs, data.Pmaxs],
-                    mode: 'lines',
-                    name: 'Pmax Series',
-                    line: { color: 'green', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    return "Sorry, I couldn't get a response. The response from the AI was empty or malformed.";
+                }
+            } catch (error) {
+                console.error("Gemini API call error:", error);
+                return `Sorry, an error occurred while contacting the AI advisor: ${error.message}`;
             }
-            if (!isNaN(data.Pmaxp)) {
-                traces.push({
-                    x: [Math.min(...data.Flux.Parallel, 0), Math.max(...data.Flux.Parallel, 0.5)], // Extend line across plot
-                    y: [data.Pmaxp, data.Pmaxp],
-                    mode: 'lines',
-                    name: 'Pmax Parallel',
-                    line: { color: 'red', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: `Core Loss vs. Flux Density for ${selectedCoreName}`,
-                xaxis: { title: 'Flux Density (Tesla)' },
-                yaxis: { title: 'Core Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
         }
 
-        function plotLossVsTurns(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
+        // --- UI & MODAL LOGIC ---
+        function showModal(title, body) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = body;
+            document.getElementById('aiModal').style.display = 'flex';
+        }
 
-            // Plot Series (solid line)
-            if (data.Turns.Series.Primary && data.Pfes && data.Turns.Series.Primary.length > 0 && data.Turns.Series.Primary.every(val => !isNaN(val)) && data.Pfes.every(val => !isNaN(val))) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.Pfes,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-S`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-            }
-            // Plot Parallel (dashed line)
-            if (data.Turns.Parallel.Primary && data.Pfep && data.Turns.Parallel.Primary.length > 0 && data.Turns.Parallel.Primary.every(val => !isNaN(val)) && data.Pfep.every(val => !isNaN(val))) {
-                traces.push({
-                    x: data.Turns.Parallel.Primary,
-                    y: data.Pfep,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-P`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], dash: 'dash', width: 2 }
-                });
-            }
+        function closeModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+
+        async function getExplanation(sectionId) {
+            const sectionCard = document.getElementById(sectionId).closest('.card');
+            const sectionName = sectionCard.dataset.sectionName;
+            const sectionText = sectionCard.innerText.replace('✨ Explain','').trim();
             
-            // Add Pmax lines
-            if (!isNaN(data.Pmaxs)) {
-                traces.push({
-                    x: [Math.min(...data.Turns.Series.Primary, 0), Math.max(...data.Turns.Series.Primary, 50)],
-                    y: [data.Pmaxs, data.Pmaxs],
-                    mode: 'lines',
-                    name: 'Pmax Series',
-                    line: { color: 'green', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-            if (!isNaN(data.Pmaxp)) {
-                traces.push({
-                    x: [Math.min(...data.Turns.Parallel.Primary, 0), Math.max(...data.Turns.Parallel.Primary, 50)],
-                    y: [data.Pmaxp, data.Pmaxp],
-                    mode: 'lines',
-                    name: 'Pmax Parallel',
-                    line: { color: 'red', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
+            showModal(`✨ Explaining: ${sectionName}`, '<div class="flex justify-center items-center p-8"><div class="loader"></div></div>');
 
-            const layout = {
-                title: `Core Loss vs. Primary Turns for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Core Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotFluxVsTurns(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            // Plot Series (solid line)
-            if (data.Turns.Series.Primary && data.Flux.Series && data.Turns.Series.Primary.length > 0 && data.Turns.Series.Primary.every(val => !isNaN(val)) && data.Flux.Series.every(val => !isNaN(val))) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.Flux.Series,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-S`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-            }
-            // Plot Parallel (dashed line)
-            if (data.Turns.Parallel.Primary && data.Flux.Parallel && data.Turns.Parallel.Primary.length > 0 && data.Turns.Parallel.Primary.every(val => !isNaN(val)) && data.Flux.Parallel.every(val => !isNaN(val))) {
-                traces.push({
-                    x: data.Turns.Parallel.Primary,
-                    y: data.Flux.Parallel,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-P`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], dash: 'dash', width: 2 }
-                });
-            }
-
-            const layout = {
-                title: `Flux Density vs. Primary Turns for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Flux Density (Tesla)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotCompareCoreLosses(allCoresSummary, plotDivId, Ploss_max) {
-            const traces = [];
-            const coreNames = allCoresSummary.map(c => c.coreName);
-            const seriesLosses = allCoresSummary.map(c => c.OptimalSeriesPower);
-            const parallelLosses = allCoresSummary.map(c => c.OptimalParallelPower);
-
-            // Filter out NaN values for plotting
-            const validSeriesData = seriesLosses.map((loss, idx) => ({ x: coreNames[idx], y: loss })).filter(d => !isNaN(d.y));
-            const validParallelData = parallelLosses.map((loss, idx) => ({ x: coreNames[idx], y: loss })).filter(d => !isNaN(d.y));
-
-            if (validSeriesData.length > 0) {
-                traces.push({
-                    x: validSeriesData.map(d => d.x),
-                    y: validSeriesData.map(d => d.y),
-                    type: 'bar',
-                    name: 'Optimal Series Loss',
-                    marker: { color: 'rgb(55, 128, 191)' }
-                });
-            }
-            if (validParallelData.length > 0) {
-                traces.push({
-                    x: validParallelData.map(d => d.x),
-                    y: validParallelData.map(d => d.y),
-                    type: 'bar',
-                    name: 'Optimal Parallel Loss',
-                    marker: { color: 'rgb(219, 64, 82)' }
-                });
-            }
-
-            // Add Pmax line if Ploss_max is a valid number
-            if (!isNaN(Ploss_max)) {
-                traces.push({
-                    x: coreNames,
-                    y: Array(coreNames.length).fill(Ploss_max),
-                    mode: 'lines',
-                    name: 'Max Allowable Loss',
-                    line: { color: 'grey', dash: 'dot', width: 2 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: 'Optimal Total Power Loss per Core Type (Series vs. Parallel)',
-                xaxis: { title: 'Core Type', tickangle: -45 },
-                yaxis: { title: 'Optimal Total Power Loss (W)' },
-                barmode: 'group',
-                hovermode: 'closest',
-                showlegend: true,
-                margin: { b: 100 } // Adjust bottom margin for rotated labels
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotLayersVsTurns(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            if (data.Turns.Series.Primary && data.Layers.Series.Primary && data.Turns.Series.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.Layers.Series.Primary,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Primary Series Layers`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-            }
-            if (data.Turns.Series.Secondary && data.Layers.Series.Secondary && data.Turns.Series.Secondary.length > 0) {
-                traces.push({
-                    x: data.Turns.Series.Primary, // X-axis still Np for consistency
-                    y: data.Layers.Series.Secondary,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Secondary Series Layers`,
-                    line: { color: 'orange', width: 2, dash: 'dot' }
-                });
-            }
-            // Add parallel if needed
-
-            const layout = {
-                title: `Number of Layers vs. Primary Turns for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Number of Layers (Approx)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotSkeffProximity(data, plotDivId) {
-            const traces = [];
+            const prompt = `As an expert in power electronics, please explain the following concept from a transformer design document in a clear, simple, and conversational way for an engineering student. Explain the significance of the formulas and the practical implications.
             
-            traces.push({
-                x: [0.01, 0.1, 1, 10, 100], // Example x values for a generic plot
-                y: [1, 1.1, 1.5, 3, 10], // Example Skeff values
-                mode: 'lines',
-                name: 'Skeff (Example)',
-                line: { color: 'blue', width: 2 }
-            });
+            Concept: "${sectionName}"
+            
+            Text from document: "${sectionText}"`;
 
-            traces.push({
-                x: [0.01, 0.1, 1, 10, 100], // Example x values
-                y: [0.1, 0.2, 0.4, 0.7, 0.9], // Example Proximity values
-                mode: 'lines',
-                name: 'Proximity Effect (Example)',
-                line: { color: 'red', width: 2, dash: 'dash' }
-            });
-
-            // If you have actual arrays for these values in your 'data' object, use them:
-            // For example, if you calculated arrays for delta, Skeffs, Proxeffs etc.
-            // traces.push({
-            //     x: data.deltas_array, // replace with actual delta values
-            //     y: data.Skeffs_array, // replace with actual Skeffs values
-            //     mode: 'lines',
-            //     name: `Skeff (${selectedCoreName})`,
-            //     line: { color: 'blue', width: 2 }
-            // });
-            // traces.push({
-            //     x: data.deltas_array, // replace with actual delta values
-            //     y: data.Proxeffs_array, // replace with actual Proxeffs values
-            //     mode: 'lines',
-            //     name: `Proximity Effect (${selectedCoreName})`,
-            //     line: { color: 'red', width: 2, dash: 'dash' }
-            // });
-
-
-            const layout = {
-                title: 'Skin and Proximity Effects (Conceptual/Example)',
-                xaxis: { title: 'Delta (Normalized Wire Size)', type: 'log' },
-                yaxis: { title: 'Effect Factor' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
+            const explanation = await callGemini(prompt);
+            showModal(`✨ Explaining: ${sectionName}`, explanation.replace(/\n/g, '<br>'));
         }
 
-        function plotCopperLossVsTurns(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
+        // --- CALCULATOR LOGIC ---
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+            // Get all input values
+            const Vin = parseFloat(document.getElementById('vin').value);
+            const D = parseFloat(document.getElementById('d').value);
+            const fs = parseFloat(document.getElementById('fs').value) * 1000; // to Hz
+            const Ac = parseFloat(document.getElementById('ac').value) / 1000000; // to m^2
+            const Bmax = parseFloat(document.getElementById('bmax').value);
+            const Io = parseFloat(document.getElementById('io').value);
+            const K = parseFloat(document.getElementById('k').value);
+            const Ku = parseFloat(document.getElementById('ku').value);
+            const Sp = parseFloat(document.getElementById('sp').value) / 1000000; // to m^2
+            const Ss = parseFloat(document.getElementById('ss').value) / 1000000; // to m^2
+            const Wa = parseFloat(document.getElementById('wa').value) / 1000000; // to m^2
 
-            if (data.Turns.Series.Primary && data.CopperLoss.Series && data.Turns.Series.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.CopperLoss.Series,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-S`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-            }
-            if (data.Turns.Parallel.Primary && data.CopperLoss.Parallel && data.Turns.Parallel.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Parallel.Primary,
-                    y: data.CopperLoss.Parallel,
-                    mode: 'lines',
-                    name: `${selectedCoreName}-P`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], dash: 'dash', width: 2 }
-                });
-            }
+            // Perform calculations
+            const Npmin = (Vin * D) / (2 * fs * Ac * Bmax);
+            const Npmax = (Ku * Wa) / (Sp + Ss / K);
+            const Iprms = (Io / (2 * (1 / K))) * Math.sqrt(2 * D);
+            const Isrms = (Io / 2) * Math.sqrt(D);
 
-            const layout = {
-                title: `Copper Loss vs. Primary Turns for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Copper Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotTotalPowerLossVsFluxSeries(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            if (data.Flux.Series && data.PowerLoss.Series && data.Flux.Series.length > 0) {
-                traces.push({
-                    x: data.Flux.Series,
-                    y: data.PowerLoss.Series,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Series Total Loss`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-                // Add optimal point marker
-                if (!isNaN(data.Optimal.Series.B) && !isNaN(data.Optimal.Series.Power)) {
-                    traces.push({
-                        x: [data.Optimal.Series.B],
-                        y: [data.Optimal.Series.Power],
-                        mode: 'markers',
-                        name: `Optimal Point (Np=${data.Optimal.Series.Np})`,
-                        marker: { color: 'green', size: 10, symbol: 'star' },
-                        hoverinfo: 'name+x+y'
-                    });
-                }
-            }
-            if (!isNaN(data.Pmaxs)) {
-                traces.push({
-                    x: [Math.min(...data.Flux.Series, 0), Math.max(...data.Flux.Series, 0.5)],
-                    y: [data.Pmaxs, data.Pmaxs],
-                    mode: 'lines',
-                    name: 'Pmax Series',
-                    line: { color: 'green', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: `Total Power Loss vs. Flux Density (Series) for ${selectedCoreName}`,
-                xaxis: { title: 'Flux Density (Tesla)' },
-                yaxis: { title: 'Total Power Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotTotalPowerLossVsFluxParallel(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            if (data.Flux.Parallel && data.PowerLoss.Parallel && data.Flux.Parallel.length > 0) {
-                traces.push({
-                    x: data.Flux.Parallel,
-                    y: data.PowerLoss.Parallel,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Parallel Total Loss`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2, dash: 'dash' }
-                });
-                // Add optimal point marker
-                if (!isNaN(data.Optimal.Parallel.B) && !isNaN(data.Optimal.Parallel.Power)) {
-                    traces.push({
-                        x: [data.Optimal.Parallel.B],
-                        y: [data.Optimal.Parallel.Power],
-                        mode: 'markers',
-                        name: `Optimal Point (Np=${data.Optimal.Parallel.Np})`,
-                        marker: { color: 'red', size: 10, symbol: 'star' },
-                        hoverinfo: 'name+x+y'
-                    });
-                }
-            }
-            if (!isNaN(data.Pmaxp)) {
-                traces.push({
-                    x: [Math.min(...data.Flux.Parallel, 0), Math.max(...data.Flux.Parallel, 0.5)],
-                    y: [data.Pmaxp, data.Pmaxp],
-                    mode: 'lines',
-                    name: 'Pmax Parallel',
-                    line: { color: 'red', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: `Total Power Loss vs. Flux Density (Parallel) for ${selectedCoreName}`,
-                xaxis: { title: 'Flux Density (Tesla)' },
-                yaxis: { title: 'Total Power Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotTotalPowerLossVsTurnsSeries(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            if (data.Turns.Series.Primary && data.PowerLoss.Series && data.Turns.Series.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.PowerLoss.Series,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Series Total Loss`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-                // Add optimal point marker
-                if (!isNaN(data.Optimal.Series.Np) && !isNaN(data.Optimal.Series.Power)) {
-                    traces.push({
-                        x: [data.Optimal.Series.Np],
-                        y: [data.Optimal.Series.Power],
-                        mode: 'markers',
-                        name: `Optimal Point (B=${data.Optimal.Series.B.toFixed(3)}T)`,
-                        marker: { color: 'green', size: 10, symbol: 'star' },
-                        hoverinfo: 'name+x+y'
-                    });
-                }
-            }
-            if (!isNaN(data.Pmaxs)) {
-                traces.push({
-                    x: [Math.min(...data.Turns.Series.Primary, 0), Math.max(...data.Turns.Series.Primary, 50)],
-                    y: [data.Pmaxs, data.Pmaxs],
-                    mode: 'lines',
-                    name: 'Pmax Series',
-                    line: { color: 'green', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: `Total Power Loss vs. Primary Turns (Series) for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Total Power Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotTotalPowerLossVsTurnsParallel(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            if (data.Turns.Parallel.Primary && data.PowerLoss.Parallel && data.Turns.Parallel.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Parallel.Primary,
-                    y: data.PowerLoss.Parallel,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Parallel Total Loss`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2, dash: 'dash' }
-                });
-                // Add optimal point marker
-                if (!isNaN(data.Optimal.Parallel.Np) && !isNaN(data.Optimal.Parallel.Power)) {
-                    traces.push({
-                        x: [data.Optimal.Parallel.Np],
-                        y: [data.Optimal.Parallel.Power],
-                        mode: 'markers',
-                        name: `Optimal Point (B=${data.Optimal.Parallel.B.toFixed(3)}T)`,
-                        marker: { color: 'red', size: 10, symbol: 'star' },
-                        hoverinfo: 'name+x+y'
-                    });
-                }
-            }
-            if (!isNaN(data.Pmaxp)) {
-                traces.push({
-                    x: [Math.min(...data.Turns.Parallel.Primary, 0), Math.max(...data.Turns.Parallel.Primary, 50)],
-                    y: [data.Pmaxp, data.Pmaxp],
-                    mode: 'lines',
-                    name: 'Pmax Parallel',
-                    line: { color: 'red', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: `Total Power Loss vs. Primary Turns (Parallel) for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Total Power Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotTotalPowerLossVsTurnsCombined(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            // Series data
-            if (data.Turns.Series.Primary && data.PowerLoss.Series && data.Turns.Series.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.PowerLoss.Series,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Series Total Loss`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-                if (!isNaN(data.Optimal.Series.Np) && !isNaN(data.Optimal.Series.Power)) {
-                    traces.push({
-                        x: [data.Optimal.Series.Np],
-                        y: [data.Optimal.Series.Power],
-                        mode: 'markers',
-                        name: `Optimal Series Point (B=${data.Optimal.Series.B.toFixed(3)}T)`,
-                        marker: { color: 'green', size: 10, symbol: 'star' },
-                        hoverinfo: 'name+x+y'
-                    });
-                }
-            }
-
-            // Parallel data
-            if (data.Turns.Parallel.Primary && data.PowerLoss.Parallel && data.Turns.Parallel.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Parallel.Primary,
-                    y: data.PowerLoss.Parallel,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Parallel Total Loss`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], dash: 'dash', width: 2 }
-                });
-                if (!isNaN(data.Optimal.Parallel.Np) && !isNaN(data.Optimal.Parallel.Power)) {
-                    traces.push({
-                        x: [data.Optimal.Parallel.Np],
-                        y: [data.Optimal.Parallel.Power],
-                        mode: 'markers',
-                        name: `Optimal Parallel Point (B=${data.Optimal.Parallel.B.toFixed(3)}T)`,
-                        marker: { color: 'red', size: 10, symbol: 'star' },
-                        hoverinfo: 'name+x+y'
-                    });
-                }
-            }
-
-            // Pmax lines
-            if (!isNaN(data.Pmaxs)) {
-                traces.push({
-                    x: [Math.min(...(data.Turns.Series.Primary.concat(data.Turns.Parallel.Primary)), 0), Math.max(...(data.Turns.Series.Primary.concat(data.Turns.Parallel.Primary)), 50)],
-                    y: [data.Pmaxs, data.Pmaxs],
-                    mode: 'lines',
-                    name: 'Pmax Series',
-                    line: { color: 'green', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-            if (!isNaN(data.Pmaxp)) {
-                traces.push({
-                    x: [Math.min(...(data.Turns.Series.Primary.concat(data.Turns.Parallel.Primary)), 0), Math.max(...(data.Turns.Series.Primary.concat(data.Turns.Parallel.Primary)), 50)],
-                    y: [data.Pmaxp, data.Pmaxp],
-                    mode: 'lines',
-                    name: 'Pmax Parallel',
-                    line: { color: 'red', dash: 'dot', width: 1.5 },
-                    hoverinfo: 'name+y'
-                });
-            }
-
-            const layout = {
-                title: `Total Power Loss vs. Primary Turns (Combined) for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Total Power Loss (W)' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-        function plotKuVsTurns(data, plotDivId) {
-            const traces = [];
-            const colorMap = colors.map(c => getPlotlyColor(c));
-            const selectedCoreName = core_names[data.selectedCoreIndex];
-
-            if (data.Turns.Series.Primary && data.Ku.Series && data.Turns.Series.Primary.length > 0) {
-                traces.push({
-                    x: data.Turns.Series.Primary,
-                    y: data.Ku.Series,
-                    mode: 'lines',
-                    name: `${selectedCoreName} Series Ku Factor`,
-                    line: { color: colorMap[data.selectedCoreIndex % colors.length], width: 2 }
-                });
-            }
-
-            const layout = {
-                title: `Ku Factor vs. Primary Turns (Series) for ${selectedCoreName}`,
-                xaxis: { title: 'Primary Turns (Np)' },
-                yaxis: { title: 'Ku Factor' },
-                hovermode: 'closest',
-                showlegend: true
-            };
-            Plotly.newPlot(plotDivId, traces, layout);
-        }
-
-
-        // Function to update the summary table
-        function updateLossDiffTable(summaryData) {
-            const tableContainer = document.getElementById('lossDiffTable');
-            let tableHTML = `
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2">Core Type</th>
-                            <th class="px-4 py-2">Max Power Loss (Series) [W]</th>
-                            <th class="px-4 py-2">Optimal Series Loss [W] (Np)</th>
-                            <th class="px-4 py-2">Max Power Loss (Parallel) [W]</th>
-                            <th class="px-4 py-2">Optimal Parallel Loss [W] (Np)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            // Display results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="p-3 bg-slate-100 rounded-lg"><span class="font-medium">Min Primary Turns (Npmin):</span><br>${Npmin.toFixed(2)}</div>
+                <div class="p-3 bg-slate-100 rounded-lg"><span class="font-medium">Max Primary Turns (Npmax):</span><br>${Npmax.toFixed(2)}</div>
+                <div class="p-3 bg-slate-100 rounded-lg"><span class="font-medium">Primary RMS Current (A):</span><br>${Iprms.toFixed(2)}</div>
+                <div class="p-3 bg-slate-100 rounded-lg"><span class="font-medium">Secondary RMS Current (A):</span><br>${Isrms.toFixed(2)}</div>
             `;
 
-            summaryData.forEach(core => {
-                const optimalSeriesText = !isNaN(core.OptimalSeriesPower) ? `${core.OptimalSeriesPower.toFixed(2)} (${core.OptimalSeriesNp})` : 'N/A';
-                const optimalParallelText = !isNaN(core.OptimalParallelPower) ? `${core.OptimalParallelPower.toFixed(2)} (${core.OptimalParallelNp})` : 'N/A';
-                tableHTML += `
-                    <tr>
-                        <td class="px-4 py-2">${core.coreName}</td>
-                        <td class="px-4 py-2">${!isNaN(core.Pmaxs) ? core.Pmaxs.toFixed(2) : 'N/A'}</td>
-                        <td class="px-4 py-2">${optimalSeriesText}</td>
-                        <td class="px-4 py-2">${!isNaN(core.Pmaxp) ? core.Pmaxp.toFixed(2) : 'N/A'}</td>
-                        <td class="px-4 py-2">${optimalParallelText}</td>
-                    </tr>
-                `;
-            });
-
-            tableHTML += `
-                    </tbody>
-                </table>
-            `;
-            tableContainer.innerHTML = tableHTML;
-        }
-
-        // Event listener for the Calculate button
-        document.getElementById('calculateButton').addEventListener('click', () => {
-            const plotDiv = document.getElementById('plotDiv');
-            const loadingOverlay = document.getElementById('loadingOverlay');
+            // Enable AI button
+            document.getElementById('aiBtn').disabled = false;
+        });
+        
+        document.getElementById('aiBtn').addEventListener('click', async () => {
+            const aiBtn = document.getElementById('aiBtn');
+            const adviceDiv = document.getElementById('aiAdvice');
             
-            // Show loading overlay
-            loadingOverlay.classList.remove('hidden');
-            Plotly.purge(plotDiv); // Clear previous plot
+            aiBtn.disabled = true;
+            aiBtn.innerHTML = '<div class="loader"></div>';
+            adviceDiv.style.display = 'block';
+            adviceDiv.innerHTML = '<div class="flex justify-center items-center p-8"><div class="loader" style="border-color: #4f46e5; border-bottom-color: transparent;"></div></div>';
 
-            setTimeout(() => { // Simulate a small delay for calculations
-                try {
-                    const { selectedCoreResults, allCoresLossSummary } = calculateLosses();
-                    const plotType = document.getElementById('plotType').value;
-                    const Ploss_max_input = parseFloat(document.getElementById('maxPowerLoss').value);
+            const inputs = {
+                Vin: document.getElementById('vin').value,
+                D: document.getElementById('d').value,
+                fs: document.getElementById('fs').value,
+                Ac: document.getElementById('ac').value,
+                Bmax: document.getElementById('bmax').value,
+                Io: document.getElementById('io').value,
+                K: document.getElementById('k').value,
+                Ku: document.getElementById('ku').value,
+                Sp: document.getElementById('sp').value,
+                Ss: document.getElementById('ss').value,
+                Wa: document.getElementById('wa').value,
+                results: document.getElementById('results').innerText
+            };
 
-                    switch (plotType) {
-                        case 'loss_vs_flux':
-                            plotLossVsFlux(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'loss_vs_turns':
-                            plotLossVsTurns(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'flux_vs_turns':
-                            plotFluxVsTurns(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'compare_core':
-                            plotCompareCoreLosses(allCoresLossSummary, 'plotDiv', Ploss_max_input);
-                            break;
-                        case 'layers_vs_turns':
-                            plotLayersVsTurns(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'skeff_proximity':
-                            plotSkeffProximity(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'copper_loss_vs_turns':
-                            plotCopperLossVsTurns(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'total_power_loss_vs_flux_series':
-                            plotTotalPowerLossVsFluxSeries(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'total_power_loss_vs_flux_parallel':
-                            plotTotalPowerLossVsFluxParallel(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'total_power_loss_vs_turns_series':
-                            plotTotalPowerLossVsTurnsSeries(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'total_power_loss_vs_turns_parallel':
-                            plotTotalPowerLossVsTurnsParallel(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'total_power_loss_vs_turns_combined':
-                            plotTotalPowerLossVsTurnsCombined(selectedCoreResults, 'plotDiv');
-                            break;
-                        case 'ku_vs_turns':
-                            plotKuVsTurns(selectedCoreResults, 'plotDiv');
-                            break;
-                        default:
-                            plotDiv.innerHTML = '<p class="text-gray-500">Select a plot type to see results.</p>';
-                    }
-                    updateLossDiffTable(allCoresLossSummary);
-                } catch (error) {
-                    console.error("Error during calculation or plotting:", error);
-                    plotDiv.innerHTML = `<p class="text-red-500">Error: ${error.message}. Check your inputs.</p>`;
-                } finally {
-                    // Hide loading overlay
-                    loadingOverlay.classList.add('hidden');
-                }
-            }, 50); // Short delay to allow loading overlay to show
+            const prompt = `I am an engineering student designing a high-frequency transformer. Please act as an expert power electronics design consultant and provide advice based on my parameters.
+
+            My Input Parameters:
+            - Input Voltage (Vin): ${inputs.Vin} V
+            - Duty Cycle (D): ${inputs.D}
+            - Switching Frequency (fs): ${inputs.fs} kHz
+            - Core Area (Ac): ${inputs.Ac} mm^2
+            - Max Flux Density (Bmax): ${inputs.Bmax} T
+            - Output Current (Io): ${inputs.Io} A
+            - Turns Ratio (K): ${inputs.K}
+            - Fill Factor (Ku): ${inputs.Ku}
+            - Primary Wire Area (Sp): ${inputs.Sp} mm^2
+            - Secondary Wire Area (Ss): ${inputs.Ss} mm^2
+            - Core Window Area (Wa): ${inputs.Wa} mm^2
+
+            My Calculated Results:
+            ${inputs.results}
+
+            Based on all this information, please provide a concise analysis covering:
+            1.  **Feasibility Check:** Is the design window (Npmin to Npmax) reasonable? If it's too narrow or if Npmin > Npmax, what are the likely causes and solutions?
+            2.  **Core & Winding:** Comment on the flux density. Is it a conservative or aggressive value for this frequency? What are the implications for core loss?
+            3.  **Potential Challenges:** What are the biggest challenges I might face with this design (e.g., thermal issues, high-frequency losses, manufacturability)?
+            4.  **Recommendations:** Suggest one or two concrete actions I could take to improve or optimize this design.`;
+            
+            const advice = await callGemini(prompt);
+            adviceDiv.innerHTML = advice.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            aiBtn.disabled = false;
+            aiBtn.innerHTML = '✨ Get AI Design Advice';
         });
 
-        // Populate core types dropdown on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const coreTypeSelect = document.getElementById('coreType');
-            core_names.forEach((name, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = name;
-                coreTypeSelect.appendChild(option);
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            // KaTeX rendering for equations
+            const equations = {
+                'eq4_50': 'K_u \\cdot W_a = N_p S_p + N_s S_s',
+                'eq4_51': 'N_{pmax} \\le \\frac{K_u \\cdot W_a}{S_p + \\frac{S_s}{K}}',
+                'eq4_52': 'N_{pmin} = \\frac{V_{in} \\cdot D}{2 f_s A_c B_{max}}',
+                'eq4_53': 'P_{max} = \\frac{T_{max} - T_{min}}{R_{th}}',
+                'eq4_54': 'R_{th} = 53 \\cdot (V_{core})^{-0.54}',
+                'eq4_55': 'B_{max} = \\left( \\frac{P_{max}}{k f^{\\alpha} V_{core}} \\right)^{\\frac{1}{\\beta}}',
+                'eq4_56': 'B = \\frac{V_{in} \\cdot D}{2 \\cdot A_c f_s N}',
+                'eq4_42': 'V_{out(series)} = 2 \\cdot D_{eff} \\cdot \\frac{N_s}{N_p} \\cdot \\frac{V_{in}}{2}',
+                'eq4_43': 'V_{out(parallel)} = 2 \\cdot D_{eff} \\cdot \\frac{N_s}{N_p} \\cdot V_{in}',
+                'eq4_47': 'I_{prms} = \\frac{I_o}{2 \\cdot \\frac{N_s}{N_p}} \\cdot \\sqrt{2D}',
+                'eq4_48': 'I_{srms} = \\frac{I_o}{2} \\cdot \\sqrt{D}',
+                'eq4_49': 'd = \\sqrt{\\frac{4 I_{max}}{7.2 \\cdot \\pi}}',
+                // New equations from the fetched file
+                'eq_Np': 'N_p = \\frac{V_{in}}{2 \\cdot f \\cdot B_{max} \\cdot A_e}',
+                'eq_n': 'n = \\frac{V_{primary, RMS}}{V_{secondary, RMS}} \\approx \\frac{V_{in, nominal}}{V_{out, desired} + V_{diode\\_drop}}',
+                'eq_Pcore': 'P_{core} = k \\cdot f^{\\alpha} \\cdot B_{ac}^{\\beta} \\cdot V_e',
+                'eq_Pcopper': 'P_{copper} = I_{rms}^2 \\cdot R_{ac}',
+                'eq_Rac': 'R_{ac} = F_R \\cdot R_{dc}',
+                'eq_Ptotalloss': 'P_{total\\_loss} = P_{core} + P_{copper}'
+            };
+            for (const id in equations) {
+                katex.render(equations[id], document.getElementById(id), { throwOnError: false, displayMode: true });
+            }
+            
+            // Chart.js for animated graph
+            const ctx = document.getElementById('fillFactorChart').getContext('2d');
+            const chartData = {
+                labels: [0, 100, 200, 300, 400, 500, 600, 700, 800],
+                datasets: [
+                    { label: 'EE19', data: [0.45, 0.42, 0.39, null], borderColor: '#36A2EB', fill: false, tension: 0.1 },
+                    { label: 'EE25/19', data: [0.52, 0.49, 0.46, 0.43], borderColor: '#FF6384', fill: false, tension: 0.1 },
+                    { label: 'EE40', data: [0.56, 0.54, 0.52, 0.50, 0.48, 0.46], borderColor: '#4BC0C0', fill: false, tension: 0.1 },
+                    { label: 'EE50', data: [0.58, 0.56, 0.54, 0.52, 0.50, 0.48, 0.46, 0.44, 0.42], borderColor: '#FF9F40', fill: false, tension: 0.1 },
+                    { label: 'EE55', data: [0.60, 0.58, 0.56, 0.54, 0.52, 0.50, 0.48, 0.46, 0.44], borderColor: '#E63946', fill: false, tension: 0.1 }
+                ]
+            };
+            new Chart(ctx, {
+                type: 'line', data: chartData, options: { responsive: true, animation: { duration: 2000, easing: 'easeInOutQuad' }, scales: { x: { title: { display: true, text: 'Number of Turns' } }, y: { title: { display: true, text: 'Window Utilization Factor (Ku)' }, min: 0.3, max: 0.6 } }, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Fill Factor Trend vs. Number of Turns' } } }
             });
-            // Trigger initial calculation/plot to show something on load
-            document.getElementById('calculateButton').click();
-        });
-
+        };
     </script>
 </body>
 </html>
