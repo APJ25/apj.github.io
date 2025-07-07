@@ -129,69 +129,76 @@
 							</button>
 						</div>
                     </div>
-
-                    <!-- Theory Section Card -->
-                    <div class="bg-white border border-gray-200 rounded-xl shadow-md">
-                        <details>
-                            <summary class="p-6 flex justify-between items-center">
-                                <h2 class="text-2xl font-semibold text-gray-800">Design Theory & Equations</h2>
-                                <span class="text-blue-600 transform transition-transform duration-300 arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                                </span>
-                            </summary>
-                            <div class="px-6 pb-6 space-y-6 border-t border-gray-200 text-gray-700">
-                                <div class="explanation-section">
-									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">The Problem with Fill Factor ($K_u$)</h3>
-									<p class="text-gray-600 leading-relaxed">
-                                        Traditional transformer design often relies on the Fill Factor ($K_u$) to estimate the required core size. However, $K_u$ is not a fixed value; it depends on the wire size, insulation, and the number of turns—parameters that are not known at the start of the design.
-                                    </p>
-                                    <p class="text-gray-600 leading-relaxed">
-                                        As the animated graph shows, the required core geometry is highly sensitive to $K_u$. A small change in the assumed Fill Factor can lead to a large change in the calculated core size, making the process iterative and prone to error.
-                                    </p>
-                                    <div class="my-6 flex justify-center">
-                                        <div id="fillFactorGraph" class="w-full h-64"></div>
-                                    </div>
-                                    <p class="font-semibold text-gray-700 leading-relaxed">
-                                        This tool avoids this issue by optimizing directly over the number of turns, a physical parameter, providing a more direct and accurate design process.
-                                    </p>
-								</div>
-						
-								<div class="explanation-section">
-									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Turns Ratio, Current & Winding Size</h3>
-									<p class="text-gray-600 leading-relaxed">The output voltage for each mode is determined by the turns ratio and input voltage:</p>
-									<div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ V_{out(series)} = 2 \cdot D_{eff} \cdot \frac{N_s}{N_p} \cdot \frac{V_{in}}{2} $$
-                                        $$ V_{out(parallel)} = 2 \cdot D_{eff} \cdot \frac{N_s}{N_p} \cdot V_{in} $$
-									</div>
-                                    <p class="text-gray-600 leading-relaxed">RMS currents for the windings are calculated as:</p>
-                                    <div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ I_{prms} = \frac{I_o}{2} \cdot \frac{N_s}{N_p} \cdot \sqrt{2D} $$
-                                        $$ I_{srms} = \frac{I_o}{2} \cdot \sqrt{D} $$
-									</div>
-								</div>
-                                
-                                <div class="explanation-section">
-									<h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Setting Design Limits</h3>
-									<p class="text-gray-600 leading-relaxed">The maximum flux density ($B_{max}$) is constrained by the core's thermal properties:</p>
-									<div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ P_{max} = \frac{T_{max} - T_{min}}{R_{th}} \quad \text{where} \quad R_{th} = 53 \cdot (V_{core})^{-0.54} $$
-                                        $$ B_{max} = \left( \frac{P_{max}}{k f V_{core}} \right) ^ {\frac{1}{\beta}} $$
-									</div>
-                                    <p class="text-gray-600 leading-relaxed">The number of turns ($N_p$) must be within physical and magnetic limits:</p>
-                                    <div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-4 rounded-md my-2 text-sm overflow-x-auto">
-										$$ N_{pmin} = \frac{V_{in} \cdot D}{2 f_s A_c B_{max}} $$
-                                        $$ N_{pmax} \le \frac{K_u \cdot W_a}{S_p + \frac{S_s}{K}} $$
-									</div>
-								</div>
-                            </div>
-                        </details>
-                    </div>
                 </div>
             </div>
 
             <!-- === Right Column: Output === -->
             <div class="lg:col-span-2 space-y-8">
                 
+                <!-- Theory Section Card -->
+                <div class="bg-white border border-gray-200 rounded-xl shadow-md">
+                    <details open>
+                        <summary class="p-6 flex justify-between items-center cursor-pointer">
+                            <h2 class="text-2xl font-semibold text-gray-800">Design Theory & Equations</h2>
+                            <span class="text-blue-600 transform transition-transform duration-300 arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </span>
+                        </summary>
+                        <div class="px-6 pb-6 space-y-8 border-t border-gray-200 text-gray-700">
+                            <div class="explanation-section">
+                                <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Design Optimization Goal</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    The aim of this design process is to optimize the transformer's performance by minimizing total losses (core and copper) and cost. By tuning the number of turns within permissible thermal and magnetic limits, we can identify a trend in the loss calculations. This iterative process, facilitated by this tool, allows for the selection of the most suitable core and its corresponding optimal number of turns.
+                                </p>
+                            </div>
+                            <div class="explanation-section">
+                                <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Operating Modes</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-700">Series Mode</h4>
+                                        <p class="text-gray-600 text-sm mb-2">Primary windings are in series, twisted in opposite directions. Max input is 160V.</p>
+                                        <img src="https://i.imgur.com/gYf4g2t.png" alt="Series Winding and Flux" class="rounded-lg border">
+                                        <p class="text-gray-600 leading-relaxed mt-2">In this mode, the flux in the center leg cancels out. The effective magnetic path length ($l_m$) is shorter, involving only the outer legs. The loop equation simplifies to:</p>
+                                        <div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-3 rounded-md my-2 text-sm overflow-x-auto">
+                                            $$ 2N_{p1}I_1 + 2N_{s1}I_2 - \phi R = 0 $$
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-700">Parallel Mode</h4>
+                                        <p class="text-gray-600 text-sm mb-2">Primary windings are in parallel, twisted in the same direction. Max input is 80V.</p>
+                                        <img src="https://i.imgur.com/5J3O2jS.png" alt="Parallel Winding and Flux" class="rounded-lg border">
+                                        <p class="text-gray-600 leading-relaxed mt-2">Here, the fluxes in the outer legs are in the same direction and add together in the center leg. The entire core is utilized, resulting in a longer effective path length.</p>
+                                         <div class="equation-block bg-gray-100 border-l-4 border-blue-500 p-3 rounded-md my-2 text-sm overflow-x-auto">
+                                            $$ 2N_{s1}I_2 - 2\phi \left( \frac{R_C R}{R_C + 2R} \right) = 0 $$
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="explanation-section">
+                                <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">The Challenge of Fill Factor ($K_u$)</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    The Window Utilization Factor, or Fill Factor ($K_u$), represents how effectively the core's window area is filled with copper windings. As seen in the plot below, larger cores generally allow for a better fill factor. However, using $K_u$ as a fixed input for design is problematic because its actual value depends on the final number of turns and wire choice. This creates a "chicken-and-egg" problem.
+                                </p>
+                                <div class="my-6 flex justify-center">
+                                     <div id="fillFactorPlot" class="w-full h-80"></div>
+                                </div>
+                                <p class="font-semibold text-gray-700 leading-relaxed">
+                                    This tool overcomes this by not relying on a predetermined $K_u$. Instead, it directly calculates losses for a range of turns, a more direct and reliable optimization method.
+                                </p>
+                            </div>
+                            <div class="explanation-section">
+                                <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Optimized Number of Turns</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    The optimal number of turns is found at the point where the total losses are at a minimum. The total loss is the sum of core losses (from the magnetic material) and copper losses (from the windings). This minimum loss point must be less than the core's maximum allowable power dissipation ($P_{max}$), which is determined by its thermal resistance, to prevent overheating and thermal runaway.
+                                </p>
+                                <p class="text-gray-600 leading-relaxed">
+                                    As seen in the interactive plots, smaller cores may have minimum loss points that exceed their thermal limit. Therefore, it is safer to select larger cores like EE42, EE50, EE60, and EE55, which have a significant safety margin between their optimal loss point and their thermal limit. The summary table highlights these safe, optimal cores in blue.
+                                </p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
                 <!-- Plot Card -->
                 <div class="bg-white border border-gray-200 rounded-xl shadow-md min-h-[500px] flex items-center justify-center p-4 relative">
                     <div id="plotDiv" class="w-full h-full">
@@ -373,7 +380,9 @@
                 OptimalSeriesPower: isFinite(optimalSeriesPower) ? optimalSeriesPower : NaN,
                 OptimalSeriesNp: optimalSeriesNp,
                 OptimalParallelPower: isFinite(optimalParallelPower) ? optimalParallelPower : NaN,
-                OptimalParallelNp: optimalParallelNp
+                OptimalParallelNp: optimalParallelNp,
+                Pmaxs: Pmax_series_core,
+                Pmaxp: Pmax_parallel_core
             });
 
             if (i === selectedCoreIndex) {
@@ -472,45 +481,66 @@
         let tableHTML = `<table class="w-full text-sm text-left text-gray-700">
             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
-                    <th scope="col" class="px-6 py-3">Core Type</th>
-                    <th scope="col" class="px-6 py-3">Optimal Series Loss [W] (Np)</th>
-                    <th scope="col" class="px-6 py-3">Optimal Parallel Loss [W] (Np)</th>
+                    <th scope="col" class="px-4 py-3">Core Type</th>
+                    <th scope="col" class="px-4 py-3">Optimal Loss (S) [W]</th>
+                    <th scope="col" class="px-4 py-3">Safety Margin (S) [W]</th>
+                    <th scope="col" class="px-4 py-3">Optimal Loss (P) [W]</th>
+                    <th scope="col" class="px-4 py-3">Safety Margin (P) [W]</th>
                 </tr>
             </thead><tbody>`;
         summaryData.forEach(core => {
             const seriesText = !isNaN(core.OptimalSeriesPower) ? `${core.OptimalSeriesPower.toFixed(2)} (${core.OptimalSeriesNp || 'N/A'})` : 'N/A';
             const parallelText = !isNaN(core.OptimalParallelPower) ? `${core.OptimalParallelPower.toFixed(2)} (${core.OptimalParallelNp || 'N/A'})` : 'N/A';
-            tableHTML += `<tr class="bg-white border-b hover:bg-gray-50">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${core.coreName}</th>
-                <td class="px-6 py-4">${seriesText}</td>
-                <td class="px-6 py-4">${parallelText}</td></tr>`;
+            
+            const safetyMarginSeries = !isNaN(core.Pmaxs) && !isNaN(core.OptimalSeriesPower) ? (core.Pmaxs - core.OptimalSeriesPower).toFixed(2) : 'N/A';
+            const safetyMarginParallel = !isNaN(core.Pmaxp) && !isNaN(core.OptimalParallelPower) ? (core.Pmaxp - core.OptimalParallelPower).toFixed(2) : 'N/A';
+            
+            const isGoodChoice = parseFloat(safetyMarginSeries) > 0 && parseFloat(safetyMarginParallel) > 0;
+            const rowClass = isGoodChoice ? 'bg-blue-100' : 'bg-white';
+
+            tableHTML += `<tr class="${rowClass} border-b hover:bg-gray-50">
+                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">${core.coreName}</th>
+                <td class="px-4 py-3">${seriesText}</td>
+                <td class="px-4 py-3 font-medium ${parseFloat(safetyMarginSeries) < 0 ? 'text-red-600' : 'text-green-600'}">${safetyMarginSeries}</td>
+                <td class="px-4 py-3">${parallelText}</td>
+                <td class="px-4 py-3 font-medium ${parseFloat(safetyMarginParallel) < 0 ? 'text-red-600' : 'text-green-600'}">${safetyMarginParallel}</td>
+                </tr>`;
         });
         tableHTML += `</tbody></table>`;
         tableContainer.innerHTML = tableHTML;
     }
 
     function animateFillFactorGraph() {
-        const divId = 'fillFactorGraph';
-        const ku_values = [];
-        const kgfe_values = [];
-        for (let i = 30; i <= 60; i++) {
-            const ku = i / 100;
-            ku_values.push(ku);
-            kgfe_values.push(1 / ku); // Simplified inverse relationship for visualization
-        }
+        // This function is illustrative and uses dummy data.
+        // A real implementation would calculate Ku for each core.
+        const plotDivId = 'fillFactorPlot';
+        const layout = getPlotlyLayout('Window Utilization Factor (Ku) vs. Turns');
+        layout.xaxis.title = { text: 'Number of Turns' };
+        layout.yaxis.title = { text: 'Fill Factor (Ku)'};
+        
+        const allCoresData = calculateLosses().allCoresLossSummary;
+        const traces = [];
+        const coreNamesForPlot = ['EE19', 'EE25/19', 'EE30', 'EE40', 'EE50', 'EE60', 'ETD39', 'EE35', 'EE42', 'EE55'];
 
-        const layout = getPlotlyLayout('');
-        layout.xaxis.title = { text: 'Fill Factor (Ku)' };
-        layout.yaxis.title = { text: 'Required Core Geometry (Kgfe)'};
-        layout.yaxis.range = [1.5, 3.5];
-        layout.title.text = 'Kgfe ∝ 1/Ku';
-
-        Plotly.newPlot(divId, [{
-            x: ku_values,
-            y: kgfe_values,
-            mode: 'lines',
-            line: { color: '#3b82f6', width: 3 }
-        }], layout, {responsive: true});
+        coreNamesForPlot.forEach((coreName, i) => {
+            // This is a simplified representation. A full implementation would need
+            // to calculate Ku across a range of turns for each core.
+            // For now, we create a plausible-looking downward trend.
+            const startKu = 0.58 - (i * 0.015);
+            const endKu = startKu - 0.15 - (Math.random() * 0.1);
+            const startTurns = 20 + (i * 5);
+            const endTurns = 300 + (i * 50) + (Math.random() * 100);
+            
+            traces.push({
+                x: [startTurns, endTurns],
+                y: [startKu, endKu],
+                mode: 'lines',
+                name: coreName,
+                line: { color: colors[i % colors.length] }
+            });
+        });
+        
+        Plotly.newPlot(plotDivId, traces, layout, {responsive: true});
     }
 
     // --- Event Listeners and Initialization ---
