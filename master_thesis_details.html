@@ -1,295 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master's Thesis Details | Adarsh Pulimoottil Jolly</title>
-    <link rel="stylesheet" href="styles.css"> <style>
-        /* Add specific styles for this page or keep them in the main stylesheet */
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: #495057;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            box-sizing: border-box;
+            background-color: #f9fafb; /* bg-gray-50 */
         }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 900px;
-            width: 100%;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
+        h1, h2, h3 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #0056b3, #17a2b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
         }
-
-        h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            color: #0056b3;
-            margin-top: 2.5rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        h2::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(45deg, #0056b3, #17a2b8);
-            margin: 0.8rem auto;
-            border-radius: 2px;
-        }
-
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .image-gallery img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .image-gallery img:hover {
-            transform: scale(1.03);
-        }
-
-        .section-content p {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        .subsection-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .subsection-links a {
-            display: inline-block;
-            background: linear-gradient(45deg, #0056b3, #17a2b8);
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .subsection-links a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-
-        .back-button {
-            display: block;
-            width: fit-content;
-            margin: 2rem auto;
-            background: #6c757d; /* A neutral gray */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .back-button:hover {
-            background: #5a6268;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 2.2rem;
-            }
-            h2 {
-                font-size: 1.8rem;
-            }
-            .image-gallery {
-                grid-template-columns: 1fr;
-            }
-            .subsection-links {
-                flex-direction: column;
-                align-items: center;
-            }
+        .section-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Magnetic Optimization of Reconfigurable Phase-shift Full Bridge Converter</h1>
-        <p style="text-align: center; font-style: italic; color: #666; margin-bottom: 2rem;">Master's Thesis Project (2023 - 2025)</p>
+<body class="text-gray-700">
 
-        <div class="section-content">
-            <p>Electrified railway systems demand compact and efficient power supplies. This thesis addresses this need by optimizing the magnetic components of a reconfigurable Phase Shift Full Bridge (PSFB) converter. While current designs often use multiple transformer cores for varying input voltages, my work introduces a single transformer core with multiple windings, significantly reducing the system's footprint and cost. The design process emphasizes accurate AC resistance estimation for a range of EE transformer cores, and a filter inductor is also designed to support Zero Voltage Switching (ZVS). Despite time constraints for full system testing, the fabricated transformer and inductor were successfully validated, demonstrating the viability and benefits of this innovative single-core approach.</p>
-        <p>You can explore the complete thesis work at:</p>
-            <p><a href="https://miun.diva-portal.org/smash/resultList.jsf?dswid=1841&language=sv&searchType=UNDERGRADUATE&query=&af=%5B%5D&aq=%5B%5B%7B%22freeText%22%3A%22Magnetic+optimization+of+a+Reconfigurable+Phase-shift+Full+Bridge+Converter%28RPSFB%29+for+Railway+Application%22%7D%5D%5D&aq2=%5B%5B%7B%22dateIssued%22%3A%7B%22from%22%3A%222024%22%2C%22to%22%3A%22%22%7D%7D%5D%5D&aqe=%5B%5D&noOfRows=50&sortOrder=author_sort_asc&sortOrder2=title_sort_asc&onlyFullText=false&sf=all" target="_blank" rel="noopener noreferrer">View Thesis Online</a></p>
-        
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Magnetic Optimization of Reconfigurable PSFB Converter</h1>
+                <p class="text-md text-gray-500 mt-2">Master's Thesis Project (2023 - 2025)</p>
+            </header>
 
-            <h2>Optimized Power Conversion for Electrified Railways</h2>
-    <p>This work focuses on optimizing the <strong>onboard power supply systems</strong> in electrified railways, specifically targeting the <strong>reconfigurable Phase Shift Full Bridge (PSFB) converter</strong>. This critical component ensures efficient power delivery for various train systems, from propulsion to passenger comfort.</p>
+            <!-- Introduction Section -->
+            <section class="mb-12 section-content">
+                <p class="text-lg leading-relaxed mb-4">Electrified railway systems demand compact and efficient power supplies. This thesis addresses this need by optimizing the magnetic components of a reconfigurable Phase Shift Full Bridge (PSFB) converter. While current designs often use multiple transformer cores for varying input voltages, my work introduces a single transformer core with multiple windings, significantly reducing the system's footprint and cost.</p>
+                <p class="text-lg leading-relaxed">The design process emphasizes accurate AC resistance estimation for a range of EE transformer cores, and a filter inductor is also designed to support Zero Voltage Switching (ZVS). Despite time constraints for full system testing, the fabricated transformer and inductor were successfully validated, demonstrating the viability and benefits of this innovative single-core approach.</p>
+                <div class="mt-6 text-center">
+                    <a href="https://miun.diva-portal.org/smash/resultList.jsf?dswid=1841&language=sv&searchType=UNDERGRADUATE&query=&af=%5B%5D&aq=%5B%5B%7B%22freeText%22%3A%22Magnetic+optimization+of+a+Reconfigurable+Phase-shift+Full+Bridge+Converter%28RPSFB%29+for+Railway+Application%22%7D%5D%5D&aq2=%5B%5B%7B%22dateIssued%22%3A%7B%22from%22%3A%222024%22%2C%22to%22%3A%22%22%7D%7D%5D%5D&aqe=%5B%5D&noOfRows=50&sortOrder=author_sort_asc&sortOrder2=title_sort_asc&onlyFullText=false&sf=all" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-semibold">View Full Thesis Online &rarr;</a>
+                </div>
+            </section>
 
-    <h3>The Challenge of Multiple Transformers</h3>
-    <p>Current PSFB converter implementations often rely on <strong>multiple transformer cores[1]</strong> to manage the wide input voltage ranges encountered in railway applications. While offering some modularity, this approach presents significant drawbacks:</p>
+            <!-- Optimized Power Conversion Section -->
+            <section class="mb-12 section-content">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Optimized Power Conversion for Electrified Railways</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed">This work focuses on optimizing the <strong>onboard power supply systems</strong> in electrified railways, specifically targeting the <strong>reconfigurable Phase Shift Full Bridge (PSFB) converter</strong>. This critical component ensures efficient power delivery for various train systems, from propulsion to passenger comfort.</p>
+            </section>
 
-    <ul>
-        <li><strong>Increased Footprint:</strong> As shown in <strong>Table 1.1</strong>, using multiple smaller cores (e.g., four PQ20s) demands a substantially larger Printed Circuit Board (PCB) area compared to a single larger core (e.g., one PQ40). This leads to longer trace lengths, increased conduction losses, and higher electromagnetic interference (EMI).</li>
-    </ul>
-
-    <div style="overflow-x: auto;">
-        <table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
-            <caption style="font-weight: bold; margin-bottom: 10px;">Table 1.1: Cost and footprint comparison between PQ20 and PQ40 cores</caption>
-            <thead>
-                <tr style="background-color: #f2f2f2;">
-                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Core Type</th>
-                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Core Cost (USD)</th>
-                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Coil Former Cost (USD)</th>
-                    <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Footprint Area (mm²)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">PQ20</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">0.872 × 4 = 3.487</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">1.914 × 4 = 7.656</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">516.128 x 4 = 2064.5</td>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">PQ40</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">2.898</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">7.239</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">1354.836</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <ul>
-        <li><strong>Higher Cost:</strong> The need for multiple cores, bobbins, and winding leads directly translates to increased system cost, as demonstrated in <strong>Table 1.1</strong>, where the PQ20 system is 10% more expensive than the PQ40.</li>
-        <li><strong>Thermal Management Issues:</strong> Minor mismatches in leakage inductance between identical cores can lead to current imbalances, increasing the risk of localized hotspots and thermal runaway. This necessitates complex and costly heat sinking solutions.</li>
-        <li><strong>Reduced Power Density:</strong> A larger footprint for the same power output results in lower power density, a significant disadvantage in space-constrained railway environments.</li>
-    </ul>
-
-    <h3>Our Innovative Single-Core Solution</h3>
-    <p>To address these limitations, my research proposes a novel <strong>single multi-winding transformer core solution</strong>. This approach, visualized in <strong>Figure 1.1</strong> comparing four PQ20 cores to a single PQ40, consolidates the magnetic component as an example .</p>
-
-    <figure style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
-        <img src="pq.png" alt="Comparison of four PQ20 cores and a single PQ40 core with their bobbins, illustrating size difference." style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-        <figcaption style="font-style: italic; margin-top: 10px;">Figure 1.1: Four PQ20 core and a single PQ40 core with their bobbins</figcaption>
-    </figure>
-<h2>Scope and Specifications</h2>
-        <p>This project focuses on the design for a **reconfigurable PSFB converter** utilizing a two-transformer system (conceptually integrated into a single multi-winding core). Key aspects of the design are detailed below:</p>
-
-        <ul>
-            <li>The system is designed for **series connection of primary windings at higher input voltages** (by turning off a specific branch) and **parallel connection at lower input voltages** (by activating a switching branch). This reconfigurable mode ensures a steady duty cycle across a wide input range.</li>
-            <li>**EE cores** were specifically chosen for this design due to their uniform exterior legs, allowing for the strategic winding of "T1" and "T2" transformer sections on a single EE core.</li>
-            <li>The investigation focuses on a specific range of ferrite cores, including **EE10/11, EE13, EE16, EE19, EE25/19, EE30, EE40, EE50, EE60, ETD39, EE35, EE42, EE55 from TDK**.</li>
-            <li>The **control aspects of the converter are not investigated** in this thesis; experiments will be conducted in open-loop operation.</li>
-            <li>Filter inductors are designed separately using a parametric approach (varying core size, turns, and air gap) to optimize system magnetics and support lossless switching (ZVS).</li>
-        </ul>
-
-        <h3>PSFB Converter Specifications</h3>
-        <p>The design adheres to the following critical parameters for the 500W reconfigurable PSFB converter:</p>
-       <table style="width: auto; margin-left: auto; margin-right: auto;">
-    <caption style="font-weight: bold; margin-bottom: 10px;">Table: Specifications of the PSFB Converter</caption>
-    <thead>
-        <tr style="background-color: #f2f2f2;">
-            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Parameter</th>
-            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Output Power (PO)</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">500 W</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Output Voltage (VO)</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">24 V</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Input Voltage (Series Mode) (Vins)</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">80 V – 160 V</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Input Voltage (Parallel Mode)</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">40 V – 80 V</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Switching Frequency (fs)</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">100 KHz</td>
-        </tr>
-    </tbody>
-</table>
-
-        
-            <div> 
+            <!-- The Challenge Section -->
+            <section class="mb-12 section-content">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">The Challenge of Multiple Transformers</h3>
+                <p class="text-lg leading-relaxed mb-6">Current PSFB converter implementations often rely on <strong>multiple transformer cores[1]</strong> to manage the wide input voltage ranges encountered in railway applications. While offering some modularity, this approach presents significant drawbacks:</p>
                 
+                <ul class="space-y-2 mb-6 text-lg">
+                    <li><strong>Increased Footprint:</strong> As shown in <strong>Table 1.1</strong>, using multiple smaller cores (e.g., four PQ20s) demands a substantially larger Printed Circuit Board (PCB) area compared to a single larger core (e.g., one PQ40). This leads to longer trace lengths, increased conduction losses, and higher electromagnetic interference (EMI).</li>
+                    <li><strong>Higher Cost:</strong> The need for multiple cores, bobbins, and winding leads directly translates to increased system cost, as demonstrated in <strong>Table 1.1</strong>, where the PQ20 system is 10% more expensive than the PQ40.</li>
+                    <li><strong>Thermal Management Issues:</strong> Minor mismatches in leakage inductance between identical cores can lead to current imbalances, increasing the risk of localized hotspots and thermal runaway. This necessitates complex and costly heat sinking solutions.</li>
+                    <li><strong>Reduced Power Density:</strong> A larger footprint for the same power output results in lower power density, a significant disadvantage in space-constrained railway environments.</li>
+                </ul>
 
-        <h2>Project Highlights & Images</h2>
-        <div class="image-gallery">
-            <img src="PSFB.png" alt="PSFB Converter Schematic">
-            <img src="Figure1.1.jpg.png" alt="Magnetic Core Design">
-            <img src="https://via.placeholder.com/250x200?text=Simulation+Results" alt="Simulation Results">
-            <img src="https://via.placeholder.com/250x200?text=Lab+Prototype" alt="Lab Prototype">
-        </div>
-        <p style="text-align: center; margin-top: 1rem;"><em>A glimpse into the design, simulation, and experimental setup.</em></p>
+                <!-- Comparison Table -->
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <caption class="p-4 text-lg font-medium text-left text-gray-800 bg-gray-50">Table 1.1: Cost and footprint comparison</caption>
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Core Type</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Core Cost (USD)</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coil Former Cost (USD)</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Footprint Area (mm²)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">PQ20 (x4)</td>
+                                <td class="px-6 py-4 whitespace-nowrap">3.487</td>
+                                <td class="px-6 py-4 whitespace-nowrap">7.656</td>
+                                <td class="px-6 py-4 whitespace-nowrap">2064.5</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">PQ40 (x1)</td>
+                                <td class="px-6 py-4 whitespace-nowrap">2.898</td>
+                                <td class="px-6 py-4 whitespace-nowrap">7.239</td>
+                                <td class="px-6 py-4 whitespace-nowrap">1354.836</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-        <h2>Detailed Design Sections</h2>
-        <div class="subsection-links">
-            <a href="transformer_design.html">Transformer Design & Calculations</a>
-            <a href="inductor_design.html">Inductor Design & Calculations</a>
+            <!-- The Solution Section -->
+            <section class="mb-12 section-content">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Innovative Single-Core Solution</h3>
+                <p class="text-lg leading-relaxed mb-6">To address these limitations, my research proposes a novel <strong>single multi-winding transformer core solution</strong>. This approach consolidates the magnetic component, significantly reducing size, cost, and complexity, as visualized below.</p>
+                <figure class="text-center">
+                    <img src="pq.png" alt="Comparison of four PQ20 cores and a single PQ40 core" class="max-w-full h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x300/e2e8f0/475569?text=Core+Comparison+Image';">
+                    <figcaption class="mt-2 text-sm text-gray-500">Figure 1.1: Four PQ20 cores vs. a single PQ40 core.</figcaption>
+                </figure>
+            </section>
+
+            <!-- Scope Section -->
+            <section class="mb-12 section-content">
+                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Scope and Specifications</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <ul class="list-disc list-inside space-y-2 text-lg">
+                    <li>The system is designed for <strong>series connection of primary windings at higher input voltages</strong> (by turning off a specific branch) and <strong>parallel connection at lower input voltages</strong> (by activating a switching branch). This reconfigurable mode ensures a steady duty cycle across a wide input range.</li>
+                    <li><strong>EE cores</strong> were specifically chosen for this design due to their uniform exterior legs, allowing for the strategic winding of "T1" and "T2" transformer sections on a single EE core.</li>
+                    <li>The investigation focuses on a specific range of ferrite cores, including <strong>EE10/11, EE13, EE16, EE19, EE25/19, EE30, EE40, EE50, EE60, ETD39, EE35, EE42, EE55 from TDK</strong>.</li>
+                    <li>The <strong>control aspects of the converter are not investigated</strong> in this thesis; experiments will be conducted in open-loop operation.</li>
+                    <li>Filter inductors are designed separately using a parametric approach (varying core size, turns, and air gap) to optimize system magnetics and support lossless switching (ZVS).</li>
+                </ul>
+                 <h3 class="text-2xl font-bold text-gray-800 my-6">PSFB Converter Specifications</h3>
+                 <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <caption class="p-4 text-lg font-medium text-left text-gray-800 bg-gray-50">Table: Specifications of the PSFB Converter</caption>
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parameter</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr><td class="px-6 py-4">Output Power (PO)</td><td class="px-6 py-4">500 W</td></tr>
+                            <tr><td class="px-6 py-4">Output Voltage (VO)</td><td class="px-6 py-4">24 V</td></tr>
+                            <tr><td class="px-6 py-4">Input Voltage (Series Mode) (Vins)</td><td class="px-6 py-4">80 V – 160 V</td></tr>
+                            <tr><td class="px-6 py-4">Input Voltage (Parallel Mode)</td><td class="px-6 py-4">40 V – 80 V</td></tr>
+                            <tr><td class="px-6 py-4">Switching Frequency (fs)</td><td class="px-6 py-4">100 KHz</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Project Highlights Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Project Highlights & Images</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <a href="#" class="block group">
+                        <img src="PSFB.png" alt="PSFB Converter Schematic" class="w-full h-56 object-cover rounded-lg shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/475569?text=PSFB+Schematic';">
+                    </a>
+                    <a href="#" class="block group">
+                        <img src="Figure1.1.jpg.png" alt="Magnetic Core Design" class="w-full h-56 object-cover rounded-lg shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/475569?text=Magnetic+Core';">
+                    </a>
+                     <a href="#" class="block group">
+                        <img src="https://via.placeholder.com/250x200?text=Simulation+Results" alt="Simulation Results" class="w-full h-56 object-cover rounded-lg shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300">
+                    </a>
+                     <a href="#" class="block group">
+                        <img src="https://via.placeholder.com/250x200?text=Lab+Prototype" alt="Lab Prototype" class="w-full h-56 object-cover rounded-lg shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300">
+                    </a>
+                </div>
+            </section>
+
+            <!-- Links to Calculators -->
+            <section class="text-center">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Explore the Design Tools</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="transformer_design.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Transformer Design Calculator</a>
+                    <a href="inductor_design.html" class="bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Inductor Design Calculator</a>
+                </div>
+            </section>
+
+            <!-- References Section -->
+            <section class="mt-12 pt-8 border-t border-gray-200 section-content">
+                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">References</h2>
+                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                 <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                     <li>M. Abu Bakar, M. Farhan Alam, Abdul Majid, and Kent Bertilsson. Dual-mode stable performance phase-shifted full-bridge converter for wide-input and medium-power applications. IEEE Transactions on Power Electronics, 36(6):6375–6388, 2021.</li>
+                 </ol>
+            </section>
+
+             <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="index.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Main Portfolio</a>
             </div>
+        </div>
+    </main>
 
-        <a href="index.html" class="back-button">← Back to Portfolio</a>
-    </div>
-             <div class="container">
-        <hr>
-
-        <h2>References</h2>
-        <ol class="references-list">
-            <li>[1]M. Abu Bakar, M. Farhan Alam, Abdul Majid, and Kent Bertilsson. Dual-mode stable performance phase-shifted full-bridge converter for wide-input and medium-power applications. IEEE Transactions on Power Electronics, 36(6):6375–6388, 2021.</li>
-            </ol>
-
-    </div>
 </body>
 </html>
