@@ -61,8 +61,7 @@
                 <h1 class="text-4xl font-bold text-blue-600">Measurement System for Indoor Climate</h1>
                 <p class="text-lg text-gray-500 mt-2">Mid Sweden University - ET106G</p>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p><b>Authors:</b> Emmanuel Ndagijimana, Davide Viggiani, Taian Hu, Bingsong Wu, Adarsh Pulimoottil Jolly</p>
-                    <p><b>Lecturer:</b> Börje Norlin | <b>Submission Date:</b> 18/01/2024</p>
+                    
                 </div>
             </header>
 
@@ -80,7 +79,7 @@
                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Background</h3>
                 <p class="text-lg leading-relaxed mb-4">Radon, a radioactive gas with no color, smell, or taste, is one natural radiation source that can be dangerous. It emerges from the bedrock and travels through the earth. Radon doesn’t pose a threat to human health outside because it tends to dilution in the atmosphere. However, radon indoors is hazardous; multiple studies have shown that even low levels, which are typically present in homes and workplaces, can be harmful to one’s health. High levels of indoor radon are especially harmful since lung cancer risk grows dramatically with continuous inhalation exposure.</p>
-                <figure class="my-6"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-2xl mx-auto"><img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+1:+Radon+Concentration+Map" alt="Annual indoor radon concentration" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Annual indoor radon concentration in ground-floor rooms.</figcaption></figure>
+                <figure class="my-6"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-2xl mx-auto"><img src="Annual.png" alt="Annual indoor radon concentration" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Annual indoor radon concentration in ground-floor rooms.</figcaption></figure>
                 
                 <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Task Description</h3>
                 <p class="text-lg leading-relaxed mb-4">The project is divided into three sections: Radon sensor implementation with analogue circuits, generating mbed code and connecting TVOC, temperature humidity, and carbondioxide sensors to the Mbed LPC1768, and finally Matlab data visualisation.</p>
@@ -98,20 +97,20 @@
                 <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">LTspice Simulations</h3>
                 <p class="text-lg leading-relaxed mb-4">Each stage of the circuit was simulated in LTspice to verify the design calculations before implementation.</p>
                 <div class="grid md:grid-cols-2 gap-8 my-6">
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x300/e2e8f0/64748b?text=Fig+10:+CSP+Simulation" alt="Charge sensitive preamplifier simulation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Simulation circuit of Charge sensitive preamplifier (CSP).</figcaption></figure>
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x300/e2e8f0/64748b?text=Fig+12:+Shaping+Amp+Sim" alt="Shaping amplifier simulation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The simulation circuit of the shaping amplifier.</figcaption></figure>
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x300/e2e8f0/64748b?text=Fig+14:+Peak+Detector+Sim" alt="Peak detector simulation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Simulation circuit of peak measurement.</figcaption></figure>
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x300/e2e8f0/64748b?text=Fig+16:+Full+Circuit+Simulation" alt="Full simulated circuit" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The full simulated circuit.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="vout.png" alt="Charge sensitive preamplifier simulation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Simulation circuit of Charge sensitive preamplifier (CSP).</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="pulsewidth.png" alt="Shaping amplifier simulation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The simulation circuit of the shaping amplifier.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="peakvalue.png" alt="Peak detector simulation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Simulation circuit of peak measurement.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="overall.png" alt="Full simulated circuit" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The full simulated circuit.</figcaption></figure>
                 </div>
 
                 <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Circuit Implementation & Measurements</h3>
                 <p class="text-lg leading-relaxed mb-4">The circuits were assembled on a breadboard. The output of each stage was verified with an oscilloscope, confirming that the physical implementation matched the simulated results.</p>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 my-6">
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Fig+17:+CSP+Scope" alt="CSP on oscilloscope" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Output voltage from a CSP on oscilloscope.</figcaption></figure>
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Fig+18:+Shaping+Amp+Scope" alt="Shaping amplifier on oscilloscope" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Output voltage from the shaping amplifier.</figcaption></figure>
-                    <figure class="md:col-span-2 lg:col-span-1"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Fig+19:+Peak+Detector+Scope" alt="Peak detector on oscilloscope" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The Input and output voltage from the peak detector.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="preamplifierimage.png" alt="CSP on oscilloscope" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Output voltage from a CSP on oscilloscope.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="pulseshapingimage.png" alt="Shaping amplifier on oscilloscope" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Output voltage from the shaping amplifier.</figcaption></figure>
+                    <figure class="md:col-span-2 lg:col-span-1"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="peak amplifier image.png" alt="Peak detector on oscilloscope" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The Input and output voltage from the peak detector.</figcaption></figure>
                 </div>
-                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-2xl mx-auto"><img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+20:+Full+Circuit+Photo" alt="Radon detection circuit implementation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Radon detection circuit implementation.</figcaption></figure>
+                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-2xl mx-auto"><img src="projectimage.png" alt="Radon detection circuit implementation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Radon detection circuit implementation.</figcaption></figure>
             </section>
             
             <!-- System Integration -->
@@ -120,8 +119,8 @@
                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <p class="text-lg leading-relaxed mb-4">The analog radon detection circuit, along with the Si7021 (Temperature/Humidity) and SGP30 (CO2/TVOC) digital sensors, were integrated with an Mbed LPC1768 microcontroller. The Mbed reads all sensor values, processes the data, and sends it to a host computer via a serial connection. A MATLAB script on the computer receives this data, parses it, and plots the environmental parameters in real-time.</p>
                 <div class="grid md:grid-cols-2 gap-8 my-6">
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2"><img src="https://placehold.co/500x600/e2e8f0/64748b?text=Figure+25:+System+Setup" alt="Mbed and sensors connected" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Mbed and sensors connected together.</figcaption></figure>
-                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2"><img src="https://placehold.co/500x600/e2e8f0/64748b?text=Figure+26:+MATLAB+GUI" alt="Data visualized in MATLAB" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The data from sensors visualized in MATLAB.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2"><img src="processblock.png" alt="Mbed and sensors connected" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Mbed and sensors connected together.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2"><img src="Aresult.jpg" alt="Data visualized in MATLAB" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The data from sensors visualized in MATLAB.</figcaption></figure>
                 </div>
             </section>
 
