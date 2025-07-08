@@ -178,6 +178,47 @@
                 </div>
             </section>
 
+            <!-- Inductor Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Inductor</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The EE19/8/9 cores made of 3C94 material are utilized. The inductor is made up of three parallel-connected AWG 25 wires with ten turns coiled on the center limb. The air gap is created by sandwiching insulation between the two EE sections, and the overall air gap is checked. R31 polyester tape is used as insulation. The insulating tape is used to bind the two core components together. Prior to testing, the wires’ continuity was examined.</p>
+                
+                <!-- Constructed Inductor Image -->
+                <figure class="my-8">
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center max-w-md mx-auto h-80 p-2">
+                       <img src="physical inductor.jpg" alt="Constructed inductor prototype" class="max-w-full max-h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/64748b?text=Constructed+Inductor';">
+                    </div>
+                    <figcaption class="caption">The constructed inductor.</figcaption>
+                </figure>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Inductor Modelling and Simulation</h3>
+                <p class="text-lg leading-relaxed mb-4">The toroidal form is used to match the design in the Ansys 2D model of the inductor and furthermore it makes the modelling easier. The air gap, core cross-section diameter, and number of turns are parametrized and corresponding inductance is measured. The core cross-section diameter is varied from 6 mm to 12 mm, the air gap is varied between 0.5 mm to 1 mm, and the number of turns is varied between 8 to 14. The conductors are modelled as yellow circular rings. The outer ring is given the current excitation of 7.2 A with a positive current direction and the inner ring with a negative current direction. The depth setup was also parametrized by varying it as the same as the core cross-section diameter.</p>
+                <p class="text-lg leading-relaxed mb-4">The test gave the output such that the combination of 7 mm core diameter, air gap of 0.5 mm and 10 number of turns gave an inductance closer to 12 μH. The highlighted plot in the figures below represents the calculated design group. The inductance of that particular group at the air gap of 0.56mm is closer to 12.7 μH. At 7.1 mm diameter of the core, the inductance is at 12.7 μH.</p>
+
+                <!-- Ansys Images -->
+                <figure class="my-8">
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center max-w-md mx-auto h-72 p-2">
+                       <img src="ansys.png" alt="Ansys 2D model of the inductor design" class="max-w-full max-h-full object-contain">
+                    </div>
+                    <figcaption class="caption">Ansys 2D model of the design of the inductor.</figcaption>
+                </figure>
+                <div class="grid md:grid-cols-2 gap-8 my-8">
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="ansysinductanceandairgap.png" alt="Graph of Inductance vs Air Gap" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Inductance vs Air Gap.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="ansysinductanceandcorediameter.png" alt="Graph of Inductance vs Core Diameter" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Inductance vs Core Diameter.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
             <!-- Back Button -->
             <div class="mt-12 text-center">
                 <a href="master_thesis_details.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Thesis Details</a>
@@ -187,3 +228,4 @@
 
 </body>
 </html>
+
