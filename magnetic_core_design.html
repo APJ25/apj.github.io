@@ -179,7 +179,50 @@
             </section>
 
             <!-- Inductor Section -->
+            <!-- Inductor Section -->
             <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Inductor</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Design Theory and Optimization</h3>
+                <p class="text-lg leading-relaxed mb-4">The traditional methods of area product and core geometry coefficient method involve an iterative, trial-and-error process of choosing a suitable core, estimating the turns, and calculating the air gap for the required inductance. These methods often overlook the interdependence of magnetic flux density, number of turns, inductance, and air gap. The design method proposed here does not require selecting a core in the first place. Instead, this method starts with solving Ampere’s law that relates the dependency between inductance, number of turns, and air gap. This approach allows for a better convergence time and provides high design flexibility.</p>
+                
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Calculation of Inductance</h4>
+                <p class="text-lg leading-relaxed mb-4">The inductance is calculated based on the equation below. The ripple current is taken to be 10% of the output current (6.6 A). Since only 80 V is expressed across each winding, the input voltage (Vin) is taken as 80 V and the turns ratio (K) is 3. The diode drop (VD) is taken to be 0.85 V considering Schottky diodes. The inductance is found to be 12.7 μH.</p>
+                <div class="equation-block">Lf = Vo / (2*fs * delta_Io) * (1 - Vo / (Vin * K - VD))</div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Optimization of Inductor</h4>
+                <p class="text-lg leading-relaxed mb-4">The solution of the two equations, namely the air gap equation and the reluctance model of inductance, gives the number of turns and the required air gap length.</p>
+                <div class="equation-block">lg = (mu_0 * N * Idc / Bdc) - (lc / mu_r)</div>
+                <div class="equation-block">L = (mu_0 * mu_r * N^2 * Ac) / (lc + mu_r * lg)</div>
+                <p class="text-lg leading-relaxed mb-4">In the air gap equation, the term lc/mu_r is very small since the relative permeability of ferrite materials is around 2000, so it is taken to be zero in the design. The conductor cross-section area is the same as the windings used in the secondary of the transformer. The Bmax of the core is limited to 0.2 T and Imax is taken to be 6.6 A plus the ripple, which is 7.26 A. The core diameter is the variable, varied from 3 mm to 14 mm. The solution of the equations gives the number of turns and air gap as:</p>
+                <div class="equation-block">(N, lg) = ( (L * delta_Imax) / (Ac * delta_Bmax), (mu_0 * N^2 * L) / (Ac * Bmax^2) - (lc / mu_r) )</div>
+                
+                <div class="grid md:grid-cols-2 gap-8 my-8">
+                    <figure>
+                        <img src="Areaofinductor.png" alt="Variation of cross-sectional area" class="w-full h-auto rounded-lg shadow-md mx-auto">
+                        <figcaption class="caption">Variation of cross-sectional area of the inductor.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="Airgapofinductor.png" class="w-full h-auto rounded-lg shadow-md mx-auto">
+                        <figcaption class="caption">Air gap variation with respect to inductor design.</figcaption>
+                    </figure>
+                </div>
+
+                <p class="text-lg leading-relaxed mb-4">As the number of turns increases, the choice of air gap increases linearly with it. The choice of cross-sectional area with air gap is inversely proportional. The advantage this method gives is that all the possibilities of area are available, not like the other methods where the area of core is fixed for a particular core.</p>
+                <p class="text-lg leading-relaxed mb-4">Now the number of turns identified above is utilized to calculate the winding area (Aw) required for the winding. The Ku is chosen to be 0.78. The mean core length (path length) is calculated using the subsequent equation.</p>
+                <div class="equation-block">Aw = (N * area_of_conductor) / Ku</div>
+                <div class="equation-block">Lc = pi * (sqrt( (4*Aw) / (0.78*pi) ) + Dc/2)</div>
+                <p class="text-lg leading-relaxed mb-4">The optimal solution is identified by calculating the total losses as explained in the case of transformer design, where total loss is the sum of core losses and copper losses. The core losses are calculated from the Steinmetz’s empirical equation and the DC losses are only considered here for copper losses since the effect of AC resistance is very small. The change in flux density is taken to be 20% of Bmax. The optimum number of turns is the position where the Pareto front of total loss to core volume is closest to the vertical and horizontal intersections of the extreme points. The number of turns, area of the core and the window area corresponding to this optimum point leads to the optimized inductor design.</p>
+                 <figure class="my-8">
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center max-w-md mx-auto h-72 p-2">
+                       <img src="Pareto.png" alt="Volume vs loss Pareto front" class="max-w-full max-h-full object-contain">
+                    </div>
+                    <figcaption class="caption">Volume vs loss Pareto front.</figcaption>
+                </figure>
+           
+
+            
                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Inductor</h2>
                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <p class="text-lg leading-relaxed mb-4">The EE19/8/9 cores made of 3C94 material are utilized. The inductor is made up of three parallel-connected AWG 25 wires with ten turns coiled on the center limb. The air gap is created by sandwiching insulation between the two EE sections, and the overall air gap is checked. R31 polyester tape is used as insulation. The insulating tape is used to bind the two core components together. Prior to testing, the wires’ continuity was examined.</p>
