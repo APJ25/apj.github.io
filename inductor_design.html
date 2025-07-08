@@ -62,6 +62,9 @@
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
             border: none;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
         }
         .btn:hover {
             background-color: #2563eb;
@@ -142,10 +145,12 @@
                     <div class="input-group"><label for="inductorCoreDiameterCoarseEnd">Core Diameter (Dc_end) [m]:</label><input type="number" id="inductorCoreDiameterCoarseEnd" value="14e-3" step="0.5e-3"></div>
                     <div class="input-group"><label for="inductorNumPoints">Number of Data Points (s):</label><input type="number" id="inductorNumPoints" value="100" step="10"></div>
                     <div class="input-group lg:col-span-3"><label for="inductorPlotType">Select Plot:</label><select id="inductorPlotType"><option value="P_vs_Vc">Total Loss vs. Core Volume (P vs Vc) with Optimal Point</option><option value="N_vs_Vc">Turns vs. Core Volume (N vs Vc) with Optimal Point</option></select></div>
-                    <div class="input-group lg:col-span-3"><label for="analyzeTurns">Analyze Specific Number of Turns (N):</label><input type="number" id="analyzeTurns" placeholder="e.g., 12"></div>
                 </div>
                 
-                <div class="flex justify-center mb-8"><button id="calculateInductorButton" class="btn">Calculate and Plot Inductor</button></div>
+                <div class="flex justify-center flex-wrap gap-4 mb-8">
+                    <button id="calculateInductorButton" class="btn">Calculate and Plot Inductor</button>
+                    <a href="inductor_design_script.m" download class="btn bg-gray-600 hover:bg-gray-700">Download MATLAB Script</a>
+                </div>
 
                 <div id="inductorPlotContainer" class="plot-container bg-gray-50 p-4 rounded-lg border border-gray-200 min-h-[450px]"><div class="loading-overlay hidden" id="inductorLoadingOverlay"><div class="spinner"></div></div><div id="plot-area" class="w-full h-full"></div></div>
                 <p id="inductorPlotDescription" class="caption mt-4"></p>
@@ -156,16 +161,6 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parameter</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th></tr></thead>
                             <tbody class="bg-white divide-y divide-gray-200" id="inductorSummaryTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="analysisSummaryContainer" class="mt-8 hidden">
-                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-4">Analysis for Target Turns</h3>
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parameter</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th></tr></thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="analysisSummaryTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -186,7 +181,6 @@
         const a3 = 1.022e+06, b3 = -1.348, c3 = -0.02106;
         let inductorResults = null;
         let optimalGlobalIndex = -1;
-        let analysisIndex = -1;
 
         // PCHIP Interpolation function to mimic MATLAB's pchip
         function pchip(x, y, xq) {
@@ -306,7 +300,6 @@
                 Em[i] = 1e6 * 0.5 * B1[i]**2 * A[i] * valueOfeg[i] / uo;
                 Vc[i] = Le[i] * A[i] * 1e9; // m^3 to mm^3
                 Bac[i] = B1[i] * 0.2;
-                // Note: MATLAB uses Vc in cm^3 for Pin calc, so we convert back
                 Pin[i] = 1000 * k * Math.pow(f, alpha) * Math.pow(Bac[i], Beta) * (Vc[i] * 1e-3) * 1e-6;
                 DCR[i] = rau * lm[i] / Sp;
                 Pw[i] = DCR[i] * I**2; 
@@ -356,26 +349,6 @@
 
             updateSummaryTable(optimalGlobalIndex, 'inductorSummaryTableBody');
             
-            // --- Analysis for Target Turns ---
-            const targetTurns = parseFloat(document.getElementById('analyzeTurns').value);
-            analysisIndex = -1;
-            if (Number.isFinite(targetTurns)) {
-                let minTurnDiff = Infinity;
-                for (let i = 0; i < s; i++) {
-                    if (Number.isFinite(N[i])) {
-                        const diff = Math.abs(N[i] - targetTurns);
-                        if (diff < minTurnDiff) {
-                            minTurnDiff = diff;
-                            analysisIndex = i;
-                        }
-                    }
-                }
-                document.getElementById('analysisSummaryContainer').classList.remove('hidden');
-                updateSummaryTable(analysisIndex, 'analysisSummaryTableBody');
-            } else {
-                document.getElementById('analysisSummaryContainer').classList.add('hidden');
-            }
-
             plotInductorData(document.getElementById('inductorPlotType').value);
             document.getElementById('inductorLoadingOverlay').classList.add('hidden');
         }
@@ -398,20 +371,14 @@
                     if (optimalGlobalIndex !== -1) {
                         data.push({ x: [P[optimalGlobalIndex]], y: [Vc[optimalGlobalIndex]], mode: 'markers', marker: { size: 12, color: 'blue', symbol: 'circle' }, name: 'Optimal Point' });
                     }
-                    if (analysisIndex !== -1) {
-                         data.push({ x: [P[analysisIndex]], y: [Vc[analysisIndex]], mode: 'markers', marker: { size: 12, color: 'green', symbol: 'star' }, name: 'Analysis Point' });
-                    }
                     layout = { title: 'Total Loss vs. Core Volume', xaxis: { title: 'Total Loss (W)' }, yaxis: { title: 'Core Volume (mm³)' }, showlegend: true };
-                    description = "This plot shows the Pareto front for Total Loss vs. Core Volume. The blue circle is the calculated optimal point, and the green star is your specified analysis point.";
+                    description = "This plot shows the Pareto front for Total Loss vs. Core Volume. The blue circle is the calculated optimal point.";
                     break;
                 
                 case 'N_vs_Vc':
                      data.push({ x: N, y: Vc, mode: 'lines', type: 'scatter', name: 'Turns vs Volume', line: { color: 'red', width: 2 } });
                      if (optimalGlobalIndex !== -1) {
                          data.push({ x: [N[optimalGlobalIndex]], y: [Vc[optimalGlobalIndex]], mode: 'markers', marker: { size: 10, color: 'blue', symbol: 'circle' }, name: 'Optimal Point' });
-                     }
-                     if (analysisIndex !== -1) {
-                         data.push({ x: [N[analysisIndex]], y: [Vc[analysisIndex]], mode: 'markers', marker: { size: 12, color: 'green', symbol: 'star' }, name: 'Analysis Point' });
                      }
                      layout = { title: 'Turns vs Core Volume with Optimal Point', xaxis: { title: 'Number of Turns (N)' }, yaxis: { title: 'Core Volume (mm³)' }, showlegend: true };
                      description = "This plot displays the number of turns versus core volume.";
