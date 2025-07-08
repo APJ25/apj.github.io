@@ -55,31 +55,31 @@
                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
-                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Gameplay+Video+1">
+                        <video controls class="w-full h-full rounded-lg" poster="airswordtitle.jpg">
+                            <source src="air.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                     <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
+                        <video controls class="w-full h-full rounded-lg" poster="another.jpg">
                             <source src="gameplay1.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
+                        <video controls class="w-full h-full rounded-lg" poster="menu.jpg">
+                            <source src="menu.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                      <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
-                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Gameplay+Video+2">
+                        <video controls class="w-full h-full rounded-lg" poster="andexit.jpg">
                             <source src="gameplay2.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
-                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
-                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Menu+Navigation">
-                            <source src="menu_video.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                     <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
-                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Accelerometer+Control">
-                            <source src="accelerometer_video.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
                 </div>
-                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="https://placehold.co/800x400/e2e8f0/64748b?text=Figure+1:+Game+Title+Screen" alt="Game Name" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The game's title screen displayed on the LCD.</figcaption></figure>
+                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="airswordtitle.jpg" alt="Game Name" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The game's title screen displayed on the LCD.</figcaption></figure>
             </section>
 
             <!-- Game Flow and UI -->
@@ -87,7 +87,7 @@
                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Game Flow & User Interface</h2>
                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <p class="text-lg leading-relaxed mb-4">The game starts with a title screen and sound, then transitions to a main menu with "Start," "Option," and "High Score" choices. The joystick is used for navigation, with LEDs indicating the current selection. The "Option" screen provides instructions, and "High Score" displays the best score achieved. Selecting "Start" allows the player to choose between joystick or accelerometer controls for the gameplay.</p>
-                <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="https://placehold.co/600x800/e2e8f0/64748b?text=Figure+2:+Game+Flow+Chart" alt="Game Flow Chart" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">A flowchart illustrating the game's logic and user navigation paths.</figcaption></figure>
+                <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="gameimplimentation.png" alt="Game Flow Chart" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Game application configuration on Mbed</figcaption></figure>
             </section>
 
             <!-- Implementation Analysis Section -->
@@ -101,14 +101,14 @@
                         <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Accelerometer</h4>
                         <p class="text-lg leading-relaxed">The 3-axis accelerometer allows players to control the airplane by tilting the board. Tilting along the X-axis controls vertical movement, while tilting along the Y-axis controls horizontal movement. Samples are taken every 20ms via I2C communication.</p>
                     </div>
-                     <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+4:+Accelerometer+Axis" alt="Accelerometer axis description" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Accelerometer axis description.</figcaption></figure>
+                     <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="gameaccelerometer.jpg" alt="Accelerometer axis description" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Accelerometer axis description.</figcaption></figure>
                 </div>
                  <div class="grid md:grid-cols-2 gap-8 items-start mt-8">
                     <div>
                         <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Potentiometers</h4>
                         <p class="text-lg leading-relaxed">Two potentiometers provide analog input. Potentiometer 1 (p20) controls the rotation of the airplane's sword by converting its analog value to radians. Potentiometer 2 (p19) adjusts the game's difficulty by scaling the velocity of the enemies.</p>
                     </div>
-                     <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+5:+Position+Calculation" alt="Position calculation from potentiometer" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Position calculation from potentiometer.</figcaption></figure>
+                     <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="potentiometer.png" alt="Position calculation from potentiometer" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Position calculation from potentiometer.</figcaption></figure>
                 </div>
                  <h4 class="text-xl font-semibold text-gray-700 mt-8 mb-2">Joystick, LCD, and LEDs</h4>
                  <p class="text-lg leading-relaxed mb-4">The digital joystick is used for menu navigation and in-game control. The NHD-C12832A1Z LCD is the primary display, refreshed every 10-20ms. The four onboard LEDs provide visual feedback for menu selection and game states like "pause."</p>
@@ -120,7 +120,7 @@
                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <p class="text-lg leading-relaxed mb-4">Through trials and peer reviews, a key challenge identified was the sensitivity of the potentiometer for velocity control. Fine-tuning during gameplay could cause fluctuations that crashed the game. This was resolved by quantizing the potentiometer's range into discrete integer values, providing stable velocity levels.</p>
                 <p class="text-lg leading-relaxed mb-4">Memory management was another major concern. To prevent crashes, memory usage was minimized by only storing the current and high scores. For future development, incorporating additional memory would allow for more complex features and data storage. The limited refresh rate of the LCD also posed a constraint, requiring careful calibration of input sampling rates to ensure a responsive and smooth gameplay experience.</p>
-                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-lg mx-auto"><img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+7:+Game+Crash+Example" alt="Game crash example" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Example of a game crash due to memory or processing limits.</figcaption></figure>
+                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-lg mx-auto"><img src="gamecrash.jpg" alt="Game crash example" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Example of a game crash due to memory or processing limits.</figcaption></figure>
             </section>
 
             <!-- Back Button -->
