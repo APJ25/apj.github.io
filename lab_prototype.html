@@ -102,6 +102,38 @@
                 </figure>
             </section>
 
+            <!-- PSFB Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">PSFB Components and Setup</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The Mosfets must handle a maximum input voltage stress of 160 V. The maximum output current of the filter inductor is 7.2 A, and the Mosfet must handle a current of 7.2 A. Even though this is the case, better options in terms of reverse recovery time and lower gate charges were required for better ZVS operation. The SiC Mosfet C3M0065090D was chosen.</p>
+                <p class="text-lg leading-relaxed mb-4">The diodes in the secondary side have to handle a voltage of up to 24 V. The full-wave rectifier circuit presents a voltage stress of 2Vin/K, which is 53.33 V. For protection from voltage spikes and oscillations, twice the voltage is taken as the voltage rating. The Schottky diode STPS30100ST with a forward voltage drop of 0.65 V and 100 V, 30 A ratings was selected.</p>
+                <p class="text-lg leading-relaxed mb-4">The filter capacitance value was calculated, but the value was taken to be much higher, around 100μF, since the system is working in an open loop. 100μF 50V Aluminium electrolytic capacitors were selected.</p>
+                <p class="text-lg leading-relaxed mb-4">The Mosfets were first placed on the heat sink by drilling holes and screwing them on. The heat sinks were isolated from each other so that the drains of the Mosfets will not be shorted together. Polyester R31 was used for this purpose. The Mosfets were then soldered onto the board. The gate signals are provided by the TI Delphino launchpad F28379D with appropriate phase shift control. A 12 V input was provided for the isolated gate driver UCC2140A with the corresponding output side voltage of 10 V also applied. The device was tested for the presence of gate signals.</p>
+
+                <!-- PSFB Setup Images -->
+                <div class="grid md:grid-cols-3 gap-8 my-8">
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="https://placehold.co/400x300/e2e8f0/64748b?text=PSFB+PCB" alt="PCB for the reconfigurable PSFB" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">PCB for the reconfigurable PSFB from POWER BOX AB.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="https://placehold.co/400x300/e2e8f0/64748b?text=Isolated+MOSFET" alt="MOSFET with isolated heat sink" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Mosfet with heat sinks isolated.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="https://placehold.co/400x300/e2e8f0/64748b?text=Final+System+Setup" alt="Final setup of the system" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">The final setup of the system.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
             <!-- Back Button -->
             <div class="mt-12 text-center">
                 <a href="master_thesis_details.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Thesis Details</a>
