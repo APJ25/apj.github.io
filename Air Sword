@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: Air Sword | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Project Report: Air Sword</h1>
+                <p class="text-lg text-gray-500 mt-2">Adarsh Pulimoottil Jolly</p>
+            </header>
+
+            <!-- Introduction Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Introduction</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">Air Sword is an embedded platform-based single-player 2D game that mainly utilizes the functionalities of the mbed application board. The game is based on an NXP LPC1768 microcontroller with additional sensors for support. The objective of the game is to pilot an airplane with a front-mounted sword to sweep away an endless wave of enemies. The game ends if an enemy collides with the player's character.</p>
+                <p class="text-lg leading-relaxed mb-4">The game features multiple control schemes, including joystick and accelerometer inputs, with output displayed on a C12832 LCD and through onboard LEDs. The difficulty dynamically increases based on enemy velocity, which can be further adjusted by the user via a potentiometer. This report details the implementation and design choices made during the development of Air Sword.</p>
+            </section>
+            
+            <!-- Game Showcase Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Game Showcase</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
+                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Gameplay+Video+1">
+                            <source src="gameplay1.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                     <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
+                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Gameplay+Video+2">
+                            <source src="gameplay2.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
+                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Menu+Navigation">
+                            <source src="menu_video.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                     <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center aspect-video">
+                        <video controls class="w-full h-full rounded-lg" poster="https://placehold.co/1280x720/e2e8f0/64748b?text=Accelerometer+Control">
+                            <source src="accelerometer_video.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="https://placehold.co/800x400/e2e8f0/64748b?text=Figure+1:+Game+Title+Screen" alt="Game Name" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The game's title screen displayed on the LCD.</figcaption></figure>
+            </section>
+
+            <!-- Game Flow and UI -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Game Flow & User Interface</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The game starts with a title screen and sound, then transitions to a main menu with "Start," "Option," and "High Score" choices. The joystick is used for navigation, with LEDs indicating the current selection. The "Option" screen provides instructions, and "High Score" displays the best score achieved. Selecting "Start" allows the player to choose between joystick or accelerometer controls for the gameplay.</p>
+                <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="https://placehold.co/600x800/e2e8f0/64748b?text=Figure+2:+Game+Flow+Chart" alt="Game Flow Chart" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">A flowchart illustrating the game's logic and user navigation paths.</figcaption></figure>
+            </section>
+
+            <!-- Implementation Analysis Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Implementation Analysis</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Game Controllers & Sensors</h3>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Accelerometer</h4>
+                        <p class="text-lg leading-relaxed">The 3-axis accelerometer allows players to control the airplane by tilting the board. Tilting along the X-axis controls vertical movement, while tilting along the Y-axis controls horizontal movement. Samples are taken every 20ms via I2C communication.</p>
+                    </div>
+                     <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+4:+Accelerometer+Axis" alt="Accelerometer axis description" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Accelerometer axis description.</figcaption></figure>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-8 items-start mt-8">
+                    <div>
+                        <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Potentiometers</h4>
+                        <p class="text-lg leading-relaxed">Two potentiometers provide analog input. Potentiometer 1 (p20) controls the rotation of the airplane's sword by converting its analog value to radians. Potentiometer 2 (p19) adjusts the game's difficulty by scaling the velocity of the enemies.</p>
+                    </div>
+                     <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+5:+Position+Calculation" alt="Position calculation from potentiometer" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Position calculation from potentiometer.</figcaption></figure>
+                </div>
+                 <h4 class="text-xl font-semibold text-gray-700 mt-8 mb-2">Joystick, LCD, and LEDs</h4>
+                 <p class="text-lg leading-relaxed mb-4">The digital joystick is used for menu navigation and in-game control. The NHD-C12832A1Z LCD is the primary display, refreshed every 10-20ms. The four onboard LEDs provide visual feedback for menu selection and game states like "pause."</p>
+            </section>
+
+            <!-- Discussion Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Discussion</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">Through trials and peer reviews, a key challenge identified was the sensitivity of the potentiometer for velocity control. Fine-tuning during gameplay could cause fluctuations that crashed the game. This was resolved by quantizing the potentiometer's range into discrete integer values, providing stable velocity levels.</p>
+                <p class="text-lg leading-relaxed mb-4">Memory management was another major concern. To prevent crashes, memory usage was minimized by only storing the current and high scores. For future development, incorporating additional memory would allow for more complex features and data storage. The limited refresh rate of the LCD also posed a constraint, requiring careful calibration of input sampling rates to ensure a responsive and smooth gameplay experience.</p>
+                 <figure class="my-8"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-lg mx-auto"><img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+7:+Game+Crash+Example" alt="Game crash example" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Example of a game crash due to memory or processing limits.</figcaption></figure>
+            </section>
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="index.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Projects</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
