@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transformer Optimization for Railway Application</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Design of Transformer | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom styles for a professional look */
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.8;
+            background-color: #f9fafb; /* bg-gray-50 */
         }
         h1, h2, h3 {
-            font-weight: 700;
-            letter-spacing: -0.025em;
+            font-family: 'Montserrat', sans-serif;
         }
         .formula {
             font-family: 'Courier New', Courier, monospace;
@@ -32,175 +33,137 @@
             text-align: center;
         }
         .caption {
-            font-size: 0.9rem;
+            font-size: 0.875rem; /* text-sm */
             color: #6b7280; /* gray-500 */
             text-align: center;
             margin-top: 0.5rem;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #d1d5db; /* gray-300 */
-            padding: 0.75rem;
-            text-align: left;
-        }
-        th {
-            background-color: #f9fafb; /* gray-50 */
-            font-weight: 600;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #f3f4f6; /* gray-100 */
-        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="text-gray-700">
 
-    <div class="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Design of Transformer</h1>
+            </header>
 
-        <header class="text-center mb-12">
-             <h1 class="text-3xl md:text-4xl text-gray-900 mb-8 text-center border-b pb-4">Design of Transformer</h1>
-        </header>
-
-        <main>
             <!-- Introduction Section -->
-            <section id="introduction" class="mb-12">
-                <p class="mb-4">The aim of the design is to optimize the performance of the transformer with lower losses and lower cost. This is achieved by tuning the number of turns within permissible limits to observe a trend in loss calculation. The process ensures that the flux density and maximum allowable loss due to thermal limitations remain within their permissible limits.</p>
-                <p>This iterative process, performed across the entire core dataset using MATLAB, allows for the identification of the most preferable core and the corresponding optimal number of turns for that core.</p>
+            <section class="mb-12">
+                <p class="text-lg leading-relaxed mb-4">The aim of the design is to optimize the performance of the transformer with lower losses and lower cost. This is achieved by tuning the number of turns within permissible limits to observe a trend in loss calculation. The process ensures that the flux density and maximum allowable loss due to thermal limitations remain within their permissible limits.</p>
+                <p class="text-lg leading-relaxed">This iterative process, performed across the entire core dataset using MATLAB, allows for the identification of the most preferable core and the corresponding optimal number of turns for that core.</p>
             </section>
 
             <!-- Series Case Section -->
-            <section id="series-case" class="mb-12">
-                <h2 class="text-xl md:text-2xl mb-4">Series Case</h2>
-                <p class="mb-4">In the series mode of operation, the primary windings are connected in series, while the secondary sides are connected in parallel. The primary windings are twisted in opposite directions (one clockwise, the other anti-clockwise). The maximum input voltage that can be applied is 160 V.</p>
-                <p class="mb-4">The voltage gain of the series system of a phase-shift full-bridge converter is given as:</p>
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Series Case Operation</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">In the series mode of operation, the primary windings are connected in series, while the secondary sides are connected in parallel. The primary windings are twisted in opposite directions (one clockwise, the other anti-clockwise). The maximum input voltage that can be applied is 160 V.</p>
+                <p class="text-lg leading-relaxed mb-4">The voltage gain of the series system of a phase-shift full-bridge converter is given as:</p>
                 <div class="formula">Vout = 2 · D<sub>eff</sub> · K · V<sub>in</sub></div>
-                <p class="mb-4">where K is the turns ratio of the transformer. The flux distribution is shown in Figure 4.1a.</p>
+                <p class="text-lg leading-relaxed mb-4">where K is the turns ratio of the transformer. The flux distribution is shown in the figures below.</p>
                 
-                <!-- Image Figure 4.1 -->
                 <div class="grid md:grid-cols-2 gap-8 my-8">
                     <figure>
                         <img src="fluxseries.png" alt="Winding construction of the transformer in series case" class="w-full h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
-                        <figcaption class="caption">(a) Winding construction of the transformer in series case of operation in PSFB</figcaption>
+                        <figcaption class="caption">Winding construction of the transformer in series case of operation in PSFB</figcaption>
                     </figure>
                     <figure>
                         <img src="picture1.png" alt="Flux distribution of the transformer in series case" class="w-full h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
-                        <figcaption class="caption">(b) Flux distribution of the transformer in series case of operation in PSFB</figcaption>
+                        <figcaption class="caption">Flux distribution of the transformer in series case of operation in PSFB</figcaption>
                     </figure>
                 </div>
 
-                <p class="mb-4">Using the right-hand thumb rule, the flux in the left leg is in the upward direction, and the flux in the right leg is in the downward direction. In the central leg, the fluxes cancel out as they are in opposite directions and generated by the same number of turns and current magnitude.</p>
-                <p class="mb-4">From the figure, the effective path length of the E core is:</p>
+                <p class="text-lg leading-relaxed mb-4">Using the right-hand thumb rule, the flux in the left leg is in the upward direction, and the flux in the right leg is in the downward direction. In the central leg, the fluxes cancel out. From the figure, the effective path length of the E core is:</p>
                 <div class="formula">l<sub>m</sub> = 2a + 2b</div>
-                <p class="mb-4">where 'a' is the height and 'b' is the width of the transformer as seen in Figure 4.1a. The central leg is devoid of flux and does not contribute to the path length and reluctance.</p>
-
-                <!-- Image Figure 4.2 -->
+                
                 <figure class="my-8">
                     <img src="seriesequivalent.png" alt="Equivalent circuit of transformer in the series case" class="w-full max-w-md h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/500x250';">
-                    <figcaption class="caption">Figure 4.2: Equivalent circuit of transformer in the series case</figcaption>
+                    <figcaption class="caption">Equivalent circuit of transformer in the series case</figcaption>
                 </figure>
 
-                <p class="mb-4">The loop equation is given as:</p>
+                <p class="text-lg leading-relaxed mb-4">The loop equation is given as:</p>
                 <div class="formula">N<sub>p1</sub>I<sub>1</sub> + N<sub>s1</sub>I<sub>2</sub> + N<sub>p2</sub>I<sub>1</sub> + N<sub>s2</sub>I<sub>2</sub> − ϕR = 0</div>
-                <p class="mb-4">With N<sub>p1</sub> = N<sub>p2</sub> and N<sub>s1</sub> = N<sub>s2</sub>, this simplifies to:</p>
+                <p class="text-lg leading-relaxed mb-4">This simplifies to:</p>
                 <div class="formula">2N<sub>p1</sub>I<sub>1</sub> + 2N<sub>s1</sub>I<sub>2</sub> − ϕR = 0</div>
-                <p class="mb-4">The magnetic flux can be derived as:</p>
+                <p class="text-lg leading-relaxed mb-4">The magnetic flux, flux density, magnetic field strength, and inductances can be derived from the following equations:</p>
                 <div class="formula">ϕ = (2N<sub>p1</sub>I<sub>1</sub> + 2N<sub>s1</sub>I<sub>2</sub>) / R</div>
-                <p class="mb-4">Where reluctance R is given by l<sub>m</sub> / (μA<sub>c</sub>), where A<sub>c</sub> is the area of the cross-section of the outer legs. The flux density B can be derived as:</p>
-                <div class="formula">V<sub>p</sub> = (2N<sub>p1</sub> + 2N<sub>s1</sub>) dϕ/dt , B = ϕ / A<sub>c</sub></div>
                 <div class="formula">B = (V<sub>p</sub> · DT<sub>s</sub>) / ((2N<sub>p1</sub> + 2N<sub>s1</sub>) A<sub>c</sub>)</div>
-                <p class="mb-4">By Ampere's law, the magnetic field strength is given by:</p>
                 <div class="formula">H = (2N<sub>p1</sub>I<sub>1</sub> + 2N<sub>s1</sub>I<sub>2</sub>) / l<sub>m</sub></div>
-                <p class="mb-4">The resultant flux linkage of the primary and secondary coils are:</p>
-                <div class="formula">λ<sub>1</sub> = 2N<sub>p1</sub>ϕ = (4N<sup>2</sup><sub>p1</sub>I<sub>1</sub> + 4N<sub>p1</sub>N<sub>s1</sub>I<sub>2</sub>) / R = L<sub>11</sub>I<sub>1</sub> + L<sub>12</sub>I<sub>2</sub></div>
-                <div class="formula">λ<sub>2</sub> = 2N<sub>s1</sub>ϕ = (4N<sub>s1</sub>N<sub>p1</sub>I<sub>1</sub> + 4N<sup>2</sup><sub>s1</sub>I<sub>2</sub>) / R</div>
-                <p class="mb-4">The self-inductance of the primary is given by:</p>
                 <div class="formula">L<sub>11</sub> = 4N<sup>2</sup><sub>p1</sub>I<sub>1</sub> / R</div>
-                <p>The mean length of turns is equivalent to the perimeter of the cross-section of the outer leg of the core. The volume of the core is the product of the path length and the area of the cross-section of the outer leg since turns are placed on the outer leg.</p>
             </section>
 
             <!-- Parallel Mode Section -->
-            <section id="parallel-mode" class="mb-12">
-                <h2 class="text-xl md:text-2xl mb-4">Parallel Mode of Operation</h2>
-                <p class="mb-4">In the parallel mode of operation, both the primary and secondary windings are connected in parallel. The primary windings are twisted in the same direction (e.g., both clockwise). The maximum input voltage that can be applied is 80V.</p>
-                <p class="mb-4">The voltage gain of the parallel system is given as:</p>
-                <div class="formula">V<sub>out</sub> = 2 · D<sub>eff</sub> · K · V<sub>in</sub></div>
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Parallel Mode Operation</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">In the parallel mode of operation, both the primary and secondary windings are connected in parallel. The primary windings are twisted in the same direction. The maximum input voltage that can be applied is 80V.</p>
                 
-                <!-- Image Figure 4.3 -->
                 <div class="grid md:grid-cols-2 gap-8 my-8">
                     <figure>
                         <img src="parallelflux.png" alt="Winding Construction of the transformer in parallel case" class="w-full h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
-                        <figcaption class="caption">(a) Winding Construction of the transformer in parallel case of operation in PSFB</figcaption>
+                        <figcaption class="caption">Winding Construction of the transformer in parallel case of operation in PSFB</figcaption>
                     </figure>
                     <figure>
                         <img src="picture2.png" alt="Flux distribution of the transformer in parallel case" class="w-full h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/400x300';">
-                        <figcaption class="caption">(b) Flux distribution of the transformer in parallel case of operation in PSFB</figcaption>
+                        <figcaption class="caption">Flux distribution of the transformer in parallel case of operation in PSFB</figcaption>
                     </figure>
                 </div>
 
-                <p class="mb-4">Using the right-hand thumb rule, the flux in both the left and right legs is in the upward direction. In the central leg, the fluxes add together. The effective path length of the E core is:</p>
+                <p class="text-lg leading-relaxed mb-4">Using the right-hand thumb rule, the flux in both the left and right legs is in the upward direction. In the central leg, the fluxes add together. The effective path length of the E core is:</p>
                 <div class="formula">l<sub>m</sub> = 3a + 4b</div>
-                <p class="mb-4">The equivalent magnetic circuit of the parallel case is shown in Figure 4.4.</p>
-                
-                <!-- Image Figure 4.4 -->
+
                 <figure class="my-8">
                     <img src="magneticequivalentparallel.png" alt="The equivalent magnetic circuit of the parallel case" class="w-full max-w-md h-auto rounded-lg shadow-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/500x300';">
-                    <figcaption class="caption">Figure 4.4: The equivalent magnetic circuit of the parallel case of the transformer</figcaption>
+                    <figcaption class="caption">The equivalent magnetic circuit of the parallel case of the transformer</figcaption>
                 </figure>
                 
-                <p class="mb-4">By the superposition theorem, the effective loop equation is given as:</p>
-                <div class="formula">N<sub>p1</sub>I<sub>1</sub> + N<sub>s1</sub>I<sub>2</sub> − N<sub>p2</sub>I<sub>1</sub> + N<sub>s2</sub>I<sub>2</sub> − 2ϕ[ R<sub>C</sub>R / (R<sub>C</sub> + R + R) ] = 0</div>
-                <p class="mb-4">With N<sub>p1</sub> = N<sub>p2</sub> and N<sub>s1</sub> = N<sub>s2</sub>, this simplifies to:</p>
-                <div class="formula">2N<sub>s1</sub>I<sub>2</sub> − 2ϕ[ R<sub>C</sub>R / (R<sub>C</sub> + 2R) ] = 0</div>
-                <p class="mb-4">And the flux ϕ is:</p>
+                <p class="text-lg leading-relaxed mb-4">The various parameters can be derived from the following equations:</p>
                 <div class="formula">ϕ = (N<sub>s1</sub>I<sub>2</sub>) / [ R<sub>C</sub>R / (R<sub>C</sub> + 2R) ]</div>
-                <p class="mb-4">The flux density B can be derived as:</p>
-                <div class="formula">V = (2N<sub>s1</sub>)dϕ/dt</div>
                 <div class="formula">B = (V<sub>p</sub> · DT<sub>s</sub>) / ((2N<sub>s1</sub>)A<sub>c</sub>)</div>
-                <p class="mb-4">The resultant flux linkage of the primary and secondary coils are:</p>
-                <div class="formula">λ<sub>1</sub> = 2N<sub>p1</sub>ϕ = (4N<sup>2</sup><sub>p1</sub>I<sub>1</sub> + 4N<sub>p1</sub>N<sub>s1</sub>I<sub>2</sub>) / R = L<sub>11</sub>I<sub>1</sub> + L<sub>12</sub>I<sub>2</sub></div>
-                <div class="formula">λ<sub>2</sub> = 2N<sub>s1</sub>ϕ = (4N<sub>s1</sub>N<sub>p1</sub>I<sub>1</sub> + 4N<sup>2</sup><sub>s1</sub>I<sub>2</sub>) / R</div>
-                 <p class="mb-4">The self-inductance of the primary is given by:</p>
                 <div class="formula">L<sub>11</sub> = 4N<sup>2</sup><sub>p1</sub>I<sub>1</sub> / R</div>
-                <p>The mean length of turns is the same as in the series case. The volume of the core is the product of path length and the area of the cross-section of the outer and central legs. The volume of the core in parallel mode is the same as the effective volume given in the manufacturer datasheet.</p>
             </section>
 
             <!-- Data Table Section -->
-            <section id="data-table" class="mb-12">
-                <h3 class="text-xl md:text-2xl mb-4">Table 2.1: Transformer Core Dataset</h3>
-                <div class="overflow-x-auto rounded-lg shadow-md">
-                    <table>
-                        <thead>
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Transformer Core Dataset</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <caption class="p-4 text-lg font-medium text-left text-gray-800 bg-gray-50">Table 2.1: Transformer Core Dataset</caption>
+                        <thead class="bg-gray-50">
                             <tr>
-                                <th>Parameter</th>
-                                <th>EE10/11</th><th>EE13</th><th>EE16</th><th>EE19</th><th>EE25/19</th><th>EE30</th><th>EE40</th><th>EE50</th><th>EE60</th><th>ETD39</th><th>EE35</th><th>EE42</th><th>EE55</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parameter</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EE10/11</th><th>EE13</th><th>EE16</th><th>EE19</th><th>EE25/19</th><th>EE30</th><th>EE40</th><th>EE50</th><th>EE60</th><th>ETD39</th><th>EE35</th><th>EE42</th><th>EE55</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="bg-blue-100"><th colspan="14" class="text-center font-bold">Series</th></tr>
-                            <tr><th>ℓm (mm)</th><td>38.4</td><td>45.4</td><td>53.6</td><td>66.8</td><td>78.08</td><td>94.2</td><td>126.2</td><td>156.2</td><td>180.6</td><td>149</td><td>107.7</td><td>144.55</td><td>165.3</td></tr>
-                            <tr><th>Ac (mm²)</th><td>5.39</td><td>8.82</td><td>10</td><td>11.96</td><td>20.1528</td><td>55</td><td>66</td><td>112.5</td><td>123.2</td><td>58.9</td><td>45.2675</td><td>118.69</td><td>176.571</td></tr>
-                            <tr><th>Wa (mm²)</th><td>46.62</td><td>68.6</td><td>82.8</td><td>111.6</td><td>158</td><td>151.6</td><td>328</td><td>524</td><td>814</td><td>514</td><td>187.44</td><td>383.28</td><td>663.64</td></tr>
-                            <tr><th>MLT (mm)</th><td>12</td><td>15.4</td><td>14</td><td>15</td><td>19.18</td><td>32</td><td>34</td><td>45</td><td>47.4</td><td>40.21</td><td>29.32</td><td>42.45</td><td>51.46</td></tr>
-                            <tr><th>H (mm)</th><td>8.4</td><td>9.2</td><td>10</td><td>11.2</td><td>12.82</td><td>16.3</td><td>20.5</td><td>25.5</td><td>28.1</td><td>29.2</td><td>19.42</td><td>30.3</td><td>37.6</td></tr>
-                            <tr class="bg-green-100"><th colspan="14" class="text-center font-bold">Parallel</th></tr>
-                            <tr><th>ℓm (mm)</th><td>52.2</td><td>60.4</td><td>69</td><td>78.8</td><td>97.4</td><td>115.4</td><td>154.6</td><td>191.6</td><td>220</td><td>184.2</td><td>127.12</td><td>174.85</td><td>202.9</td></tr>
-                            <tr><th>Ac (mm²)</th><td>5.39</td><td>8.82</td><td>10</td><td>11.96</td><td>20.1528</td><td>55</td><td>66</td><td>112.5</td><td>123.2</td><td>58.9</td><td>45.2675</td><td>118.69</td><td>176.57</td></tr>
-                            <tr><th>Wa (mm²)</th><td>46.62</td><td>68.6</td><td>82.8</td><td>111.6</td><td>158</td><td>151.6</td><td>328</td><td>524</td><td>814</td><td>514</td><td>187.4</td><td>383.28</td><td>663.64</td></tr>
-al><th>MLT (mm)</th><td>12</td><td>15.4</td><td>14</td><td>15</td><td>19.18</td><td>32</td><td>34</td><td>45</td><td>47.4</td><td>40.21</td><td>29.32</td><td>42.45</td><td>51.46</td></tr>
-                            <tr><th>H (mm)</th><td>8.4</td><td>9.2</td><td>10</td><td>11.2</td><td>12.82</td><td>16.3</td><td>20.5</td><td>25.5</td><td>28.1</td><td>29.2</td><td>19.42</td><td>30.3</td><td>37.6</td></tr>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr class="bg-blue-50"><th colspan="14" class="px-6 py-4 text-center font-semibold text-blue-800">Series</th></tr>
+                            <tr><th class="px-6 py-4 font-medium">ℓm (mm)</th><td>38.4</td><td>45.4</td><td>53.6</td><td>66.8</td><td>78.08</td><td>94.2</td><td>126.2</td><td>156.2</td><td>180.6</td><td>149</td><td>107.7</td><td>144.55</td><td>165.3</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">Ac (mm²)</th><td>5.39</td><td>8.82</td><td>10</td><td>11.96</td><td>20.1528</td><td>55</td><td>66</td><td>112.5</td><td>123.2</td><td>58.9</td><td>45.2675</td><td>118.69</td><td>176.571</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">Wa (mm²)</th><td>46.62</td><td>68.6</td><td>82.8</td><td>111.6</td><td>158</td><td>151.6</td><td>328</td><td>524</td><td>814</td><td>514</td><td>187.44</td><td>383.28</td><td>663.64</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">MLT (mm)</th><td>12</td><td>15.4</td><td>14</td><td>15</td><td>19.18</td><td>32</td><td>34</td><td>45</td><td>47.4</td><td>40.21</td><td>29.32</td><td>42.45</td><td>51.46</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">H (mm)</th><td>8.4</td><td>9.2</td><td>10</td><td>11.2</td><td>12.82</td><td>16.3</td><td>20.5</td><td>25.5</td><td>28.1</td><td>29.2</td><td>19.42</td><td>30.3</td><td>37.6</td></tr>
+                            <tr class="bg-green-50"><th colspan="14" class="px-6 py-4 text-center font-semibold text-green-800">Parallel</th></tr>
+                            <tr><th class="px-6 py-4 font-medium">ℓm (mm)</th><td>52.2</td><td>60.4</td><td>69</td><td>78.8</td><td>97.4</td><td>115.4</td><td>154.6</td><td>191.6</td><td>220</td><td>184.2</td><td>127.12</td><td>174.85</td><td>202.9</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">Ac (mm²)</th><td>5.39</td><td>8.82</td><td>10</td><td>11.96</td><td>20.1528</td><td>55</td><td>66</td><td>112.5</td><td>123.2</td><td>58.9</td><td>45.2675</td><td>118.69</td><td>176.57</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">Wa (mm²)</th><td>46.62</td><td>68.6</td><td>82.8</td><td>111.6</td><td>158</td><td>151.6</td><td>328</td><td>524</td><td>814</td><td>514</td><td>187.4</td><td>383.28</td><td>663.64</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">MLT (mm)</th><td>12</td><td>15.4</td><td>14</td><td>15</td><td>19.18</td><td>32</td><td>34</td><td>45</td><td>47.4</td><td>40.21</td><td>29.32</td><td>42.45</td><td>51.46</td></tr>
+                            <tr><th class="px-6 py-4 font-medium">H (mm)</th><td>8.4</td><td>9.2</td><td>10</td><td>11.2</td><td>12.82</td><td>16.3</td><td>20.5</td><td>25.5</td><td>28.1</td><td>29.2</td><td>19.42</td><td>30.3</td><td>37.6</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
-        </main>
 
-        <footer class="text-center mt-12 pt-6 border-t">
-            <p class="text-gray-500">&copy; 2024 Magnetic Optimization Project. All rights reserved.</p>
-        </footer>
-
-    </div>
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="master_thesis_details.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Thesis Details</a>
+            </div>
+        </div>
+    </main>
 
 </body>
 </html>
