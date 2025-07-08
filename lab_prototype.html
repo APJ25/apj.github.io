@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype Details | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Prototype</h1>
+            </header>
+
+            <!-- Transformer Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Transformer</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                
+                <p class="text-lg leading-relaxed mb-4">The smaller cores such as EE25/19, EE30, EE35, and EE40 suffer greater losses and are at risk of thermal runaway. Since the bigger cores provide a better safety margin, the EE55 core provides the best range in safety and has a reduced number of turns for both cases of operation. The EE42 comes closer to these considerations. EE60 has higher optimal losses, ruling out its use, same as for EE50 compared to EE42 and EE55. The study of these two cores can be done practically to select the best core among them.</p>
+                <p class="text-lg leading-relaxed mb-4">The core material is chosen to be 3C92. The number of turns for the EE42 primary is 16 on one side, and for the EE55 primary, it is 14. Since the number of turns is low, only one layer is required for both cases.</p>
+
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Transformer Construction and Assembly</h3>
+                <p class="text-lg leading-relaxed mb-4">The transformers were constructed for both EE42 and EE55 following the design techniques outlined. The Litz wire was made by twisting two parallel AWG 25 wires for the primary and three parallel AWG 25 wires for the secondary side. The secondary side is kept at 5 turns for both cores.</p>
+                <p class="text-lg leading-relaxed mb-4">The outside leg coil formers were made with Design Spark, a 3D modeling tool. The coil former has a thickness of 1mm to ensure uniformity. Each coil former was manually wound with a single layer. The 3D printed coil formers were mounted directly onto the core without any clamps; the fit mainly depends on friction.</p>
+
+                <!-- Coil Former Images -->
+                <div class="grid md:grid-cols-2 gap-8 my-8">
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="42model.png" alt="3D model of the EE42 coil former" class="max-w-full max-h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/64748b?text=EE42+Coil+Former';">
+                        </div>
+                        <figcaption class="caption">The EE42 core coil former. Only half of one leg is shown.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2">
+                           <img src="https://placehold.co/400x300/e2e8f0/64748b?text=EE55+Coil+Former" alt="3D model of the EE55 coil former" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">The EE55 core coil former. Only half of one leg is shown.</figcaption>
+                    </figure>
+                </div>
+
+                <p class="text-lg leading-relaxed mb-4">The primary coils were twisted in a clockwise manner on the coil formers. The secondary side is coupled in clockwise and anti-clockwise directions. The primary sides were not joined together but left open, with one winding on each side, due to switching requirements. The primary was wound first, with proper insulation using polyester R31 tape, which has a dielectric strength of 5000 V. The insulation tape was also used to bind the cores together to prevent any air gap. The continuity of the windings was checked before the testing stage.</p>
+                
+                <!-- Constructed Transformer Images -->
+                <div class="grid md:grid-cols-2 gap-8 my-8">
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2">
+                           <img src="42physical.jpg" alt="Constructed EE42 transformer prototype" class="max-w-full max-h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/64748b?text=Constructed+EE42';">
+                        </div>
+                        <figcaption class="caption">Constructed EE42 transformer.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2">
+                           <img src="55physical.jpg" alt="Constructed EE55 transformer prototype" class="max-w-full max-h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/64748b?text=Constructed+EE55';">
+                        </div>
+                        <figcaption class="caption">Constructed EE55 transformer.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- Inductor Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Inductor</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The EE19/8/9 cores made of 3C94 material are utilized. The inductor is made up of three parallel-connected AWG 25 wires with ten turns coiled on the center limb. The air gap is created by sandwiching insulation between the two EE sections, and the overall air gap is checked. R31 polyester tape is used as insulation. The insulating tape is used to bind the two core components together. Prior to testing, the wires’ continuity was examined.</p>
+                
+                <!-- Constructed Inductor Image -->
+                <figure class="my-8">
+                    <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center max-w-md mx-auto h-80 p-2">
+                       <img src="physical inductor.jpg" alt="Constructed inductor prototype" class="max-w-full max-h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/64748b?text=Constructed+Inductor';">
+                    </div>
+                    <figcaption class="caption">The constructed inductor.</figcaption>
+                </figure>
+            </section>
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="master_thesis_details.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Thesis Details</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
