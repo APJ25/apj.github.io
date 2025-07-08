@@ -122,13 +122,23 @@
 								</select>
 							</div>
                         </div>
-						<div class="p-6 border-t border-gray-200">
+						<div class="p-6 border-t border-gray-200 space-y-4">
 							<button id="calculateButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5z" /></svg>
 								Calculate & Plot
 							</button>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <a href="Transformer design.m" download class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                    Design Script
+                                </a>
+                                <a href="Plotting code for the main matlab code.m" download class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center text-sm">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                   Matlab Code for Plots
+                                </a>
+                            </div>
 						</div>
-                    </div>
+                        </div>
                 </div>
             </div>
 
@@ -296,9 +306,9 @@
         const deltapp = (Math.PI / 4)**0.75 * (dpp / Sd) * Math.sqrt(nup);
         const deltas = (Math.PI / 4)**0.75 * (ds / Sd) * Math.sqrt(nup);
         const Skeffs = (Math.sinh(2 * deltaps) + Math.sin(2 * deltaps)) / (Math.cosh(2 * deltaps) - Math.cos(2 * deltaps));
-        const Skeffp = (Math.sinh(2 * deltapp) + Math.sin(2 * deltapp)) / (Math.cosh(2 * deltapp) + Math.cos(2 * deltapp));
+        const Skeffp = (Math.sinh(2 * deltapp) + Math.sin(2 * deltapp)) / (Math.cosh(2 * deltapp) - Math.cos(2 * deltapp));
         const Proxeffs = (Math.sinh(deltaps) - Math.sin(deltaps)) / (Math.cosh(deltaps) + Math.cos(deltaps));
-        const Proxeffp = (Math.sinh(deltapp) - Math.sin(deltapp)) / (Math.cosh(deltapp) + Math.cos(deltapp));
+        const Proxeffp = (Math.sinh(deltapp) - Math.sin(deltapp)) / (Math.cosh(deltapp) + Math.cos(deltaps));
 
         const allCoresLossSummary = [];
         const selectedCoreResults = {
