@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indoor Climate Measurement System | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .equation-block {
+            background-color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .code-block {
+            background-color: #1f2937; /* gray-800 */
+            color: #d1d5db; /* gray-300 */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Measurement system for indoor climate</h1>
+                <p class="text-lg text-gray-500 mt-2">Mid Sweden University - ET106G</p>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><b>Authors:</b> Emmanuel Ndagijimana, Davide Viggiani, Taian Hu, Bingsong Wu, Adarsh Pulimoottil Jolly</p>
+                    <p><b>Lecturer:</b> Börje Norlin | <b>Submission Date:</b> 18/01/2024</p>
+                </div>
+            </header>
+            
+            <!-- Introduction Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Introduction</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">A measurement system for indoor climate, considering the concentration of radon, total volatile organic compounds, and carbon dioxide, as well as measurement of temperature and humidity, allows for the maintenance of optimal conditions for a comfortable life in an office or a household. The primary reason for detecting and measuring these conditions is the potential harm that they can cause to humans when concentrations exceed the recommended levels. Radon exposure is the second leading cause of lung cancer in Sweden, accounting for 500 cases per year. The minimum radon concentration level should be 200Bq/mm³, but nearly 16% of single-family homes exceed this level.</p>
+                <p class="text-lg leading-relaxed mb-4">Prolonged exposure to TVOC causes eye, nose, and throat irritation, and may even affect our central nervous system. Anomalies in temperature and humidity values can be harmful to one’s health at the same time increases the energy costs of the household. At high concentrations, gaseous carbon dioxide can be toxic, impairing consciousness and causing cardiac problems. Given these concerns, a periodic check is advised, which can be accomplished through the use of an indoor climate system.</p>
+            </section>
+
+            <!-- Project Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Project Overview</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Background</h3>
+                <p class="text-lg leading-relaxed mb-4">Radon, a radioactive gas with no color, smell, or taste, is one natural radiation source that can be dangerous. It emerges from the bedrock and travels through the earth. Radon doesn’t pose a threat to human health outside because it tends to dilution in the atmosphere. However, radon indoors is hazardous; multiple studies have shown that even low levels, which are typically present in homes and workplaces, can be harmful to one’s health. High levels of indoor radon are especially harmful since lung cancer risk grows dramatically with continuous inhalation exposure.</p>
+                <figure class="my-6"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-2xl mx-auto"><img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+1:+Radon+Concentration+Map" alt="Annual indoor radon concentration" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Annual indoor radon concentration in ground-floor rooms.</figcaption></figure>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Task Description</h3>
+                <p class="text-lg leading-relaxed mb-4">The project is divided into three sections: Radon sensor implementation with analogue circuits, generating mbed code and connecting TVOC, temperature humidity, and carbondioxide sensors to the Mbed LPC1768, and finally Matlab data visualisation.</p>
+            </section>
+
+            <!-- Radon Sensing Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Radon Sensing Circuit Design</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">Radon sensing consists of a detector, preamplifier, pulse shaping amplifier, and a peak detector. Instead of a physical detector, the current pulse from a radon decay event was simulated.</p>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Preamplifier and Pulse Shaping</h3>
+                <p class="text-lg leading-relaxed mb-4">A charge-sensitive pre-amplifier converts the charge from a particle detection into a voltage signal. This signal is then processed by a pulse shaping amplifier to improve the signal-to-noise ratio and resolve overlapping pulses. The shaping is achieved using an active high-pass and low-pass filter configuration.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x300/e2e8f0/64748b?text=Figure+4:+Preamplifier" alt="Charge-sensitive preamplifier" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">A charge-sensitive preamplifier with feedback resistance.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x300/e2e8f0/64748b?text=Figure+8:+Active+Filter" alt="Active High Pass Filter" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Active High Pass Filter used for pulse shaping.</figcaption></figure>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Simulations and Implementation</h3>
+                <p class="text-lg leading-relaxed mb-4">Each stage of the circuit was simulated in LTspice to verify the design calculations. The circuits were then assembled on a breadboard. The final implementation successfully detected simulated input pulses, with the peak detector holding the peak voltage for measurement by the microcontroller.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+16:+Full+Simulation" alt="Full simulated circuit" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The full simulated circuit in LTspice.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+20:+Circuit+Implementation" alt="Radon detection circuit implementation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Radon detection circuit implementation on a breadboard.</figcaption></figure>
+                </div>
+            </section>
+
+            <!-- System Integration -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">System Integration & Results</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The analog radon detection circuit, along with the Si7021 (Temperature/Humidity) and SGP30 (CO2/TVOC) digital sensors, were integrated with an Mbed LPC1768 microcontroller. The Mbed reads all sensor values, processes the data, and sends it to a host computer via a serial connection. A MATLAB script on the computer receives this data, parses it, and plots the environmental parameters in real-time.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2"><img src="https://placehold.co/500x600/e2e8f0/64748b?text=Figure+25:+System+Setup" alt="Mbed and sensors connected" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Mbed and sensors connected together.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2"><img src="https://placehold.co/500x600/e2e8f0/64748b?text=Figure+26:+MATLAB+GUI" alt="Data visualized in MATLAB" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">The data from sensors visualized in MATLAB.</figcaption></figure>
+                </div>
+            </section>
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="index.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Projects</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
