@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Room Report: PN Junction Fabrication | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .equation-block {
+            background-color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Clean Room Report: P-N Junction</h1>
+                <p class="text-lg text-gray-500 mt-2">Mid Sweden University - ET007A Sensors and Instrumentation</p>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><b>Authors:</b> Emmanuel Ndagijimana, Davide Viggiani, Taian Hu, Bingsong Wu, Adarsh Pulimoottil Jolly</p>
+                    <p><b>Lecturer:</b> Börje Norlin | <b>Submission Date:</b> 12/12/2023</p>
+                </div>
+            </header>
+
+            <!-- Introduction Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Introduction</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">Processing a PN diode in a cleanroom involves a series of steps to fabricate the diode with precision and reliability. Cleanrooms provide an environment where there are very few particles in the air. This room is equipped with yellow lighting, to minimize the exposure of photoresist materials to certain wavelengths of light, particularly ultraviolet (UV) light. The specialty of the lithographical technique used in the PN junction processing is photolithography. Photolithography is a fundamental process in semiconductor fabrication, and its specialty lies in its ability to precisely define patterns on a wafer surface with high resolution. Resolution in photolithography refers to the ability of the technique to reproduce fine details and patterns accurately on the wafer surface. To determine the resolution in the below described PN junction processing, specific information about the wavelength of the UV light source, the type of photomask, and the characteristics of the photoresist would be necessary. The quality of the lithography patterns after exposure was evaluated using microscopy. Below is a detailed explanation of the photolithography process specifically done while PN junction was being processed.</p>
+            </section>
+
+            <!-- Processing Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Processing of PN junction</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Development of P-type Region</h3>
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Wafer preparation</h4>
+                <p class="text-lg leading-relaxed mb-4">Inspected the available wafers for any defects or contamination. Ensured that the wafers met the required specifications for size, thickness, and orientation. The oxide thickness was controlled through processes like thermal oxidation. During thermal oxidation, the wafer was exposed to elevated temperatures in the presence of oxygen, leading to the growth of a silicon dioxide layer.</p>
+                <img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+1:+Wafer" alt="Wafer with oxide layer" class="w-full max-w-lg mx-auto rounded-lg shadow-md my-6">
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Photoresist application</h4>
+                <p class="text-lg leading-relaxed mb-4">HMDS (Hexamethyldisilazane) was typically applied before the deposition of photoresist to improve adhesion. A positive photoresist (type 1818) was spin-coated onto the frontside of a silicon wafer at a speed of 2000 RPM, aiming to achieve a final thickness of 1.8 μm.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+2:+Adding+Photoresist" alt="Adding Photoresist" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Adding Photoresist</figcaption></figure>
+                    <figure><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+3:+Spin+Casting" alt="Photoresist spin casting" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Photoresist spin casting</figcaption></figure>
+                </div>
+                
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Baking</h4>
+                <p class="text-lg leading-relaxed mb-4">The wafer was baked at 115°C for 1 minute to remove residual solvents and promote adhesion. The photoresist was then applied to the backside of the wafer, followed by a furnace-based thermal treatment for 15 minutes to stabilize the resist.</p>
+                <img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+4:+Baking+Machine" alt="Wafer in baking machine" class="w-full max-w-lg mx-auto rounded-lg shadow-md my-6">
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Alignment and Masking</h4>
+                <p class="text-lg leading-relaxed mb-4">The wafer was placed on a photolithography aligner. A photomask containing the pattern for boron doping was aligned with the wafer and exposed to UV light. A positive photoresist was used, making the exposed areas soluble.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+5:+Mask+Alignment" alt="Mask alignment checking" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Mask alignment checking through microscope</figcaption></figure>
+                    <figure><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+6:+Photomask" alt="Mask for photolithography" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Mask for photolithography</figcaption></figure>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Development and Rinsing</h4>
+                <p class="text-lg leading-relaxed mb-4">The wafer was immersed in a developer solution for 1 minute to selectively dissolve the exposed regions of the photoresist. Following development, the wafer was rinsed for two minutes with deionized water to remove any remaining developer and residue.</p>
+                <img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+7:+Development" alt="Wafer in developer and rinsing" class="w-full max-w-lg mx-auto rounded-lg shadow-md my-6">
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Inspection, Etching, and Stripping</h4>
+                <p class="text-lg leading-relaxed mb-4">The pattern quality was inspected under a microscope. The wafer was then etched with a buffered HF solution to remove silicon dioxide in the exposed areas, creating hydrophobic openings. Finally, the remaining photoresist was stripped away, and the wafer was cleaned.</p>
+                <div class="grid md:grid-cols-3 gap-8 my-6">
+                     <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+8:+Inspection" alt="Microscopic inspection" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Microscopic inspection</figcaption></figure>
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+9:+After+Etching" alt="Inspection after etching" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Inspection after etching</figcaption></figure>
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+10:+After+Stripping" alt="Inspection after resist removal" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">Inspection after resist is removed</figcaption></figure>
+                </div>
+
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Annealing</h4>
+                <p class="text-lg leading-relaxed mb-4">The wafer was loaded into a doping furnace with boron at 950°C. This high-temperature process allowed the P-type dopant atoms to diffuse into the silicon lattice, forming the P-type region of the PN junction.</p>
+            </section>
+
+            <!-- Metallization Section -->
+            <section class="mb-12">
+                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Metallization</h2>
+                 <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                 <p class="text-lg leading-relaxed mb-4">The metallization process involves creating electrical contacts on the semiconductor device. This included opening P-areas with an HF solution, evaporating a 3000 Å layer of aluminum, and using a second photolithography step (Patterning Mask 2) to define the metal contacts. After etching the unwanted aluminum, another aluminum layer was evaporated on the backside for grounding. The process concluded with stripping the resist and a final forming gas anneal to optimize the electrical properties.</p>
+                 <img src="https://placehold.co/600x400/e2e8f0/64748b?text=Figure+11:+Pattern+Inspection" alt="Microscopic inspection for quality of the pattern after exposure" class="w-full max-w-lg mx-auto rounded-lg shadow-md my-6">
+            </section>
+
+            <!-- Characterization Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Characterization</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">I-V Characteristics</h3>
+                <p class="text-lg leading-relaxed mb-4">The I-V characteristics of 1mm, 2mm, and 4mm side squares of the pn-junction were measured using a 4-wire method to eliminate errors from conductor resistance. The breakdown voltage for the diode was determined to be -84V.</p>
+                <div class="grid md:grid-cols-3 gap-8 my-6">
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+17:+1mm+IV+Curve" alt="I-V 1mm forward and reverse characteristics" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">1mm I-V characteristics</figcaption></figure>
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+18:+2mm+IV+Curve" alt="I-V 2mm forward and reverse characteristics" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">2mm I-V characteristics</figcaption></figure>
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+19:+4mm+IV+Curve" alt="I-V 4mm forward and reverse characteristics" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">4mm I-V characteristics</figcaption></figure>
+                </div>
+
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">C-V Characteristics</h3>
+                <p class="text-lg leading-relaxed mb-4">The depletion voltage, where the diode begins to conduct, was measured for each size: 0.32V (1mm), 0.29V (2mm), and 0.26V (4mm). From the C-V curves, the junction capacitance was determined, which allowed for the calculation of the depletion depth.</p>
+                 <div class="grid md:grid-cols-3 gap-8 my-6">
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+20:+1mm+CV+Curve" alt="The CV characteristics of 1mm side pn junction" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">1mm C-V characteristics</figcaption></figure>
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+21:+2mm+CV+Curve" alt="The CV characteristics of 2mm side pn junction" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">2mm C-V characteristics</figcaption></figure>
+                    <figure><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Figure+22:+4mm+CV+Curve" alt="The CV characteristics of 4mm side pn junction" class="w-full h-auto rounded-lg shadow-md"><figcaption class="caption">4mm C-V characteristics</figcaption></figure>
+                </div>
+            </section>
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="index.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Projects</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
