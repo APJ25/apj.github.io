@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Clone with Temperature Sensor | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Arduino “clone” with temperature sensor</h1>
+                <p class="text-lg text-gray-600 mt-2">A custom microcontroller board based on the Adafruit Metro form factor.</p>
+            </header>
+
+            <!-- Introduction Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Project Overview</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">This project involved designing an Arduino clone board based on the Adafruit Metro design, but with several key modifications. The core of the board is the ESP32-S3-WROOM-I module. The primary goals were to implement a robust power supply using a single buck regulator, add an analog temperature sensor, and maintain the standard Metro form factor and header layout, all while using surface-mount components on a single side of the PCB.</p>
+            </section>
+
+            <!-- Schematic and Design Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Schematic and Design</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The schematic was designed in EasyEDA, referencing the original Adafruit Metro board but incorporating several custom modifications as per the project requirements.</p>
+                <figure class="my-8">
+                    <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-inner inline-block">
+                        <img src="Schematic_New-Project_2025-07-09.jpg" alt="Full schematic of the Arduino clone board" class="max-w-full h-auto rounded-md mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/1200x800/e2e8f0/475569?text=Full+Schematic';">
+                    </div>
+                    <figcaption class="caption">Complete schematic of the custom Arduino clone board.</figcaption>
+                </figure>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Key Design Features</h3>
+                <ul class="list-disc list-inside space-y-4 text-lg leading-relaxed">
+                    <li>
+                        <strong>Unified Power Supply:</strong> Instead of multiple linear regulators, a single switched buck regulator (LM2736XMK/NOPB) is used to provide a stable 3.3V supply for all components. This regulator handles input from the DC barrel jack, USB, and the Vin header pin.
+                    </li>
+                    <li>
+                        <strong>Reverse Voltage Protection:</strong> All power supply paths are protected against reverse voltage to prevent damage to the board.
+                    </li>
+                    <li>
+                        <strong>MCU Power Isolation:</strong> A jumper (J8) allows the power to the ESP32-S3 microcontroller to be disconnected. This is a critical feature for testing the power supply circuitry independently without risking damage to the MCU.
+                    </li>
+                    <li>
+                        <strong>Analog Temperature Sensor:</strong> An analog temperature sensor (TMP36) is integrated onto the board, with its output connected to an analog input pin of the MCU for easy temperature monitoring.
+                    </li>
+                     <li>
+                        <strong>Standard Form Factor:</strong> The board maintains the physical dimensions and header layout of the Adafruit Metro, ensuring compatibility with existing shields and accessories.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- PCB Layout Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">PCB Layout</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The PCB was designed with all SMD components on the top side to simplify assembly. The layout follows the Adafruit Metro form factor, ensuring the headers align correctly for shield compatibility. The bottom layer is primarily a ground plane with minimal traces, and features a custom logo.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2">
+                           <img src="picturetop.png" alt="Top view of the PCB layout" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Top layer of the PCB, showing component placement and routing.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2">
+                           <img src="picturebottom.png" alt="Bottom view of the PCB layout" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Bottom layer of the PCB, primarily a ground plane with a custom logo.</figcaption>
+                    </figure>
+                </div>
+            </section>
+            
+            <!-- Results and Testing Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Results and Testing</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The board was assembled with all SMD components soldered by hand. After assembly, the power supply was tested independently by removing the MCU power jumper. The buck regulator successfully provided a stable 3.3V output from all power sources (USB, DC Jack, Vin). Following the power supply validation, the MCU was powered on, and a test sketch was uploaded to verify the functionality of the analog temperature sensor.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2">
+                           <img src="https://placehold.co/600x450/e2e8f0/64748b?text=Assembled+Board+(Top)" alt="Assembled PCB top view" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Top view of the fully assembled Arduino clone board.</figcaption>
+                    </figure>
+                    <figure>
+                        <div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2">
+                           <img src="https://placehold.co/600x450/e2e8f0/64748b?text=Temperature+Sensor+Graph" alt="Graph of temperature readings over time" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <figcaption class="caption">Temperature readings from the onboard analog sensor over time.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="index.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Projects</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
