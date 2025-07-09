@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bachelor's Thesis: Fuzzy Controlled FCL | Adarsh Pulimoottil Jolly</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-md p-8 md:p-12">
+            
+            <!-- Page Header -->
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-blue-600">Fuzzy Controlled Fault Current Limiter</h1>
+                <p class="text-lg text-gray-500 mt-2">Bachelor of Technology Thesis</p>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><b>Authors:</b> Adarsh P J, Aneeta George, Kevin Shalu, Krishnapriya U</p>
+                    <p>Department of Electrical and Electronics Engineering, T.K.M. College of Engineering, Kollam | June 2022</p>
+                </div>
+            </header>
+
+            <!-- Abstract -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Abstract</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed italic text-gray-600">The project proposes a fuzzy logic controller (FLC) based bridge type fault current limiter (BFCL) to minimize the impact of fault current on the system and loads. FLC for BFCL is developed to dynamically insert the appropriate current limiting resistance during contingencies to maintain the fault currents within the acceptable limit. The proposed controller effectively provides variable duties to generate and insert controllable resistance in the system based on fluctuation of alternating current (AC) and phase voltage. The efficacy of the proposed controller is justified through simulations work for single line to ground, double line to ground, three phase to ground faults. THD studies were conducted. The results demonstrate that oscillations in AC phase can be maintained within the acceptable range by controlling fault current through the insertion of the appropriate resistance. It is also found that the proposed controller outperforms the existing method.</p>
+            </section>
+            
+            <!-- Introduction Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Introduction</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">Fault Current Limiters (FCL) are one of the well-established methods for maintaining the reliability of the power system. The FCL can act both as a protective device and as an energy management device. Fault current limiters can restrict high fault current during the response time of circuit breakers. As a result, current interruption stress on a circuit breaker is reduced with the FCLs, which eventually minimizes the size and cost of the circuit breaker. An efficient non-superconducting bridge type fault current limiter (BFCL) is proposed and studied for several branches of a power system to overcome the issues of stand-by mode loss, non-adaptable resistance, and high cost.</p>
+                <p class="text-lg leading-relaxed mb-4">With the increasing demand for electricity, electric power systems have become greater and interconnected. These topological changes may result in an increment in fault current magnitude under fault conditions, which will compromise the reliability of the power grid. This project uses a Fuzzy Logic Controller (FLC) to dynamically adjust the FCL, providing a more robust and adaptive solution compared to conventional fixed-duty controllers.</p>
+            </section>
+
+            <!-- Methodology Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Methodology</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Proposed System Architecture</h3>
+                <p class="text-lg leading-relaxed mb-4">The proposed Fuzzy Logic Controlled FCL is implemented on a WSCC standard 9-bus test system. The location of the FCL is optimized by analyzing single-line-to-ground faults at various points in the network. The architecture consists of the 9-bus system, the Bridge Fault Current Limiter (BFCL), and the Fuzzy Logic Controller that provides the gate pulse to the BFCL's switch.</p>
+                <figure class="my-6"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-96 p-2 max-w-3xl mx-auto"><img src="https://placehold.co/800x600/e2e8f0/64748b?text=Figure+19:+Proposed+Architecture" alt="Proposed Architecture" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">WSCC standard 9 bus test system with FCL and Fuzzy Logic Controller.</figcaption></figure>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Fuzzy Logic Controller Design</h3>
+                <p class="text-lg leading-relaxed mb-4">The FLC uses normalized voltage and current deviations as inputs. Triangular membership functions are used for both input and output variables. The fuzzy rule base is designed to generate the appropriate duty cycle (D) for the VR-BFCL's switch based on the severity of the fault, thereby inserting a variable resistance into the system to limit the fault current.</p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+21:+Membership+Functions" alt="Membership functions" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Input and output membership functions of the fuzzy system.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="https://placehold.co/500x400/e2e8f0/64748b?text=Figure+22:+Gate+Pulse+Generation" alt="Gate pulse generation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Gate pulse generation for VR-BFCL with FLC strategy.</figcaption></figure>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Results and Analysis</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">The system was simulated in MATLAB/Simulink under various fault conditions (SLG, DLG, 3-phase) to evaluate the performance of the proposed controller. The results demonstrate a significant reduction in peak fault current and an improvement in voltage sag and Total Harmonic Distortion (THD) compared to a system with no FCL or a fixed-duty FCL.</p>
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Single Line to Ground (SLG) Fault Analysis</h4>
+                <div class="grid md:grid-cols-3 gap-8 my-6">
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Fig+25:+SLG+No+FCL" alt="SLG without FCL" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">SLG fault without FCL.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Fig+26:+SLG+with+FCL" alt="SLG with FCL" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">SLG fault with FCL.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-64 p-2"><img src="https://placehold.co/400x300/e2e8f0/64748b?text=Fig+27:+SLG+with+Fuzzy" alt="SLG with Fuzzy FCL" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">SLG fault with Fuzzy FCL.</figcaption></figure>
+                </div>
+                <p class="text-lg leading-relaxed mb-4">For an SLG fault, the peak fault current was reduced from 3.6 p.u. to 1.3 p.u. with a standard FCL, and further down to 0.8 p.u. with the proposed fuzzy logic controller.</p>
+                
+                <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Total Harmonic Distortion (THD)</h4>
+                <p class="text-lg leading-relaxed mb-4">The implementation of the fuzzy-controlled FCL also showed a marked improvement in THD, reducing it to less than 7% during fault conditions.</p>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Conclusion</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+                <p class="text-lg leading-relaxed mb-4">In this project, a non-linear FLC based bridge controller is proposed to improve the dynamic performance of the WSCC standard 9-bus test system. Depending on fault detection based on the phase current and voltage, the controller is designed. Effective controllable resistance is generated and placed in the system during the disturbance depending on the amount of current and voltage deviations. Simulation results demonstrate that the proposed controller effectively restricts fault currents and augments the transient response of the 9-bus test system, outperforming traditional fixed-duty controllers.</p>
+            </section>
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="index.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Projects</a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
