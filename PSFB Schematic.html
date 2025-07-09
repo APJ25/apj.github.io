@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSFB Converter Schematic | Adarsh Pulimoottil Jolly</title>
+    <title>PSFB Converter Details | Adarsh Pulimoottil Jolly</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,8 +18,25 @@
             font-family: 'Inter', sans-serif;
             background-color: #f9fafb; /* bg-gray-50 */
         }
-        h1, h2, h3 {
+        h1, h2, h3, h4 {
             font-family: 'Montserrat', sans-serif;
+        }
+        .caption {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* gray-500 */
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .equation-block {
+            background-color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            text-align: center;
         }
     </style>
 </head>
@@ -31,37 +48,48 @@
             
             <!-- Page Header -->
             <header class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-blue-600">PSFB Converter Schematic</h1>
-                <p class="text-lg text-gray-600 mt-2">Detailed circuit diagram for the reconfigurable Phase-Shift Full Bridge converter.</p>
+                <h1 class="text-4xl font-bold text-blue-600">Reconfigurable PSFB Converter</h1>
+                <p class="text-lg text-gray-600 mt-2">Schematic and Operating Principles</p>
             </header>
 
             <!-- Schematic Image Section -->
             <section class="mb-12">
+                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Converter Schematic</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
                 <figure class="text-center">
-                    <!-- The image is wrapped in a container with a border and shadow for better presentation -->
                     <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-inner inline-block">
-                        <img src="PSFB.png" 
+                        <img src="PSFB.png"    
                              alt="A detailed schematic of the Phase-Shift Full Bridge (PSFB) converter, showing the H-bridge, transformer, and output rectifier stage." 
-                             class="max-w-full h-auto rounded-md mx-auto" 
+                             class="max-w-full h-auto rounded-md mx-auto"   
                              onerror="this.onerror=null;this.src='https://placehold.co/1200x800/e2e8f0/475569?text=PSFB+Schematic+Image';">
                     </div>
-                    <figcaption class="mt-4 text-sm text-gray-500">Figure 2.1: Complete schematic of the PSFB converter.</figcaption>
+                    <figcaption class="mt-4 text-sm text-gray-500">Complete schematic of the reconfigurable PSFB converter.</figcaption>
                 </figure>
             </section>
             
             <!-- Description Section -->
             <section class="mb-12 section-content max-w-4xl mx-auto">
-                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Schematic Overview</h2>
+                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Operating Modes & Theory</h2>
                  <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-                 <p class="text-lg leading-relaxed">
-                    The schematic illustrates the key components of the reconfigurable Phase-Shift Full Bridge (PSFB) converter. This includes the full H-bridge inverter stage on the primary side, the high-frequency isolation transformer with its multiple windings, and the output rectifier stage. The design incorporates gate drive circuitry for the MOSFETs and the necessary connections for reconfiguring the primary windings between series and parallel modes of operation.
-                 </p>
+                 <p class="text-lg leading-relaxed mb-4">The disadvantage of the conventional PSFB converter is that it has significant conduction losses during the freewheeling interval. If the turns ratio is fixed, as the input voltage increases, the duty cycle has to be reduced to get the required output voltage, which means more duration for freewheeling current and more conduction losses. To overcome this issue, a multi-transformer system is used.</p>
+                
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Series Mode</h3>
+                <p class="text-lg leading-relaxed mb-4">When the input voltage increases, switching to the series mode of operation doubles the turns ratio, thereby maintaining the duty cycle. The series mode of operation is exactly the same as the traditional phase shift converter where the middle branch of the reconfigurable PSFB is completely switched off and the phase shift is between the available two legs of switches. The output voltage is given by:</p>
+                <div class="equation-block">Vout = 2 · Deff · (Ns/Np) · (Vin/NT)</div>
+                <figure class="my-6"><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-80 p-2 max-w-lg mx-auto"><img src="PSFB series.png" alt="Series mode of operation" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Series mode of operation of reconfigurable PSFB converter.</figcaption></figure>
+
+                <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">Parallel Mode</h3>
+                <p class="text-lg leading-relaxed mb-4">Parallel mode of operation occurs when middle-leg transistors are employed in the switching scheme. Mosfets Q1, Q4, and Q5 are switched together to provide the parallel mode of operation. Switching Q2, Q3, and Q6 will cause the current to flow to the converter in the opposite direction. The middle leg will be out of phase, but the first and third legs’ devices are in phase. The output voltage is given by:</p>
+                <div class="equation-block">Vout = 2 · Deff · (Ns/Np) · (Vin/NTP)</div>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="PSFB_parallel.png" alt="Parallel mode current flow 1" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Current flow when Q1, Q4, and Q5 are on.</figcaption></figure>
+                    <figure><div class="bg-gray-100 rounded-lg shadow-md flex items-center justify-center h-72 p-2"><img src="parallel a.png" alt="Parallel mode current flow 2" class="max-w-full max-h-full object-contain"></div><figcaption class="caption">Current flow when Q2, Q3, and Q6 are on.</figcaption></figure>
+                </div>
             </section>
 
-
-             <!-- Back Button -->
+            <!-- Back Button -->
             <div class="mt-12 text-center">
-                <a href="thesis_details.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Thesis Details</a>
+                <a href="master_thesis_details.html" class="text-gray-500 hover:text-blue-600 font-medium transition-colors">&larr; Back to Projects</a>
             </div>
         </div>
     </main>
